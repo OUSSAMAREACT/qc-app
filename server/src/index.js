@@ -9,8 +9,8 @@ import categoryRoutes from './routes/categories.js';
 dotenv.config();
 
 const app = express();
-// Force port 5002 to avoid conflict with potential zombie process on 5001
-const PORT = 5002;
+// Use process.env.PORT for Render/Vercel, fallback to 5002 for local dev
+const PORT = process.env.PORT || 5002;
 
 app.use(cors({
     origin: [
