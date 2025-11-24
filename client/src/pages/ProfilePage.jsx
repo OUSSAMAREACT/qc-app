@@ -27,6 +27,13 @@ export default function ProfilePage() {
             return;
         }
 
+        const nameRegex = /^[a-zA-Z\u00C0-\u00FF\s'-]+$/;
+        if (!nameRegex.test(name)) {
+            setMessage({ type: 'error', text: "Le nom ne doit contenir que des lettres, des espaces et des tirets." });
+            setLoading(false);
+            return;
+        }
+
         try {
             const res = await axios.put('/auth/profile', {
                 name,

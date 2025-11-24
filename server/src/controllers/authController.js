@@ -99,7 +99,13 @@ export const updateProfile = async (req, res) => {
         }
 
         const updates = {};
-        if (name) updates.name = name;
+        if (name) {
+            const nameRegex = /^[a-zA-Z\u00C0-\u00FF\s'-]+$/;
+            if (!nameRegex.test(name)) {
+                return res.status(400).json({ message: "Le nom ne doit contenir que des lettres, des espaces et des tirets." });
+            }
+            updates.name = name;
+        }
 
         if (newPassword) {
             if (!currentPassword) {
