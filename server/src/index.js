@@ -31,7 +31,7 @@ app.get('/', (req, res) => {
     res.send('Quiz API is running');
 });
 
-if (process.env.NODE_ENV !== 'production') {
+if (process.env.NODE_ENV !== 'production' || !process.env.VERCEL) {
     app.listen(PORT, () => {
         console.log(`Server running on port ${PORT}`);
     });
