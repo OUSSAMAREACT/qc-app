@@ -3,7 +3,8 @@
     "version": "1.0.0",
     "type": "module",
     "scripts": {
-        "postinstall": "prisma generate --schema=./server/prisma/schema.prisma"
+        "postinstall": "prisma generate --schema=./server/prisma/schema.prisma",
+        "start": "prisma migrate deploy --schema=./server/prisma/schema.prisma && node server/src/index.js"
     },
     "dependencies": {
         "@prisma/client": "^5.10.0",
