@@ -1,0 +1,58 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  password  String
+  name      String?
+  role      String   @default("STUDENT") // "STUDENT" or "ADMIN"
+
+  createdAt DateTime @default(now())
+  results   QuizResult[]
+}
+
+model Category {
+  id        Int        @id @default(autoincrement())
+  name      String     @unique
+  questions Question[]
+  createdAt DateTime   @default(now())
+}
+
+model Question {
+  id         Int      @id @default(autoincrement())
+  text       String
+  difficulty String   @default("Moyen") // "Facile", "Moyen", "Difficile"
+  createdAt  DateTime @default(now())
+  choices    Choice[]
+  category   Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  categoryId Int
+  explanation String? // Detailed explanation for the answer
+}
+
+model Choice {
+  id         Int      @id @default(autoincrement())
+  text       String
+  isCorrect  Boolean  @default(false)
+  question   Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  questionId Int
+}
+
+model QuizResult {
+  id             Int      @id @default(autoincrement())
+  score          Int
+  totalQuestions Int
+  createdAt      DateTime @default(now())
+  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId         Int
+  categoryName   String?
+}
