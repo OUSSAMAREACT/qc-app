@@ -167,9 +167,9 @@ export default function QuizPage() {
     const timePercentage = totalTime > 0 ? (timeLeft / totalTime) * 100 : 0;
 
     return (
-        <div className="min-h-screen bg-gray-50 dark:bg-gray-900 p-4 flex flex-col items-center pb-20 font-sans transition-colors duration-300">
-            {/* Dark Premium Floating Timer (Bottom Right) */}
-            <div className={`fixed bottom-6 right-6 z-40 transition-all duration-500 transform hover:scale-105 ${isLowTime ? 'animate-pulse' : ''
+        <div className="min-h-screen bg-gray-50 dark:bg-gray-900 p-4 flex flex-col items-center pb-32 md:pb-20 font-sans transition-colors duration-300">
+            {/* Dark Premium Floating Timer (Bottom Right on Desktop, Bottom Center on Mobile) */}
+            <div className={`fixed bottom-6 left-1/2 -translate-x-1/2 md:left-auto md:translate-x-0 md:right-6 z-40 transition-all duration-500 transform hover:scale-105 ${isLowTime ? 'animate-pulse' : ''
                 }`}>
                 <div className={`backdrop-blur-xl bg-gray-900/95 dark:bg-black/90 border border-gray-700/50 shadow-2xl rounded-2xl px-4 py-3 flex items-center gap-4 ${isLowTime ? 'ring-2 ring-red-500/50 shadow-red-900/20' : 'ring-1 ring-white/10'
                     }`}>
