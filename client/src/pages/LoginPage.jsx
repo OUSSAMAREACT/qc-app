@@ -113,7 +113,7 @@ export default function LoginPage() {
                         <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">Pas encore de compte ?</p>
                         <Link to="/register">
                             <Button variant="secondary" className="w-full py-2.5 flex items-center justify-center group border-blue-200 dark:border-gray-600 text-blue-700 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-gray-700 hover:border-blue-300 dark:hover:border-gray-500 bg-white dark:bg-gray-800">
-                                <ArrowLeft size={16} className="mr-2 group-hover:-translate-x-1 transition-transform" /> Se connecter
+                                <ArrowLeft size={16} className="mr-2 group-hover:-translate-x-1 transition-transform" /> S'inscrire
                             </Button>
                         </Link>
                     </div>
