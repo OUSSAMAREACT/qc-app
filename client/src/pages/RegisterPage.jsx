@@ -29,6 +29,12 @@ export default function RegisterPage() {
             return;
         }
 
+        const nameRegex = /^[a-zA-Z\u00C0-\u00FF\s'-]+$/;
+        if (!nameRegex.test(name)) {
+            setError("Le nom ne doit contenir que des lettres, des espaces et des tirets.");
+            return;
+        }
+
         setIsLoading(true);
         try {
             await register(name, email, password);

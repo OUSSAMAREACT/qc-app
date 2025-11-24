@@ -14,6 +14,12 @@ export const register = async (req, res) => {
             return res.status(400).json({ message: "Cet email est déjà utilisé." });
         }
 
+        // Validate name format
+        const nameRegex = /^[a-zA-Z\u00C0-\u00FF\s'-]+$/;
+        if (!nameRegex.test(name)) {
+            return res.status(400).json({ message: "Le nom ne doit contenir que des lettres, des espaces et des tirets." });
+        }
+
         // Hash password
         const hashedPassword = await bcrypt.hash(password, 10);
 
