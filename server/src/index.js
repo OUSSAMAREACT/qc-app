@@ -31,10 +31,18 @@ app.get('/', (req, res) => {
     res.send('Quiz API is running');
 });
 
+console.log("Starting server initialization...");
+console.log("Environment:", process.env.NODE_ENV);
+console.log("VERCEL env:", process.env.VERCEL);
+console.log("PORT env:", process.env.PORT);
+
 if (process.env.NODE_ENV !== 'production' || !process.env.VERCEL) {
+    console.log("Attempting to bind to port...");
     app.listen(PORT, '0.0.0.0', () => {
         console.log(`Server running on port ${PORT}`);
     });
+} else {
+    console.log("Skipping app.listen (Vercel environment detected)");
 }
 
 export default app;
