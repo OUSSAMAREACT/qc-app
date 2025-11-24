@@ -88,7 +88,7 @@ export default function LoginPage() {
                                 }
                             />
                             <div className="text-right">
-                                <button onClick={handleForgotPassword} className="text-xs text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 hover:underline bg-transparent border-none cursor-pointer p-0">
+                                <button type="button" onClick={handleForgotPassword} className="text-xs text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 hover:underline bg-transparent border-none cursor-pointer p-0">
                                     Mot de passe oublié ?
                                 </button>
                             </div>

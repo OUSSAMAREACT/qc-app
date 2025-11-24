@@ -8,7 +8,7 @@ export const AuthProvider = ({ children }) => {
     const [loading, setLoading] = useState(true);
 
     // Set base URL for API
-    axios.defaults.baseURL = import.meta.env.VITE_API_URL || 'http://localhost:5002/api';
+    axios.defaults.baseURL = import.meta.env.VITE_API_URL || '/api';
 
     // On mount, try to restore session from localStorage
     useEffect(() => {
