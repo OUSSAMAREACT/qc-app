@@ -171,7 +171,7 @@ export default function QuizPage() {
             {/* Dark Premium Floating Timer (Bottom Right on Desktop, Bottom Center on Mobile) */}
             <div className={`fixed bottom-6 left-1/2 -translate-x-1/2 md:left-auto md:translate-x-0 md:right-6 z-40 transition-all duration-500 transform hover:scale-105 ${isLowTime ? 'animate-pulse' : ''
                 }`}>
-                <div className={`backdrop-blur-xl bg-gray-900/95 dark:bg-black/90 border border-gray-700/50 shadow-2xl rounded-2xl px-4 py-3 flex items-center gap-4 ${isLowTime ? 'ring-2 ring-red-500/50 shadow-red-900/20' : 'ring-1 ring-white/10'
+                <div className={`backdrop-blur-xl bg-white/90 dark:bg-black/90 border border-gray-200 dark:border-gray-700/50 shadow-2xl rounded-2xl px-4 py-3 flex items-center gap-4 ${isLowTime ? 'ring-2 ring-red-500/50 shadow-red-900/20' : 'ring-1 ring-gray-200 dark:ring-white/10'
                     }`}>
                     {/* Circular Timer Progress */}
                     <div className="relative w-10 h-10 flex items-center justify-center">
@@ -184,7 +184,7 @@ export default function QuizPage() {
                                 stroke="currentColor"
                                 strokeWidth="3"
                                 fill="transparent"
-                                className="text-gray-700"
+                                className="text-gray-200 dark:text-gray-700"
                             />
                             {/* Progress Circle */}
                             <circle
@@ -197,7 +197,7 @@ export default function QuizPage() {
                                 strokeDasharray={2 * Math.PI * 16}
                                 strokeDashoffset={0}
                                 strokeLinecap="round"
-                                className={`transition-all duration-1000 ease-linear ${isLowTime ? "text-red-500" : "text-emerald-400"
+                                className={`transition-all duration-1000 ease-linear ${isLowTime ? "text-red-500" : "text-blue-600 dark:text-emerald-400"
                                     }`}
                                 style={{
                                     strokeDasharray: '100',
@@ -206,17 +206,17 @@ export default function QuizPage() {
                             />
                         </svg>
                         <div className="absolute inset-0 flex items-center justify-center">
-                            <Clock size={14} className={` ${isLowTime ? "text-red-500" : "text-emerald-400"}`} />
+                            <Clock size={14} className={` ${isLowTime ? "text-red-500" : "text-blue-600 dark:text-emerald-400"}`} />
                         </div>
                     </div>
 
                     {/* Time Display */}
                     <div className="flex flex-col items-start min-w-[70px]">
-                        <span className={`text-xl font-bold font-mono tracking-wider ${isLowTime ? "text-red-400" : "text-white"
+                        <span className={`text-xl font-bold font-mono tracking-wider ${isLowTime ? "text-red-500 dark:text-red-400" : "text-gray-900 dark:text-white"
                             }`}>
                             {formatTime(timeLeft)}
                         </span>
-                        <span className="text-[9px] uppercase tracking-[0.2em] font-bold text-gray-400">
+                        <span className="text-[9px] uppercase tracking-[0.2em] font-bold text-gray-500 dark:text-gray-400">
                             Restant
                         </span>
                     </div>
