@@ -10,7 +10,7 @@ export default function Navbar() {
     const { theme, toggleTheme } = useTheme();
 
     return (
-        <nav className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 sticky top-0 z-20 shadow-sm transition-colors duration-300">
+        <nav className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 sticky top-0 z-50 shadow-sm transition-colors duration-300">
             <div className="max-w-6xl mx-auto px-4 md:px-6 py-4 flex justify-between items-center">
                 <Link to="/dashboard" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
                     <div className="bg-blue-600 text-white p-1.5 rounded-lg">
