@@ -163,7 +163,7 @@ export default function DashboardPage() {
                                     {history.length > 5 && (
                                         <div className="p-3 text-center bg-gray-50 dark:bg-gray-700/50">
                                             <Link to="/history">
-                                                <button className="text-xs font-medium text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300">
+                                                <button className="text-xs font-medium text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 cursor-pointer">
                                                     Voir tout l'historique
                                                 </button>
                                             </Link>
