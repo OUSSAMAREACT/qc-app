@@ -12,7 +12,13 @@ const app = express();
 // Force port 5002 to avoid conflict with potential zombie process on 5001
 const PORT = 5002;
 
-app.use(cors());
+app.use(cors({
+    origin: [
+        "http://localhost:5173",
+        "https://qc-app-zeta.vercel.app"
+    ],
+    credentials: true
+}));
 app.use(express.json());
 
 // Routes
