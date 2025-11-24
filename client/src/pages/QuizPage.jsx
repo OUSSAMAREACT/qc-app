@@ -168,13 +168,13 @@ export default function QuizPage() {
 
     return (
         <div className="min-h-screen bg-gray-50 dark:bg-gray-900 p-4 flex flex-col items-center pb-20 font-sans transition-colors duration-300">
-            {/* Dark Premium Floating Timer (Dynamic Island Style) */}
-            <div className={`fixed top-4 md:top-6 z-30 transition-all duration-500 transform hover:scale-105 ${isLowTime ? 'animate-pulse' : ''
+            {/* Dark Premium Floating Timer (Bottom Right) */}
+            <div className={`fixed bottom-6 right-6 z-40 transition-all duration-500 transform hover:scale-105 ${isLowTime ? 'animate-pulse' : ''
                 }`}>
-                <div className={`backdrop-blur-xl bg-gray-900/95 dark:bg-black/90 border border-gray-700/50 shadow-2xl rounded-full px-4 py-2 md:px-6 md:py-3 flex items-center gap-3 md:gap-5 ${isLowTime ? 'ring-2 ring-red-500/50 shadow-red-900/20' : 'ring-1 ring-white/10'
+                <div className={`backdrop-blur-xl bg-gray-900/95 dark:bg-black/90 border border-gray-700/50 shadow-2xl rounded-2xl px-4 py-3 flex items-center gap-4 ${isLowTime ? 'ring-2 ring-red-500/50 shadow-red-900/20' : 'ring-1 ring-white/10'
                     }`}>
                     {/* Circular Timer Progress */}
-                    <div className="relative w-8 h-8 md:w-10 md:h-10 flex items-center justify-center">
+                    <div className="relative w-10 h-10 flex items-center justify-center">
                         <svg className="w-full h-full transform -rotate-90">
                             {/* Background Circle */}
                             <circle
@@ -194,8 +194,8 @@ export default function QuizPage() {
                                 stroke="currentColor"
                                 strokeWidth="3"
                                 fill="transparent"
-                                strokeDasharray={2 * Math.PI * 16} // Approximate for r=16 (45% of 32/40)
-                                strokeDashoffset={0} // Simplified for responsive SVG
+                                strokeDasharray={2 * Math.PI * 16}
+                                strokeDashoffset={0}
                                 strokeLinecap="round"
                                 className={`transition-all duration-1000 ease-linear ${isLowTime ? "text-red-500" : "text-emerald-400"
                                     }`}
@@ -206,24 +206,24 @@ export default function QuizPage() {
                             />
                         </svg>
                         <div className="absolute inset-0 flex items-center justify-center">
-                            <Clock size={12} className={`md:w-3.5 md:h-3.5 ${isLowTime ? "text-red-500" : "text-emerald-400"}`} />
+                            <Clock size={14} className={` ${isLowTime ? "text-red-500" : "text-emerald-400"}`} />
                         </div>
                     </div>
 
                     {/* Time Display */}
-                    <div className="flex flex-col items-start min-w-[60px] md:min-w-[80px]">
-                        <span className={`text-lg md:text-xl font-bold font-mono tracking-wider ${isLowTime ? "text-red-400" : "text-white"
+                    <div className="flex flex-col items-start min-w-[70px]">
+                        <span className={`text-xl font-bold font-mono tracking-wider ${isLowTime ? "text-red-400" : "text-white"
                             }`}>
                             {formatTime(timeLeft)}
                         </span>
-                        <span className="text-[8px] md:text-[9px] uppercase tracking-[0.2em] font-bold text-gray-400">
+                        <span className="text-[9px] uppercase tracking-[0.2em] font-bold text-gray-400">
                             Restant
                         </span>
                     </div>
                 </div>
             </div>
 
-            <div className="w-full max-w-4xl space-y-6 md:space-y-8 mt-24 md:mt-32 z-10">
+            <div className="w-full max-w-4xl space-y-6 md:space-y-8 mt-8 md:mt-12 z-10">
                 {/* Header Info */}
                 <div className="flex flex-col md:flex-row justify-between items-start md:items-end px-2 gap-4 md:gap-0">
                     <div className="flex flex-col">
