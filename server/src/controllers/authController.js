@@ -165,11 +165,19 @@ export const updateProfile = async (req, res) => {
         const updatedUser = await prisma.user.update({
             where: { id: userId },
             data: updates,
+            include: { specialty: true } // Include specialty to return it
         });
 
         res.json({
             message: "Profil mis à jour avec succès.",
-            user: { id: updatedUser.id, email: updatedUser.email, name: updatedUser.name, role: updatedUser.role }
+            user: {
+                id: updatedUser.id,
+                email: updatedUser.email,
+                name: updatedUser.name,
+                role: updatedUser.role,
+                specialty: updatedUser.specialty, // Return full specialty object
+                onboardingCompleted: updatedUser.onboardingCompleted
+            }
         });
     } catch (error) {
         console.error("Update profile error:", error);

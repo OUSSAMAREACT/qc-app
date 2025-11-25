@@ -94,12 +94,12 @@ export default function PremiumBadge({ type, size = 64, className = '' }) {
                     y="62"
                     textAnchor="middle"
                     fill={colors.text}
-                    fontSize="24"
+                    fontSize="14"
                     fontWeight="bold"
                     filter="drop-shadow(0px 2px 2px rgba(0,0,0,0.3))"
-                    style={{ fontFamily: 'serif' }}
+                    style={{ fontFamily: 'serif', letterSpacing: '1px' }}
                 >
-                    {type === 'GOLD' ? '1' : type === 'SILVER' ? '2' : '3'}
+                    {type === 'GOLD' ? 'CHAMPION' : type === 'SILVER' ? 'MASTER' : 'ELITE'}
                 </text>
             </svg>
 
