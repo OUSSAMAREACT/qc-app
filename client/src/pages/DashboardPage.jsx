@@ -22,6 +22,10 @@ export default function DashboardPage() {
     const [categories, setCategories] = useState([]);
     const [activeExam, setActiveExam] = useState(null);
 
+    const [showAllSpecialty, setShowAllSpecialty] = useState(false);
+    const [showAllCommon, setShowAllCommon] = useState(false);
+    const INITIAL_DISPLAY_COUNT = 4;
+
     useEffect(() => {
         const hour = new Date().getHours();
         if (hour < 12) setGreeting('Bonjour');
@@ -93,6 +97,9 @@ export default function DashboardPage() {
         hidden: { y: 20, opacity: 0 },
         visible: { y: 0, opacity: 1 }
     };
+
+    const specialtyCategories = categories.filter(c => c.specialty);
+    const commonCategories = categories.filter(c => !c.specialty);
 
     return (
         <motion.div
@@ -179,32 +186,121 @@ export default function DashboardPage() {
                                     <Star className="text-yellow-500" size={24} /> Ma Spécialité : {user.specialty.name}
                                 </h2>
                                 <span className="text-sm text-gray-500 dark:text-gray-400 bg-white dark:bg-dark-card px-3 py-1 rounded-full border border-gray-200 dark:border-gray-700 shadow-sm">
-                                    {categories.filter(c => c.specialty).length} disponibles
+                                    {specialtyCategories.length} disponibles
                                 </span>
                             </div>
 
-                            {categories.filter(c => c.specialty).length === 0 ? (
+                            {specialtyCategories.length === 0 ? (
                                 <div className="text-center py-12 bg-white dark:bg-dark-card rounded-3xl border-2 border-dashed border-gray-200 dark:border-gray-700">
                                     <Star className="mx-auto text-gray-300 dark:text-gray-600 mb-4" size={48} />
                                     <p className="text-gray-500 dark:text-gray-400 font-medium">Aucun module de spécialité disponible pour le moment.</p>
                                 </div>
                             ) : (
+                                <>
+                                    <div className="grid sm:grid-cols-2 gap-6">
+                                        {specialtyCategories.slice(0, showAllSpecialty ? undefined : INITIAL_DISPLAY_COUNT).map((cat, index) => (
+                                            <motion.div
+                                                whileHover={{ y: -5 }}
+                                                key={cat.id}
+                                                className="group relative bg-white dark:bg-dark-card rounded-3xl shadow-sm hover:shadow-2xl hover:shadow-yellow-500/10 transition-all duration-300 border border-gray-100 dark:border-gray-700 overflow-hidden flex flex-col h-full"
+                                            >
+                                                {/* Gradient Header */}
+                                                <div className={`h-32 w-full bg-gradient-to-br from-yellow-500 to-orange-600 relative overflow-hidden`}>
+                                                    <div className="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors duration-300"></div>
+                                                    <div className="absolute -bottom-6 -right-6 text-white/20 transform rotate-12 group-hover:scale-110 group-hover:rotate-6 transition-transform duration-500">
+                                                        <Star size={120} />
+                                                    </div>
+                                                    <div className="absolute top-6 left-6">
+                                                        <span className="bg-white/20 backdrop-blur-md text-white text-xs font-bold px-3 py-1 rounded-full border border-white/20 shadow-sm">
+                                                            Spécialité
+                                                        </span>
+                                                    </div>
+                                                </div>
+
+                                                <div className="p-6 flex-1 flex flex-col relative">
+                                                    {/* Floating Icon */}
+                                                    <div className="absolute -top-10 left-6 w-16 h-16 bg-white dark:bg-gray-800 rounded-2xl shadow-lg flex items-center justify-center border-4 border-white dark:border-dark-card group-hover:scale-110 transition-transform duration-300">
+                                                        <div className="text-yellow-500">
+                                                            <Star size={32} className="text-gray-700 dark:text-white" />
+                                                        </div>
+                                                    </div>
+
+                                                    <div className="mt-8 mb-4">
+                                                        <h3 className="font-heading font-bold text-xl text-gray-900 dark:text-white group-hover:text-yellow-600 dark:group-hover:text-yellow-400 transition-colors line-clamp-2">
+                                                            {cat.name}
+                                                        </h3>
+                                                        <div className="flex items-center gap-2 mt-2 text-sm text-gray-500 dark:text-gray-400">
+                                                            <div className="flex items-center gap-1">
+                                                                <div className="w-2 h-2 rounded-full bg-green-500"></div>
+                                                                <span>{cat._count?.questions || 0} Questions</span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div className="mt-auto pt-4 border-t border-gray-100 dark:border-gray-700/50">
+                                                        <Link to={`/quiz?category=${encodeURIComponent(cat.name)}`}>
+                                                            <button className="w-full bg-gray-50 dark:bg-gray-800 hover:bg-gray-900 dark:hover:bg-gray-700 text-gray-900 dark:text-white hover:text-white py-3 rounded-xl font-bold transition-all flex items-center justify-between px-4 group/btn">
+                                                                <span>Commencer</span>
+                                                                <div className="w-8 h-8 rounded-full bg-white dark:bg-gray-700 group-hover/btn:bg-yellow-500 group-hover/btn:text-white flex items-center justify-center transition-colors shadow-sm">
+                                                                    <ArrowRight size={16} />
+                                                                </div>
+                                                            </button>
+                                                        </Link>
+                                                    </div>
+                                                </div>
+                                            </motion.div>
+                                        ))}
+                                    </div>
+                                    {specialtyCategories.length > INITIAL_DISPLAY_COUNT && (
+                                        <div className="flex justify-center">
+                                            <button
+                                                onClick={() => setShowAllSpecialty(!showAllSpecialty)}
+                                                className="text-primary-600 dark:text-primary-400 font-medium hover:underline flex items-center gap-1"
+                                            >
+                                                {showAllSpecialty ? 'Voir moins' : 'Tout voir'}
+                                                <ChevronRight size={16} className={`transform transition-transform ${showAllSpecialty ? 'rotate-90' : ''}`} />
+                                            </button>
+                                        </div>
+                                    )}
+                                </>
+                            )}
+                        </motion.div>
+                    )}
+
+                    {/* Common Modules */}
+                    <motion.div variants={itemVariants} className="space-y-6">
+                        <div className="flex items-center justify-between">
+                            <h2 className="text-xl font-heading font-bold text-gray-900 dark:text-white flex items-center gap-2">
+                                <BookOpen className="text-primary-600 dark:text-primary-400" size={24} /> Tronc Commun
+                            </h2>
+                            <span className="text-sm text-gray-500 dark:text-gray-400 bg-white dark:bg-dark-card px-3 py-1 rounded-full border border-gray-200 dark:border-gray-700 shadow-sm">
+                                {commonCategories.length} disponibles
+                            </span>
+                        </div>
+
+                        {commonCategories.length === 0 ? (
+                            <div className="text-center py-12 bg-white dark:bg-dark-card rounded-3xl border-2 border-dashed border-gray-200 dark:border-gray-700">
+                                <BookOpen className="mx-auto text-gray-300 dark:text-gray-600 mb-4" size={48} />
+                                <p className="text-gray-500 dark:text-gray-400 font-medium">Aucun module commun disponible pour le moment.</p>
+                            </div>
+                        ) : (
+                            <>
                                 <div className="grid sm:grid-cols-2 gap-6">
-                                    {categories.filter(c => c.specialty).map((cat, index) => (
+                                    {commonCategories.slice(0, showAllCommon ? undefined : INITIAL_DISPLAY_COUNT).map((cat, index) => (
                                         <motion.div
                                             whileHover={{ y: -5 }}
                                             key={cat.id}
-                                            className="group relative bg-white dark:bg-dark-card rounded-3xl shadow-sm hover:shadow-2xl hover:shadow-yellow-500/10 transition-all duration-300 border border-gray-100 dark:border-gray-700 overflow-hidden flex flex-col h-full"
+                                            className="group relative bg-white dark:bg-dark-card rounded-3xl shadow-sm hover:shadow-2xl hover:shadow-primary-500/10 transition-all duration-300 border border-gray-100 dark:border-gray-700 overflow-hidden flex flex-col h-full"
                                         >
                                             {/* Gradient Header */}
-                                            <div className={`h-32 w-full bg-gradient-to-br from-yellow-500 to-orange-600 relative overflow-hidden`}>
+                                            <div className={`h-32 w-full bg-gradient-to-br ${getCategoryGradient(index)} relative overflow-hidden`}>
                                                 <div className="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors duration-300"></div>
                                                 <div className="absolute -bottom-6 -right-6 text-white/20 transform rotate-12 group-hover:scale-110 group-hover:rotate-6 transition-transform duration-500">
-                                                    <Star size={120} />
+                                                    <BookOpen size={120} />
                                                 </div>
                                                 <div className="absolute top-6 left-6">
                                                     <span className="bg-white/20 backdrop-blur-md text-white text-xs font-bold px-3 py-1 rounded-full border border-white/20 shadow-sm">
-                                                        Spécialité
+                                                        Module Commun
                                                     </span>
                                                 </div>
                                             </div>
@@ -212,13 +308,13 @@ export default function DashboardPage() {
                                             <div className="p-6 flex-1 flex flex-col relative">
                                                 {/* Floating Icon */}
                                                 <div className="absolute -top-10 left-6 w-16 h-16 bg-white dark:bg-gray-800 rounded-2xl shadow-lg flex items-center justify-center border-4 border-white dark:border-dark-card group-hover:scale-110 transition-transform duration-300">
-                                                    <div className="text-yellow-500">
-                                                        <Star size={32} className="text-gray-700 dark:text-white" />
+                                                    <div className={`text-${getCategoryGradient(index).split('-')[1]}-500`}>
+                                                        <BookOpen size={32} className="text-gray-700 dark:text-white" />
                                                     </div>
                                                 </div>
 
                                                 <div className="mt-8 mb-4">
-                                                    <h3 className="font-heading font-bold text-xl text-gray-900 dark:text-white group-hover:text-yellow-600 dark:group-hover:text-yellow-400 transition-colors line-clamp-2">
+                                                    <h3 className="font-heading font-bold text-xl text-gray-900 dark:text-white group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors line-clamp-2">
                                                         {cat.name}
                                                     </h3>
                                                     <div className="flex items-center gap-2 mt-2 text-sm text-gray-500 dark:text-gray-400">
@@ -233,7 +329,7 @@ export default function DashboardPage() {
                                                     <Link to={`/quiz?category=${encodeURIComponent(cat.name)}`}>
                                                         <button className="w-full bg-gray-50 dark:bg-gray-800 hover:bg-gray-900 dark:hover:bg-gray-700 text-gray-900 dark:text-white hover:text-white py-3 rounded-xl font-bold transition-all flex items-center justify-between px-4 group/btn">
                                                             <span>Commencer</span>
-                                                            <div className="w-8 h-8 rounded-full bg-white dark:bg-gray-700 group-hover/btn:bg-yellow-500 group-hover/btn:text-white flex items-center justify-center transition-colors shadow-sm">
+                                                            <div className="w-8 h-8 rounded-full bg-white dark:bg-gray-700 group-hover/btn:bg-primary-500 group-hover/btn:text-white flex items-center justify-center transition-colors shadow-sm">
                                                                 <ArrowRight size={16} />
                                                             </div>
                                                         </button>
@@ -243,81 +339,18 @@ export default function DashboardPage() {
                                         </motion.div>
                                     ))}
                                 </div>
-                            )}
-                        </motion.div>
-                    )}
-
-                    {/* Common Modules */}
-                    <motion.div variants={itemVariants} className="space-y-6">
-                        <div className="flex items-center justify-between">
-                            <h2 className="text-xl font-heading font-bold text-gray-900 dark:text-white flex items-center gap-2">
-                                <BookOpen className="text-primary-600 dark:text-primary-400" size={24} /> Tronc Commun
-                            </h2>
-                            <span className="text-sm text-gray-500 dark:text-gray-400 bg-white dark:bg-dark-card px-3 py-1 rounded-full border border-gray-200 dark:border-gray-700 shadow-sm">
-                                {categories.filter(c => !c.specialty).length} disponibles
-                            </span>
-                        </div>
-
-                        {categories.filter(c => !c.specialty).length === 0 ? (
-                            <div className="text-center py-12 bg-white dark:bg-dark-card rounded-3xl border-2 border-dashed border-gray-200 dark:border-gray-700">
-                                <BookOpen className="mx-auto text-gray-300 dark:text-gray-600 mb-4" size={48} />
-                                <p className="text-gray-500 dark:text-gray-400 font-medium">Aucun module commun disponible pour le moment.</p>
-                            </div>
-                        ) : (
-                            <div className="grid sm:grid-cols-2 gap-6">
-                                {categories.filter(c => !c.specialty).map((cat, index) => (
-                                    <motion.div
-                                        whileHover={{ y: -5 }}
-                                        key={cat.id}
-                                        className="group relative bg-white dark:bg-dark-card rounded-3xl shadow-sm hover:shadow-2xl hover:shadow-primary-500/10 transition-all duration-300 border border-gray-100 dark:border-gray-700 overflow-hidden flex flex-col h-full"
-                                    >
-                                        {/* Gradient Header */}
-                                        <div className={`h-32 w-full bg-gradient-to-br ${getCategoryGradient(index)} relative overflow-hidden`}>
-                                            <div className="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors duration-300"></div>
-                                            <div className="absolute -bottom-6 -right-6 text-white/20 transform rotate-12 group-hover:scale-110 group-hover:rotate-6 transition-transform duration-500">
-                                                <BookOpen size={120} />
-                                            </div>
-                                            <div className="absolute top-6 left-6">
-                                                <span className="bg-white/20 backdrop-blur-md text-white text-xs font-bold px-3 py-1 rounded-full border border-white/20 shadow-sm">
-                                                    Module Commun
-                                                </span>
-                                            </div>
-                                        </div>
-
-                                        <div className="p-6 flex-1 flex flex-col relative">
-                                            {/* Floating Icon */}
-                                            <div className="absolute -top-10 left-6 w-16 h-16 bg-white dark:bg-gray-800 rounded-2xl shadow-lg flex items-center justify-center border-4 border-white dark:border-dark-card group-hover:scale-110 transition-transform duration-300">
-                                                <div className={`text-${getCategoryGradient(index).split('-')[1]}-500`}>
-                                                    <BookOpen size={32} className="text-gray-700 dark:text-white" />
-                                                </div>
-                                            </div>
-
-                                            <div className="mt-8 mb-4">
-                                                <h3 className="font-heading font-bold text-xl text-gray-900 dark:text-white group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors line-clamp-2">
-                                                    {cat.name}
-                                                </h3>
-                                                <div className="flex items-center gap-2 mt-2 text-sm text-gray-500 dark:text-gray-400">
-                                                    <div className="flex items-center gap-1">
-                                                        <div className="w-2 h-2 rounded-full bg-green-500"></div>
-                                                        <span>{cat._count?.questions || 0} Questions</span>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <div className="mt-auto pt-4 border-t border-gray-100 dark:border-gray-700/50">
-                                                <Link to={`/quiz?category=${encodeURIComponent(cat.name)}`}>
-                                                    <button className="w-full bg-gray-50 dark:bg-gray-800 hover:bg-gray-900 dark:hover:bg-gray-700 text-gray-900 dark:text-white hover:text-white py-3 rounded-xl font-bold transition-all flex items-center justify-between px-4 group/btn">
-                                                        <span>Commencer</span>
-                                                        <div className="w-8 h-8 rounded-full bg-white dark:bg-gray-700 group-hover/btn:bg-primary-500 group-hover/btn:text-white flex items-center justify-center transition-colors shadow-sm">
-                                                            <ArrowRight size={16} />
-                                                        </div>
-                                                    </button>
-                                                </Link>
-                                            </div>
-                                        </div>
-                                    </motion.div>
-                                ))}
-                            </div>
+                                {commonCategories.length > INITIAL_DISPLAY_COUNT && (
+                                    <div className="flex justify-center">
+                                        <button
+                                            onClick={() => setShowAllCommon(!showAllCommon)}
+                                            className="text-primary-600 dark:text-primary-400 font-medium hover:underline flex items-center gap-1"
+                                        >
+                                            {showAllCommon ? 'Voir moins' : 'Tout voir'}
+                                            <ChevronRight size={16} className={`transform transition-transform ${showAllCommon ? 'rotate-90' : ''}`} />
+                                        </button>
+                                    </div>
+                                )}
+                            </>
                         )}
                     </motion.div>
                 </div>
