@@ -144,7 +144,7 @@ export default function OnboardingWizard() {
                                     <input
                                         type="range"
                                         min="15"
-                                        max="120"
+                                        max="300"
                                         step="15"
                                         value={formData.studyMinutesPerDay}
                                         onChange={(e) => setFormData({ ...formData, studyMinutesPerDay: parseInt(e.target.value) })}
@@ -153,8 +153,8 @@ export default function OnboardingWizard() {
 
                                     <div className="flex justify-between text-xs text-gray-400">
                                         <span>15 min</span>
-                                        <span>1h</span>
-                                        <span>2h</span>
+                                        <span>2h30</span>
+                                        <span>5h</span>
                                     </div>
 
                                     <div className="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-xl border border-blue-100 dark:border-blue-800">
