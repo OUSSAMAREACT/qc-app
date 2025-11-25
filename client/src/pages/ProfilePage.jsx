@@ -76,32 +76,39 @@ export default function ProfilePage() {
             className="max-w-5xl mx-auto space-y-8"
         >
             {/* Header Section with Cover */}
-            <motion.div variants={itemVariants} className="relative mb-20">
+            <motion.div variants={itemVariants} className="relative mb-8">
                 <div className="h-48 md:h-64 bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 rounded-3xl shadow-lg overflow-hidden relative">
                     <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10"></div>
                     <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent"></div>
                 </div>
 
-                <div className="absolute -bottom-16 left-8 md:left-12 flex items-end gap-6">
+                {/* Avatar - Overlapping */}
+                <div className="absolute -bottom-12 left-8 md:left-12">
                     <div className="w-32 h-32 md:w-40 md:h-40 rounded-3xl bg-white dark:bg-gray-800 p-2 shadow-xl ring-4 ring-white/50 dark:ring-gray-700/50 backdrop-blur-sm">
                         <div className="w-full h-full bg-gradient-to-br from-primary-500 to-primary-700 rounded-2xl flex items-center justify-center text-white text-5xl md:text-6xl font-bold shadow-inner">
                             {user?.name?.charAt(0).toUpperCase()}
                         </div>
                     </div>
-                    <div className="mb-4">
-                        <h1 className="text-3xl md:text-4xl font-heading font-bold text-gray-900 dark:text-white drop-shadow-sm">
-                            {user?.name}
-                        </h1>
-                        <div className="flex items-center gap-2 text-gray-600 dark:text-gray-300 font-medium bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm px-3 py-1 rounded-full shadow-sm w-fit mt-2">
+                </div>
+            </motion.div>
+
+            {/* User Info - Below Cover */}
+            <motion.div variants={itemVariants} className="px-8 md:px-12 pb-4 flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
+                <div className="mt-4 md:mt-0 md:pl-44"> {/* Offset for avatar width + gap */}
+                    <h1 className="text-3xl md:text-4xl font-heading font-bold text-gray-900 dark:text-white">
+                        {user?.name}
+                    </h1>
+                    <div className="flex flex-wrap items-center gap-2 text-gray-600 dark:text-gray-300 font-medium mt-2">
+                        <div className="flex items-center gap-2 bg-white dark:bg-gray-800 px-3 py-1 rounded-full shadow-sm border border-gray-100 dark:border-gray-700">
                             <Award size={16} className="text-yellow-500" />
                             <span>{user?.role === 'ADMIN' ? 'Administrateur' : 'Étudiant'}</span>
-                            {user?.specialty && (
-                                <>
-                                    <span className="w-1 h-1 bg-gray-400 rounded-full"></span>
-                                    <span>{user.specialty.name}</span>
-                                </>
-                            )}
                         </div>
+                        {user?.specialty && (
+                            <div className="flex items-center gap-2 bg-white dark:bg-gray-800 px-3 py-1 rounded-full shadow-sm border border-gray-100 dark:border-gray-700">
+                                <span className="w-2 h-2 bg-primary-500 rounded-full"></span>
+                                <span>{user.specialty.name}</span>
+                            </div>
+                        )}
                     </div>
                 </div>
             </motion.div>
