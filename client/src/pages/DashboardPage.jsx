@@ -267,7 +267,7 @@ export default function DashboardPage() {
                     <motion.div variants={itemVariants} className="space-y-6">
                         <div className="flex items-center justify-between">
                             <h2 className="text-xl font-heading font-bold text-gray-900 dark:text-white flex items-center gap-2">
-                                <BookOpen className="text-primary-600 dark:text-primary-400" size={24} /> Tronc Commun
+                                <BookOpen className="text-primary-600 dark:text-primary-400" size={24} /> Commun
                             </h2>
                             <span className="text-sm text-gray-500 dark:text-gray-400 bg-white dark:bg-dark-card px-3 py-1 rounded-full border border-gray-200 dark:border-gray-700 shadow-sm">
                                 {commonCategories.length} disponibles

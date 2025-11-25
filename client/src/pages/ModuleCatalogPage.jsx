@@ -16,6 +16,11 @@ export default function ModuleCatalogPage() {
 
     const isSpecialty = type === 'specialty';
 
+    // Scroll to top on mount or type change
+    useEffect(() => {
+        window.scrollTo(0, 0);
+    }, [type]);
+
     useEffect(() => {
         fetchCategories();
     }, [type]);
@@ -103,14 +108,14 @@ export default function ModuleCatalogPage() {
                         ) : (
                             <>
                                 <BookOpen className="text-primary-600 dark:text-primary-400" size={32} />
-                                Tronc Commun
+                                Commun
                             </>
                         )}
                     </h1>
                     <p className="text-gray-500 dark:text-gray-400 mt-2 text-lg">
                         {isSpecialty
                             ? `Explorez tous les modules dédiés à votre spécialité : ${user?.specialty?.name || 'Non définie'}`
-                            : "Accédez à l'ensemble des modules du tronc commun."}
+                            : "Accédez à l'ensemble des modules du commun."}
                     </p>
                 </div>
             </div>
