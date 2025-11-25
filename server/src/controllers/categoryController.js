@@ -12,8 +12,8 @@ export const getCategories = async (req, res) => {
         const where = {};
         if (user.role !== 'ADMIN') {
             where.OR = [
-                { specialty: null }, // Common modules
-                { specialty: user.specialty } // User's specialty
+                { specialtyId: null }, // Common modules
+                { specialtyId: user.specialtyId } // User's specialty
             ];
         }
 
@@ -22,10 +22,20 @@ export const getCategories = async (req, res) => {
             include: {
                 _count: {
                     select: { questions: true }
-                }
-            }
+                },
+                specialty: true // Include specialty details
+            },
+            orderBy: { name: 'asc' } // Sort alphabetically
         });
-        res.json(categories);
+
+        // Flatten specialty name for frontend compatibility if needed, or frontend adapts
+        const formattedCategories = categories.map(cat => ({
+            ...cat,
+            specialty: cat.specialty?.name || null,
+            specialtyId: cat.specialtyId
+        }));
+
+        res.json(formattedCategories);
     } catch (error) {
         console.error("Get categories error:", error);
         res.status(500).json({ message: "Erreur lors de la récupération des catégories." });
@@ -34,14 +44,23 @@ export const getCategories = async (req, res) => {
 
 export const createCategory = async (req, res) => {
     try {
-        const { name, specialty } = req.body;
+        const { name, specialtyId } = req.body;
         if (!name) return res.status(400).json({ message: "Le nom est requis." });
 
         const category = await prisma.category.create({
-            data: { name, specialty: specialty || null }
+            data: {
+                name,
+                specialtyId: specialtyId ? parseInt(specialtyId) : null
+            },
+            include: { specialty: true }
         });
         console.log("Category created:", category);
-        res.status(201).json(category);
+
+        // Format response
+        res.status(201).json({
+            ...category,
+            specialty: category.specialty?.name || null
+        });
     } catch (error) {
         console.error("Create category error:", error);
         if (error.code === 'P2002') {
@@ -54,14 +73,22 @@ export const createCategory = async (req, res) => {
 export const updateCategory = async (req, res) => {
     try {
         const { id } = req.params;
-        const { name, specialty } = req.body;
+        const { name, specialtyId } = req.body;
         if (!name) return res.status(400).json({ message: "Le nom est requis." });
 
         const category = await prisma.category.update({
             where: { id: parseInt(id) },
-            data: { name, specialty: specialty || null }
+            data: {
+                name,
+                specialtyId: specialtyId ? parseInt(specialtyId) : null
+            },
+            include: { specialty: true }
         });
-        res.json(category);
+
+        res.json({
+            ...category,
+            specialty: category.specialty?.name || null
+        });
     } catch (error) {
         console.error("Update category error:", error);
         if (error.code === 'P2002') {

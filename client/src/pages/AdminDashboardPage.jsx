@@ -5,6 +5,7 @@ import { Card } from '../components/ui/Card';
 import { Input } from '../components/ui/Input';
 import QuestionForm from '../components/QuestionForm';
 import CategoryManager from '../components/CategoryManager';
+import SpecialtyManager from '../components/SpecialtyManager';
 import { Plus, Edit, Trash2, ArrowLeft, Search } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
@@ -111,6 +112,15 @@ export default function AdminDashboardPage() {
                     >
                         Catégories
                     </button>
+                    <button
+                        className={`px-4 py-2 rounded-md text-sm font-medium transition-all duration-200 ${view === 'specialties'
+                            ? 'bg-white dark:bg-gray-600 text-blue-600 dark:text-blue-300 shadow-sm'
+                            : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200'
+                            }`}
+                        onClick={() => setView('specialties')}
+                    >
+                        Spécialités
+                    </button>
                 </div>
             </header>
 
@@ -118,6 +128,10 @@ export default function AdminDashboardPage() {
                 {view === 'categories' ? (
                     <div className="flex-1 p-6 overflow-auto">
                         <CategoryManager />
+                    </div>
+                ) : view === 'specialties' ? (
+                    <div className="flex-1 p-6 overflow-auto">
+                        <SpecialtyManager />
                     </div>
                 ) : (
                     <>

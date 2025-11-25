@@ -5,6 +5,7 @@ import authRoutes from './routes/auth.js';
 import questionRoutes from './routes/questions.js';
 import quizRoutes from './routes/quiz.js';
 import categoryRoutes from './routes/categories.js';
+import specialtyRoutes from './routes/specialtyRoutes.js';
 
 dotenv.config();
 
@@ -26,6 +27,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/questions', questionRoutes);
 app.use('/api/quiz', quizRoutes);
 app.use('/api/categories', categoryRoutes);
+app.use('/api/specialties', specialtyRoutes);
 
 app.get('/', (req, res) => {
     res.send('Quiz API is running');

@@ -18,9 +18,21 @@ export default function CategoryManager() {
 
     const [editingCategory, setEditingCategory] = useState(null);
 
+    const [specialties, setSpecialties] = useState([]);
+
     useEffect(() => {
         fetchCategories();
+        fetchSpecialties();
     }, []);
+
+    const fetchSpecialties = async () => {
+        try {
+            const res = await axios.get('/specialties');
+            setSpecialties(res.data);
+        } catch (error) {
+            console.error("Failed to fetch specialties", error);
+        }
+    };
 
     const fetchCategories = async () => {
         try {
@@ -38,9 +50,9 @@ export default function CategoryManager() {
         setLoading(true);
         try {
             if (editingCategory) {
-                await axios.put(`/categories/${editingCategory.id}`, { name: newCategory, specialty: specialty || null });
+                await axios.put(`/categories/${editingCategory.id}`, { name: newCategory, specialtyId: specialty || null });
             } else {
-                await axios.post('/categories', { name: newCategory, specialty: specialty || null });
+                await axios.post('/categories', { name: newCategory, specialtyId: specialty || null });
             }
             setNewCategory('');
             setSpecialty('');
@@ -58,7 +70,7 @@ export default function CategoryManager() {
     const startEdit = (category) => {
         setEditingCategory(category);
         setNewCategory(category.name);
-        setSpecialty(category.specialty || '');
+        setSpecialty(category.specialtyId || '');
     };
 
     const cancelEdit = () => {
@@ -105,14 +117,9 @@ export default function CategoryManager() {
                         className="px-4 py-2 rounded-lg border bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 focus:bg-white dark:focus:bg-gray-600 transition-colors text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 outline-none"
                     >
                         <option value="">Commun (Tous)</option>
-                        <option value="POLYVALENT">Polyvalent</option>
-                        <option value="ANESTHESIE">Anesthésie</option>
-                        <option value="RADIOLOGIE">Radiologie</option>
-                        <option value="KINESITHERAPIE">Kinésithérapie</option>
-                        <option value="SANTE_MENTALE">Santé Mentale</option>
-                        <option value="LABORATOIRE">Laboratoire</option>
-                        <option value="SAGE_FEMME">Sage Femme</option>
-                        <option value="ASSISTANTE_SOCIALE">Assistante Sociale</option>
+                        {specialties.map((s) => (
+                            <option key={s.id} value={s.id}>{s.name}</option>
+                        ))}
                     </select>
                     {editingCategory ? (
                         <div className="flex gap-2">

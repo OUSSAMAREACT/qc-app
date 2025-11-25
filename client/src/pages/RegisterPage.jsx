@@ -87,46 +87,6 @@ export default function RegisterPage() {
                     <form onSubmit={handleSubmit} className="space-y-5">
                         <Input
                             label="Nom complet"
-                            type="text"
-                            placeholder="Votre nom"
-                            value={name}
-                            onChange={(e) => setName(e.target.value)}
-                            required
-                            className="bg-gray-50 dark:bg-gray-700 border-gray-200 dark:border-gray-600 focus:bg-white dark:focus:bg-gray-600 transition-colors text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500"
-                        />
-                        <Input
-                            label="Adresse e-mail"
-                            type="email"
-                            placeholder="exemple@email.com"
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
-                            required
-                            className="bg-gray-50 dark:bg-gray-700 border-gray-200 dark:border-gray-600 focus:bg-white dark:focus:bg-gray-600 transition-colors text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500"
-                        />
-
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Spécialité</label>
-                            <select
-                                value={specialty}
-                                onChange={(e) => setSpecialty(e.target.value)}
-                                required
-                                className="w-full px-4 py-2 rounded-lg border bg-gray-50 dark:bg-gray-700 border-gray-200 dark:border-gray-600 focus:bg-white dark:focus:bg-gray-600 transition-colors text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 outline-none"
-                            >
-                                <option value="" disabled>Choisir votre spécialité</option>
-                                <option value="POLYVALENT">Infirmier Polyvalent</option>
-                                <option value="ANESTHESIE">Anesthésie Réanimation</option>
-                                <option value="RADIOLOGIE">Radiologie</option>
-                                <option value="KINESITHERAPIE">Kinésithérapie</option>
-                                <option value="SANTE_MENTALE">Santé Mentale</option>
-                                <option value="LABORATOIRE">Laboratoire</option>
-                                <option value="SAGE_FEMME">Sage Femme</option>
-                                <option value="ASSISTANTE_SOCIALE">Assistante Sociale</option>
-                            </select>
-                        </div>
-                        <Input
-                            label="Mot de passe"
-                            type={showPassword ? "text" : "password"}
-                            placeholder="••••••••"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
                             required

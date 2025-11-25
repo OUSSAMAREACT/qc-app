@@ -125,7 +125,7 @@ export default function DashboardPage() {
                         </div>
 
                         {/* Specialty Modules */}
-                        {user.specialty && (
+                        {user.specialty && categories.filter(c => c.specialty === user.specialty).length > 0 && (
                             <div className="space-y-6">
                                 <div className="flex items-center justify-between">
                                     <h2 className="text-xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
@@ -136,37 +136,31 @@ export default function DashboardPage() {
                                     </span>
                                 </div>
 
-                                {categories.filter(c => c.specialty === user.specialty).length === 0 ? (
-                                    <div className="text-center py-8 bg-white dark:bg-gray-800 rounded-2xl border border-dashed border-gray-300 dark:border-gray-700">
-                                        <p className="text-gray-500 dark:text-gray-400">Aucun module de spécialité disponible.</p>
-                                    </div>
-                                ) : (
-                                    <div className="grid sm:grid-cols-2 gap-5">
-                                        {categories.filter(c => c.specialty === user.specialty).map((cat, index) => (
-                                            <div key={cat.id} className="group relative bg-white dark:bg-gray-800 rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 border border-gray-100 dark:border-gray-700 overflow-hidden flex flex-col">
-                                                <div className={`h-2 w-full bg-gradient-to-r ${getCategoryGradient(index + 5)}`} />
-                                                <div className="p-6 flex-1 flex flex-col">
-                                                    <div className="flex justify-between items-start mb-4">
-                                                        <h3 className="font-bold text-lg text-gray-900 dark:text-white group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors">
-                                                            {cat.name}
-                                                        </h3>
-                                                        <span className="bg-gray-50 dark:bg-gray-700 text-gray-600 dark:text-gray-300 text-xs font-medium px-2.5 py-1 rounded-full border border-gray-100 dark:border-gray-600">
-                                                            {cat._count?.questions || 0} Q
-                                                        </span>
-                                                    </div>
+                                <div className="grid sm:grid-cols-2 gap-5">
+                                    {categories.filter(c => c.specialty === user.specialty).map((cat, index) => (
+                                        <div key={cat.id} className="group relative bg-white dark:bg-gray-800 rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 border border-gray-100 dark:border-gray-700 overflow-hidden flex flex-col">
+                                            <div className={`h-2 w-full bg-gradient-to-r ${getCategoryGradient(index + 5)}`} />
+                                            <div className="p-6 flex-1 flex flex-col">
+                                                <div className="flex justify-between items-start mb-4">
+                                                    <h3 className="font-bold text-lg text-gray-900 dark:text-white group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors">
+                                                        {cat.name}
+                                                    </h3>
+                                                    <span className="bg-gray-50 dark:bg-gray-700 text-gray-600 dark:text-gray-300 text-xs font-medium px-2.5 py-1 rounded-full border border-gray-100 dark:border-gray-600">
+                                                        {cat._count?.questions || 0} Q
+                                                    </span>
+                                                </div>
 
-                                                    <div className="mt-auto pt-4">
-                                                        <Link to={`/quiz?category=${encodeURIComponent(cat.name)}`}>
-                                                            <Button className="w-full bg-gray-900 dark:bg-gray-700 hover:bg-emerald-600 dark:hover:bg-emerald-500 text-white transition-colors flex items-center justify-center gap-2 group-hover:shadow-lg group-hover:shadow-emerald-500/20 cursor-pointer">
-                                                                <Play size={16} fill="currentColor" /> Commencer
-                                                            </Button>
-                                                        </Link>
-                                                    </div>
+                                                <div className="mt-auto pt-4">
+                                                    <Link to={`/quiz?category=${encodeURIComponent(cat.name)}`}>
+                                                        <Button className="w-full bg-gray-900 dark:bg-gray-700 hover:bg-emerald-600 dark:hover:bg-emerald-500 text-white transition-colors flex items-center justify-center gap-2 group-hover:shadow-lg group-hover:shadow-emerald-500/20 cursor-pointer">
+                                                            <Play size={16} fill="currentColor" /> Commencer
+                                                        </Button>
+                                                    </Link>
                                                 </div>
                                             </div>
-                                        ))}
-                                    </div>
-                                )}
+                                        </div>
+                                    ))}
+                                </div>
                             </div>
                         )}
                     </div>

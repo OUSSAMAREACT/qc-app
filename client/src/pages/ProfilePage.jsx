@@ -85,8 +85,13 @@ export default function ProfilePage() {
                             <h2 className="text-2xl font-bold text-gray-900 dark:text-white">{user?.name}</h2>
                             <p className="text-gray-500 dark:text-gray-400">{user?.email}</p>
                             <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 mt-2">
-                                <Shield size={12} /> {user?.role}
+                                <Shield size={12} /> {user?.role === 'ADMIN' ? 'Administrateur' : 'Étudiant'}
                             </span>
+                            {user?.specialty && (
+                                <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 mt-2 ml-2">
+                                    {user.specialty}
+                                </span>
+                            )}
                         </div>
                     </div>
 
@@ -116,6 +121,24 @@ export default function ProfilePage() {
                                     />
                                 </div>
                             </div>
+
+                            {user?.specialty && (
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Spécialité</label>
+                                    <div className="relative">
+                                        <div className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
+                                            <Shield size={18} />
+                                        </div>
+                                        <input
+                                            type="text"
+                                            value={user.specialty}
+                                            disabled
+                                            className="w-full pl-10 pr-4 py-3 md:py-2 border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-500 dark:text-gray-400 rounded-lg cursor-not-allowed"
+                                        />
+                                    </div>
+                                    <p className="text-xs text-gray-500 mt-1">La spécialité ne peut pas être modifiée.</p>
+                                </div>
+                            )}
                         </div>
 
                         {/* Password Section */}

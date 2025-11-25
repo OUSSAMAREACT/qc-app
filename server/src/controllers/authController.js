@@ -4,7 +4,7 @@ import jwt from 'jsonwebtoken';
 
 export const register = async (req, res) => {
     try {
-        const { email, password, name, specialty } = req.body;
+        const { email, password, name, specialtyId } = req.body;
 
         // Check if user exists
         const existingUser = await prisma.user.findUnique({ where: { email } });
@@ -28,8 +28,9 @@ export const register = async (req, res) => {
                 password: hashedPassword,
                 name,
                 role: "STUDENT",
-                specialty,
+                specialtyId: specialtyId ? parseInt(specialtyId) : null,
             },
+            include: { specialty: true }
         });
 
         // Generate token
@@ -39,7 +40,7 @@ export const register = async (req, res) => {
 
         res.status(201).json({
             token,
-            user: { id: user.id, email: user.email, name: user.name, role: user.role, specialty: user.specialty }
+            user: { id: user.id, email: user.email, name: user.name, role: user.role, specialty: user.specialty?.name }
         });
     } catch (error) {
         console.error("Register error:", error);
@@ -52,7 +53,10 @@ export const login = async (req, res) => {
         const { email, password } = req.body;
 
         // Find user
-        const user = await prisma.user.findUnique({ where: { email } });
+        const user = await prisma.user.findUnique({
+            where: { email },
+            include: { specialty: true }
+        });
         if (!user) {
             return res.status(400).json({ message: "Email ou mot de passe incorrect." });
         }
@@ -68,7 +72,7 @@ export const login = async (req, res) => {
             expiresIn: '7d',
         });
 
-        res.json({ token, user: { id: user.id, email: user.email, name: user.name, role: user.role, specialty: user.specialty } });
+        res.json({ token, user: { id: user.id, email: user.email, name: user.name, role: user.role, specialty: user.specialty?.name } });
     } catch (error) {
         console.error("Login error:", error);
         res.status(500).json({ message: "Erreur lors de la connexion." });
@@ -77,11 +81,14 @@ export const login = async (req, res) => {
 
 export const getMe = async (req, res) => {
     try {
-        const user = await prisma.user.findUnique({ where: { id: req.user.userId } });
+        const user = await prisma.user.findUnique({
+            where: { id: req.user.userId },
+            include: { specialty: true }
+        });
         if (!user) {
             return res.status(404).json({ message: "Utilisateur non trouvé." });
         }
-        res.json({ user: { id: user.id, email: user.email, name: user.name, role: user.role, specialty: user.specialty } });
+        res.json({ user: { id: user.id, email: user.email, name: user.name, role: user.role, specialty: user.specialty?.name } });
     } catch (error) {
         res.status(500).json({ message: "Erreur serveur." });
     }
