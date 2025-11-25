@@ -1,11 +1,11 @@
 import express from 'express';
-import { authenticateToken, isAdmin } from '../middleware/auth.js';
+import { authenticateToken, requireAdmin } from '../middleware/authMiddleware.js';
 import * as userController from '../controllers/userController.js';
 
 const router = express.Router();
 
 // All routes require admin authentication
-router.use(authenticateToken, isAdmin);
+router.use(authenticateToken, requireAdmin);
 
 router.get('/', userController.getUsers);
 router.put('/:id', userController.updateUser);
