@@ -14,6 +14,7 @@ import WeeklyExamPage from './pages/WeeklyExamPage';
 import LeaderboardPage from './pages/LeaderboardPage';
 import ProtectedRoute from './components/ProtectedRoute';
 import Layout from './components/Layout';
+import OnboardingWizard from './components/OnboardingWizard';
 
 function App() {
   return (
@@ -23,6 +24,12 @@ function App() {
           <Routes>
             <Route path="/login" element={<LoginPage />} />
             <Route path="/register" element={<RegisterPage />} />
+
+            <Route path="/onboarding" element={
+              <ProtectedRoute>
+                <OnboardingWizard />
+              </ProtectedRoute>
+            } />
 
             <Route path="/dashboard" element={
               <ProtectedRoute>

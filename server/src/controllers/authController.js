@@ -40,7 +40,14 @@ export const register = async (req, res) => {
 
         res.status(201).json({
             token,
-            user: { id: user.id, email: user.email, name: user.name, role: user.role, specialty: user.specialty?.name }
+            user: {
+                id: user.id,
+                email: user.email,
+                name: user.name,
+                role: user.role,
+                specialty: user.specialty?.name,
+                onboardingCompleted: user.onboardingCompleted
+            }
         });
     } catch (error) {
         console.error("Register error:", error);
@@ -72,7 +79,17 @@ export const login = async (req, res) => {
             expiresIn: '7d',
         });
 
-        res.json({ token, user: { id: user.id, email: user.email, name: user.name, role: user.role, specialty: user.specialty?.name } });
+        res.json({
+            token,
+            user: {
+                id: user.id,
+                email: user.email,
+                name: user.name,
+                role: user.role,
+                specialty: user.specialty?.name,
+                onboardingCompleted: user.onboardingCompleted
+            }
+        });
     } catch (error) {
         console.error("Login error:", error);
         res.status(500).json({ message: "Erreur lors de la connexion." });
@@ -88,7 +105,17 @@ export const getMe = async (req, res) => {
         if (!user) {
             return res.status(404).json({ message: "Utilisateur non trouvé." });
         }
-        res.json({ user: { id: user.id, email: user.email, name: user.name, role: user.role, specialty: user.specialty?.name, badges: user.badges } });
+        res.json({
+            user: {
+                id: user.id,
+                email: user.email,
+                name: user.name,
+                role: user.role,
+                specialty: user.specialty?.name,
+                badges: user.badges,
+                onboardingCompleted: user.onboardingCompleted
+            }
+        });
     } catch (error) {
         res.status(500).json({ message: "Erreur serveur." });
     }

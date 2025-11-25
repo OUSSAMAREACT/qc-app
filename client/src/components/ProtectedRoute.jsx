@@ -1,9 +1,10 @@
 import React from 'react';
-import { Navigate } from 'react-router-dom';
+import { Navigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
 export default function ProtectedRoute({ children, requireAdmin }) {
     const { user, loading } = useAuth();
+    const location = useLocation();
 
     if (loading) {
         return <div className="min-h-screen flex items-center justify-center">Chargement...</div>;
@@ -11,6 +12,15 @@ export default function ProtectedRoute({ children, requireAdmin }) {
 
     if (!user) {
         return <Navigate to="/login" />;
+    }
+
+    // Onboarding Check
+    if (!user.onboardingCompleted && location.pathname !== '/onboarding' && !requireAdmin) {
+        return <Navigate to="/onboarding" />;
+    }
+
+    if (user.onboardingCompleted && location.pathname === '/onboarding') {
+        return <Navigate to="/dashboard" />;
     }
 
     if (requireAdmin && user.role !== 'ADMIN') {

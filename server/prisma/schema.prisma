@@ -35,6 +35,11 @@ model User {
   longestStreak Int      @default(0)
   lastStudyDate DateTime?
   weeklyProgress WeeklyProgress[]
+
+  // Onboarding
+  onboardingCompleted Boolean  @default(false)
+  examDate            DateTime?
+  studyMinutesPerDay  Int?
 }
 
 model WeeklyProgress {
