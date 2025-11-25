@@ -45,7 +45,7 @@ export const register = async (req, res) => {
                 email: user.email,
                 name: user.name,
                 role: user.role,
-                specialty: user.specialty?.name,
+                specialty: user.specialty,
                 onboardingCompleted: user.onboardingCompleted
             }
         });
@@ -86,7 +86,7 @@ export const login = async (req, res) => {
                 email: user.email,
                 name: user.name,
                 role: user.role,
-                specialty: user.specialty?.name,
+                specialty: user.specialty,
                 onboardingCompleted: user.onboardingCompleted
             }
         });
@@ -111,7 +111,7 @@ export const getMe = async (req, res) => {
                 email: user.email,
                 name: user.name,
                 role: user.role,
-                specialty: user.specialty?.name,
+                specialty: user.specialty,
                 badges: user.badges,
                 onboardingCompleted: user.onboardingCompleted
             }
