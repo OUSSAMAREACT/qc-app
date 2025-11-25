@@ -8,6 +8,7 @@ import { useAuth } from '../context/AuthContext';
 import CommonModulesView from '../components/admin/CommonModulesView';
 import SpecialtyView from '../components/admin/SpecialtyView';
 import CategoryDetailView from '../components/admin/CategoryDetailView';
+import WeeklyExamManager from '../components/admin/WeeklyExamManager';
 
 export default function AdminDashboardPage() {
     const { logout } = useAuth();
@@ -39,6 +40,8 @@ export default function AdminDashboardPage() {
                 return <CommonModulesView onSelectCategory={handleCategorySelect} />;
             case 'specialties':
                 return <SpecialtyView onSelectCategory={handleCategorySelect} />;
+            case 'weekly-exams':
+                return <WeeklyExamManager />;
             case 'users':
                 return <div className="p-8 text-center text-gray-500">Gestion des utilisateurs (Bientôt disponible)</div>;
             default:
@@ -76,6 +79,12 @@ export default function AdminDashboardPage() {
                         onClick={() => { setCurrentView('specialties'); setSelectedCategory(null); }}
                     />
                     <SidebarItem
+                        icon={<Award size={20} />} // Reusing Award icon for now, or maybe Trophy
+                        label="Partie Commune"
+                        isActive={currentView === 'weekly-exams'}
+                        onClick={() => { setCurrentView('weekly-exams'); setSelectedCategory(null); }}
+                    />
+                    <SidebarItem
                         icon={<Users size={20} />}
                         label="Utilisateurs"
                         isActive={currentView === 'users'}
@@ -110,8 +119,8 @@ function SidebarItem({ icon, label, isActive, onClick }) {
         <button
             onClick={onClick}
             className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200 ${isActive
-                    ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300 shadow-sm'
-                    : 'text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-white'
+                ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300 shadow-sm'
+                : 'text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-white'
                 }`}
         >
             {icon}

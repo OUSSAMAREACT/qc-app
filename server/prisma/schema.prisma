@@ -26,6 +26,8 @@ model User {
   specialtyId Int?
   results     QuizResult[]
   specialty   Specialty?   @relation(fields: [specialtyId], references: [id])
+  submissions ExamSubmission[]
+  badges      Badge[]
 }
 
 model Category {
@@ -46,6 +48,7 @@ model Question {
   explanation String?
   choices     Choice[]
   category    Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  weeklyExams WeeklyExam[]
 }
 
 model Choice {
@@ -54,6 +57,40 @@ model Choice {
   isCorrect  Boolean  @default(false)
   questionId Int
   question   Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
+}
+
+model WeeklyExam {
+  id          Int       @id @default(autoincrement())
+  title       String
+  description String?
+  startDate   DateTime? @default(now())
+  endDate     DateTime
+  questions   Question[]
+  submissions ExamSubmission[]
+  badges      Badge[]
+  createdAt   DateTime  @default(now())
+}
+
+model ExamSubmission {
+  id          Int        @id @default(autoincrement())
+  userId      Int
+  user        User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  examId      Int
+  exam        WeeklyExam @relation(fields: [examId], references: [id], onDelete: Cascade)
+  score       Int
+  submittedAt DateTime   @default(now())
+
+  @@unique([userId, examId]) // One submission per user per exam
+}
+
+model Badge {
+  id        Int        @id @default(autoincrement())
+  userId    Int
+  user      User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type      String     // "GOLD", "SILVER", "BRONZE"
+  examId    Int
+  exam      WeeklyExam @relation(fields: [examId], references: [id], onDelete: Cascade)
+  awardedAt DateTime   @default(now())
 }
 
 model QuizResult {

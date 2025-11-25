@@ -10,6 +10,8 @@ import ResultPage from './pages/ResultPage';
 import AdminDashboardPage from './pages/AdminDashboardPage';
 import HistoryPage from './pages/HistoryPage';
 import ProfilePage from './pages/ProfilePage';
+import WeeklyExamPage from './pages/WeeklyExamPage';
+import LeaderboardPage from './pages/LeaderboardPage';
 import ProtectedRoute from './components/ProtectedRoute';
 import Layout from './components/Layout';
 
@@ -58,6 +60,22 @@ function App() {
               <ProtectedRoute>
                 <Layout>
                   <ResultPage />
+                </Layout>
+              </ProtectedRoute>
+            } />
+
+            <Route path="/weekly-exam/:id" element={
+              <ProtectedRoute>
+                <Layout>
+                  <WeeklyExamPage />
+                </Layout>
+              </ProtectedRoute>
+            } />
+
+            <Route path="/weekly-exam/:id/leaderboard" element={
+              <ProtectedRoute>
+                <Layout>
+                  <LeaderboardPage />
                 </Layout>
               </ProtectedRoute>
             } />

@@ -5,15 +5,18 @@ import { Card } from '../components/ui/Card';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import { Play, Clock, Award, BarChart2, BookOpen } from 'lucide-react';
+import WeeklyExamCard from '../components/WeeklyExamCard';
 
 export default function DashboardPage() {
     const { user } = useAuth();
     const [history, setHistory] = useState([]);
     const [categories, setCategories] = useState([]);
+    const [activeExam, setActiveExam] = useState(null);
 
     useEffect(() => {
         fetchHistory();
         fetchCategories();
+        fetchActiveExam();
     }, []);
 
     const fetchHistory = async () => {
@@ -31,6 +34,16 @@ export default function DashboardPage() {
             setCategories(res.data);
         } catch (error) {
             console.error("Failed to fetch categories", error);
+        }
+    };
+
+    const fetchActiveExam = async () => {
+        try {
+            const res = await axios.get('/weekly-exams/active');
+            setActiveExam(res.data);
+        } catch (error) {
+            // It's okay if no active exam
+            console.log("No active exam or error fetching", error);
         }
     };
 
@@ -78,8 +91,10 @@ export default function DashboardPage() {
 
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 md:gap-8">
                     {/* Main Content: Modules */}
-                    {/* Main Content: Modules */}
                     <div className="lg:col-span-2 space-y-8">
+                        {/* Weekly Exam Card */}
+                        {activeExam && <WeeklyExamCard exam={activeExam} />}
+
                         {/* Common Modules */}
                         <div className="space-y-6">
                             <div className="flex items-center justify-between">

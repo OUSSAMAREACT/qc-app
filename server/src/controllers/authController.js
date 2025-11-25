@@ -83,12 +83,12 @@ export const getMe = async (req, res) => {
     try {
         const user = await prisma.user.findUnique({
             where: { id: req.user.userId },
-            include: { specialty: true }
+            include: { specialty: true, badges: true }
         });
         if (!user) {
             return res.status(404).json({ message: "Utilisateur non trouvé." });
         }
-        res.json({ user: { id: user.id, email: user.email, name: user.name, role: user.role, specialty: user.specialty?.name } });
+        res.json({ user: { id: user.id, email: user.email, name: user.name, role: user.role, specialty: user.specialty?.name, badges: user.badges } });
     } catch (error) {
         res.status(500).json({ message: "Erreur serveur." });
     }
