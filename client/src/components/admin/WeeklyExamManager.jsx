@@ -3,7 +3,7 @@ import axios from 'axios';
 import { Link } from 'react-router-dom';
 import { Button } from '../ui/Button';
 import { Card } from '../ui/Card';
-import { Plus, Calendar, CheckSquare, Trash2, Users, Trophy, Pencil, X, CheckCircle } from 'lucide-react';
+import { Plus, Calendar, CheckSquare, Trash2, Users, Trophy, Pencil, X, CheckCircle, FileText } from 'lucide-react';
 
 export default function WeeklyExamManager() {
     const [exams, setExams] = useState([]);
