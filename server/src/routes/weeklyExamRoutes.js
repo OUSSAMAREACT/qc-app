@@ -1,5 +1,5 @@
 import express from 'express';
-import { verifyToken, isAdmin } from '../middleware/auth.js';
+import { authenticateToken, requireAdmin } from '../middleware/authMiddleware.js';
 import {
     createExam,
     getExams,
@@ -11,12 +11,12 @@ import {
 const router = express.Router();
 
 // Public/User routes
-router.get('/active', verifyToken, getActiveExam);
-router.post('/submit', verifyToken, submitExam);
-router.get('/:examId/leaderboard', verifyToken, getLeaderboard);
+router.get('/active', authenticateToken, getActiveExam);
+router.post('/submit', authenticateToken, submitExam);
+router.get('/:examId/leaderboard', authenticateToken, getLeaderboard);
 
 // Admin routes
-router.post('/', verifyToken, isAdmin, createExam);
-router.get('/', verifyToken, isAdmin, getExams);
+router.post('/', authenticateToken, requireAdmin, createExam);
+router.get('/', authenticateToken, requireAdmin, getExams);
 
 export default router;
