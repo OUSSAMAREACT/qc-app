@@ -193,6 +193,60 @@ export const deleteExam = async (req, res) => {
     }
 };
 
+// Get a single exam by ID (for Admin editing)
+export const getExamById = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const exam = await prisma.weeklyExam.findUnique({
+            where: { id: parseInt(id) },
+            include: {
+                questions: true // Include questions to populate the form
+            }
+        });
+        if (!exam) {
+            return res.status(404).json({ message: "Exam not found." });
+        }
+        res.json(exam);
+    } catch (error) {
+        console.error("Error fetching exam:", error);
+        res.status(500).json({ message: "Failed to fetch exam." });
+    }
+};
+
+// Update an exam
+export const updateExam = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { title, description, startDate, endDate, questionIds } = req.body;
+
+        // Basic validation
+        if (!title || !endDate || !questionIds || !Array.isArray(questionIds)) {
+            return res.status(400).json({ message: "Title, endDate, and questionIds (array) are required." });
+        }
+
+        const exam = await prisma.weeklyExam.update({
+            where: { id: parseInt(id) },
+            data: {
+                title,
+                description,
+                startDate: startDate ? new Date(startDate) : new Date(),
+                endDate: new Date(endDate),
+                questions: {
+                    set: questionIds.map(qId => ({ id: qId })) // Replace all questions
+                }
+            },
+            include: {
+                questions: true
+            }
+        });
+
+        res.json(exam);
+    } catch (error) {
+        console.error("Error updating exam:", error);
+        res.status(500).json({ message: "Failed to update exam." });
+    }
+};
+
 // Get Leaderboard for an exam
 export const getLeaderboard = async (req, res) => {
     try {
