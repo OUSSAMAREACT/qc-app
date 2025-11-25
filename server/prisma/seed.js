@@ -68,6 +68,39 @@ async function main() {
                         { text: "Poumons", isCorrect: false },
                         { text: "Foie", isCorrect: true }
                     ]
+                },
+                {
+                    text: "Quel est le plus grand organe du corps humain ?",
+                    difficulty: "Facile",
+                    explanation: "La peau est considérée comme le plus grand organe du corps humain.",
+                    choices: [
+                        { text: "Le foie", isCorrect: false },
+                        { text: "La peau", isCorrect: true },
+                        { text: "Les poumons", isCorrect: false },
+                        { text: "Le cerveau", isCorrect: false }
+                    ]
+                },
+                {
+                    text: "Combien de vertèbres cervicales possède l'être humain ?",
+                    difficulty: "Moyen",
+                    explanation: "Il y a 7 vertèbres cervicales (C1 à C7).",
+                    choices: [
+                        { text: "5", isCorrect: false },
+                        { text: "7", isCorrect: true },
+                        { text: "12", isCorrect: false },
+                        { text: "4", isCorrect: false }
+                    ]
+                },
+                {
+                    text: "Où se situe le muscle deltoïde ?",
+                    difficulty: "Facile",
+                    explanation: "Le deltoïde est le muscle qui recouvre l'épaule.",
+                    choices: [
+                        { text: "Dans la cuisse", isCorrect: false },
+                        { text: "Sur l'épaule", isCorrect: true },
+                        { text: "Dans le dos", isCorrect: false },
+                        { text: "Sur le bras", isCorrect: false }
+                    ]
                 }
             ]
         },
@@ -84,6 +117,79 @@ async function main() {
                         { text: "Intraveineuse", isCorrect: true },
                         { text: "Intramusculaire", isCorrect: false },
                         { text: "Sous-cutanée", isCorrect: false }
+                    ]
+                },
+                {
+                    text: "Qu'est-ce qu'un effet indésirable ?",
+                    difficulty: "Facile",
+                    explanation: "C'est une réaction nocive et non voulue à un médicament.",
+                    choices: [
+                        { text: "L'effet thérapeutique recherché", isCorrect: false },
+                        { text: "Une réaction nocive non voulue", isCorrect: true },
+                        { text: "Une interaction médicamenteuse", isCorrect: false },
+                        { text: "Une erreur de dosage", isCorrect: false }
+                    ]
+                },
+                {
+                    text: "Quel est l'antidote des opiacés ?",
+                    difficulty: "Difficile",
+                    explanation: "La naloxone est un antagoniste des récepteurs opioïdes.",
+                    choices: [
+                        { text: "Flumazénil", isCorrect: false },
+                        { text: "Naloxone", isCorrect: true },
+                        { text: "Atropine", isCorrect: false },
+                        { text: "Vitamine K", isCorrect: false }
+                    ]
+                },
+                {
+                    text: "Parmi ces médicaments, lesquels sont des antalgiques ? (Plusieurs réponses)",
+                    difficulty: "Moyen",
+                    explanation: "Le paracétamol et la morphine sont des antalgiques. L'ibuprofène est un AINS (aussi antalgique).",
+                    choices: [
+                        { text: "Paracétamol", isCorrect: true },
+                        { text: "Amoxicilline", isCorrect: false },
+                        { text: "Morphine", isCorrect: true },
+                        { text: "Furosémide", isCorrect: false },
+                        { text: "Ibuprofène", isCorrect: true }
+                    ]
+                }
+            ]
+        },
+        {
+            name: "Soins Infirmiers de Base",
+            specialty: null, // Common
+            questions: [
+                {
+                    text: "Quelle est la fréquence respiratoire normale chez l'adulte au repos ?",
+                    difficulty: "Facile",
+                    explanation: "La fréquence normale est généralement comprise entre 12 et 20 cycles par minute.",
+                    choices: [
+                        { text: "5-10 cycles/min", isCorrect: false },
+                        { text: "12-20 cycles/min", isCorrect: true },
+                        { text: "25-30 cycles/min", isCorrect: false },
+                        { text: "30-40 cycles/min", isCorrect: false }
+                    ]
+                },
+                {
+                    text: "Quels sont les sites d'injection intramusculaire courants ? (Plusieurs réponses)",
+                    difficulty: "Moyen",
+                    explanation: "Le deltoïde, le fessier et le quadriceps sont des sites courants.",
+                    choices: [
+                        { text: "Deltoïde", isCorrect: true },
+                        { text: "Ventre", isCorrect: false },
+                        { text: "Fessier (quart supéro-externe)", isCorrect: true },
+                        { text: "Quadriceps", isCorrect: true },
+                        { text: "Avant-bras", isCorrect: false }
+                    ]
+                },
+                {
+                    text: "Lors de la prise de tension artérielle, le premier bruit entendu correspond à :",
+                    difficulty: "Moyen",
+                    explanation: "Le premier bruit de Korotkoff correspond à la pression systolique.",
+                    choices: [
+                        { text: "La pression diastolique", isCorrect: false },
+                        { text: "La pression systolique", isCorrect: true },
+                        { text: "La pression moyenne", isCorrect: false }
                     ]
                 }
             ]
@@ -112,6 +218,55 @@ async function main() {
                         { text: "Atropine", isCorrect: false },
                         { text: "Adrénaline", isCorrect: true },
                         { text: "Amiodarone", isCorrect: false }
+                    ]
+                },
+                {
+                    text: "Quelle est la valeur normale de la saturation en oxygène (SpO2) ?",
+                    difficulty: "Facile",
+                    explanation: "Une SpO2 normale est supérieure à 95%.",
+                    choices: [
+                        { text: "85-90%", isCorrect: false },
+                        { text: "90-94%", isCorrect: false },
+                        { text: "> 95%", isCorrect: true },
+                        { text: "< 80%", isCorrect: false }
+                    ]
+                },
+                {
+                    text: "Dans le score de Glasgow, quelle est la réponse verbale maximale ?",
+                    difficulty: "Difficile",
+                    explanation: "La réponse verbale est notée sur 5.",
+                    choices: [
+                        { text: "4", isCorrect: false },
+                        { text: "5", isCorrect: true },
+                        { text: "6", isCorrect: false },
+                        { text: "15", isCorrect: false }
+                    ]
+                }
+            ]
+        },
+        {
+            name: "Pédiatrie",
+            specialty: "Sage Femme",
+            questions: [
+                {
+                    text: "Quel est le score utilisé pour évaluer la vitalité du nouveau-né à la naissance ?",
+                    difficulty: "Facile",
+                    explanation: "Le score d'Apgar évalue la fréquence cardiaque, la respiration, le tonus, la réactivité et la coloration.",
+                    choices: [
+                        { text: "Score de Glasgow", isCorrect: false },
+                        { text: "Score d'Apgar", isCorrect: true },
+                        { text: "Score de Silverman", isCorrect: false }
+                    ]
+                },
+                {
+                    text: "Quels sont les réflexes archaïques du nouveau-né ? (Plusieurs réponses)",
+                    difficulty: "Moyen",
+                    explanation: "Le grasping, la marche automatique et le réflexe de Moro sont des réflexes archaïques.",
+                    choices: [
+                        { text: "Grasping", isCorrect: true },
+                        { text: "Marche automatique", isCorrect: true },
+                        { text: "Réflexe de Moro", isCorrect: true },
+                        { text: "Réflexe rotulien", isCorrect: false }
                     ]
                 }
             ]
