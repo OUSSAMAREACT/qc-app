@@ -37,7 +37,9 @@ export default function ModuleCatalogPage() {
 
             // Filter based on type
             const relevantCategories = allCategories.filter(c =>
-                isSpecialty ? c.specialtyId !== null : c.specialtyId === null
+                isSpecialty
+                    ? (c.specialtyId && c.specialtyId === user?.specialtyId)
+                    : !c.specialtyId
             );
 
             setCategories(relevantCategories);
