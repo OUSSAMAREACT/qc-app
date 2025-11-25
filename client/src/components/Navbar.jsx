@@ -44,8 +44,8 @@ export default function Navbar() {
     return (
         <nav
             className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${isScrolled
-                    ? 'bg-white/80 dark:bg-dark-bg/80 backdrop-blur-md shadow-sm border-b border-gray-200/50 dark:border-gray-700/50'
-                    : 'bg-transparent'
+                ? 'bg-white/80 dark:bg-dark-bg/80 backdrop-blur-md shadow-sm border-b border-gray-200/50 dark:border-gray-700/50'
+                : 'bg-transparent'
                 }`}
         >
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -56,7 +56,7 @@ export default function Navbar() {
                             Q
                         </div>
                         <span className="font-heading font-bold text-xl text-gray-900 dark:text-white tracking-tight">
-                            QCM<span className="text-primary-600">Pro</span>
+                            QCMEchelle<span className="text-primary-600">11</span>
                         </span>
                     </Link>
 
@@ -70,8 +70,8 @@ export default function Navbar() {
                                     key={link.path}
                                     to={link.path}
                                     className={`relative px-4 py-2 rounded-xl text-sm font-medium transition-all duration-200 flex items-center gap-2 ${isActive
-                                            ? 'text-primary-600 bg-primary-50 dark:bg-primary-900/20'
-                                            : 'text-gray-600 dark:text-gray-300 hover:text-primary-600 hover:bg-gray-50 dark:hover:bg-gray-800'
+                                        ? 'text-primary-600 bg-primary-50 dark:bg-primary-900/20'
+                                        : 'text-gray-600 dark:text-gray-300 hover:text-primary-600 hover:bg-gray-50 dark:hover:bg-gray-800'
                                         }`}
                                 >
                                     <Icon size={18} />
@@ -171,8 +171,8 @@ export default function Navbar() {
                                         key={link.path}
                                         to={link.path}
                                         className={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${isActive
-                                                ? 'bg-primary-50 dark:bg-primary-900/20 text-primary-600'
-                                                : 'text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800'
+                                            ? 'bg-primary-50 dark:bg-primary-900/20 text-primary-600'
+                                            : 'text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800'
                                             }`}
                                     >
                                         <Icon size={20} />
