@@ -19,6 +19,9 @@ export default function DashboardPage() {
     });
     const [greeting, setGreeting] = useState('');
 
+    const [categories, setCategories] = useState([]);
+    const [activeExam, setActiveExam] = useState(null);
+
     useEffect(() => {
         const hour = new Date().getHours();
         if (hour < 12) setGreeting('Bonjour');
@@ -26,6 +29,8 @@ export default function DashboardPage() {
         else setGreeting('Bonsoir');
 
         fetchStats();
+        fetchCategories();
+        fetchActiveExam();
     }, []);
 
     const fetchStats = async () => {
@@ -41,6 +46,37 @@ export default function DashboardPage() {
         } catch (error) {
             console.error("Failed to fetch stats", error);
         }
+    };
+
+    const fetchCategories = async () => {
+        try {
+            const res = await axios.get('/categories');
+            setCategories(res.data);
+        } catch (error) {
+            console.error("Failed to fetch categories", error);
+        }
+    };
+
+    const fetchActiveExam = async () => {
+        try {
+            const res = await axios.get('/weekly-exams/active');
+            setActiveExam(res.data);
+        } catch (error) {
+            console.log("No active exam or error fetching", error);
+        }
+    };
+
+    // Helper to assign gradients based on index
+    const getCategoryGradient = (index) => {
+        const gradients = [
+            'from-emerald-500 to-teal-600',
+            'from-blue-500 to-indigo-600',
+            'from-purple-500 to-pink-600',
+            'from-orange-500 to-red-600',
+            'from-cyan-500 to-blue-600',
+            'from-rose-500 to-orange-600'
+        ];
+        return gradients[index % gradients.length];
     };
 
     const containerVariants = {
@@ -126,7 +162,57 @@ export default function DashboardPage() {
                         <h2 className="text-xl font-heading font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
                             <Trophy className="text-yellow-500" size={24} /> Challenge Hebdomadaire
                         </h2>
-                        <WeeklyExamCard />
+                        {activeExam ? (
+                            <WeeklyExamCard exam={activeExam} />
+                        ) : (
+                            <div className="bg-white dark:bg-dark-card p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 text-center">
+                                <p className="text-gray-500 dark:text-gray-400">Aucun examen hebdomadaire actif pour le moment.</p>
+                            </div>
+                        )}
+                    </motion.div>
+
+                    {/* Common Modules */}
+                    <motion.div variants={itemVariants} className="space-y-6">
+                        <div className="flex items-center justify-between">
+                            <h2 className="text-xl font-heading font-bold text-gray-900 dark:text-white flex items-center gap-2">
+                                <BookOpen className="text-primary-600 dark:text-primary-400" size={24} /> Tronc Commun
+                            </h2>
+                            <span className="text-sm text-gray-500 dark:text-gray-400 bg-white dark:bg-dark-card px-3 py-1 rounded-full border border-gray-200 dark:border-gray-700 shadow-sm">
+                                {categories.filter(c => !c.specialty).length} disponibles
+                            </span>
+                        </div>
+
+                        {categories.filter(c => !c.specialty).length === 0 ? (
+                            <div className="text-center py-8 bg-white dark:bg-dark-card rounded-2xl border border-dashed border-gray-300 dark:border-gray-700">
+                                <p className="text-gray-500 dark:text-gray-400">Aucun module commun disponible.</p>
+                            </div>
+                        ) : (
+                            <div className="grid sm:grid-cols-2 gap-5">
+                                {categories.filter(c => !c.specialty).map((cat, index) => (
+                                    <div key={cat.id} className="group relative bg-white dark:bg-dark-card rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 border border-gray-100 dark:border-gray-700 overflow-hidden flex flex-col">
+                                        <div className={`h-2 w-full bg-gradient-to-r ${getCategoryGradient(index)}`} />
+                                        <div className="p-6 flex-1 flex flex-col">
+                                            <div className="flex justify-between items-start mb-4">
+                                                <h3 className="font-bold text-lg text-gray-900 dark:text-white group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors">
+                                                    {cat.name}
+                                                </h3>
+                                                <span className="bg-gray-50 dark:bg-gray-800 text-gray-600 dark:text-gray-300 text-xs font-medium px-2.5 py-1 rounded-full border border-gray-100 dark:border-gray-700">
+                                                    {cat._count?.questions || 0} Q
+                                                </span>
+                                            </div>
+
+                                            <div className="mt-auto pt-4">
+                                                <Link to={`/quiz?category=${encodeURIComponent(cat.name)}`}>
+                                                    <button className="w-full bg-gray-900 dark:bg-gray-700 hover:bg-primary-600 dark:hover:bg-primary-500 text-white py-2.5 rounded-xl font-medium transition-colors flex items-center justify-center gap-2 group-hover:shadow-lg group-hover:shadow-primary-500/20 cursor-pointer">
+                                                        <Play size={16} fill="currentColor" /> Commencer
+                                                    </button>
+                                                </Link>
+                                            </div>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        )}
                     </motion.div>
                 </div>
 
