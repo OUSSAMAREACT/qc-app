@@ -187,15 +187,16 @@ export default function WeeklyExamManager() {
                 </div>
                 {!isCreating && (
                     <Button onClick={() => {
-                        setEditingExam(null);
+                        setEditingId(null);
                         setFormData({
                             title: '',
                             description: '',
                             startDate: new Date().toISOString().slice(0, 16),
                             endDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().slice(0, 16),
-                            questionIds: []
+                            selectedCategory: '',
+                            selectedQuestions: []
                         });
-                        setSelectedQuestions([]);
+                        setSelectedQuestionObjects([]);
                         setIsCreating(true);
                     }}>
                         <Plus size={20} className="mr-2" /> Créer un examen
@@ -205,7 +206,7 @@ export default function WeeklyExamManager() {
 
             {isCreating ? (
                 <Card className="p-6">
-                    <h3 className="text-lg font-bold mb-4">{editingExam ? 'Modifier l\'examen' : 'Créer un nouvel examen'}</h3>
+                    <h3 className="text-lg font-bold mb-4">{editingId ? 'Modifier l\'examen' : 'Créer un nouvel examen'}</h3>
                     <form onSubmit={handleSubmit} className="space-y-4">
                         <div>
                             <label className="block text-sm font-medium mb-1">Titre</label>
@@ -250,7 +251,7 @@ export default function WeeklyExamManager() {
 
                         {/* Question Selection UI */}
                         <div className="border-t pt-4 mt-4">
-                            <h4 className="font-medium mb-4">Sélection des questions ({selectedQuestions.length} sélectionnées)</h4>
+                            <h4 className="font-medium mb-4">Sélection des questions ({formData.selectedQuestions.length} sélectionnées)</h4>
 
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 {/* Left Column: Filter & Add */}
@@ -258,22 +259,22 @@ export default function WeeklyExamManager() {
                                     <div className="flex gap-2">
                                         <select
                                             className="flex-1 p-2 rounded-lg border dark:bg-gray-700 dark:border-gray-600"
-                                            value={selectedModule}
-                                            onChange={(e) => setSelectedModule(e.target.value)}
+                                            value={formData.selectedCategory}
+                                            onChange={(e) => handleCategoryChange(e.target.value)}
                                         >
                                             <option value="">Tous les modules</option>
-                                            {modules.map(m => (
-                                                <option key={m.id} value={m.id}>{m.name}</option>
+                                            {categories.map(c => (
+                                                <option key={c.id} value={c.id}>{c.name}</option>
                                             ))}
                                         </select>
                                     </div>
 
                                     <div className="h-96 overflow-y-auto border rounded-lg p-2 space-y-2 bg-gray-50 dark:bg-gray-900/50">
-                                        {availableQuestions.length === 0 ? (
-                                            <p className="text-center text-gray-500 py-4">Aucune question disponible dans ce module.</p>
+                                        {questions.length === 0 ? (
+                                            <p className="text-center text-gray-500 py-4">Aucune question disponible dans ce module (ou aucun module sélectionné).</p>
                                         ) : (
-                                            availableQuestions.map(q => {
-                                                const isSelected = selectedQuestions.some(sq => sq.id === q.id);
+                                            questions.map(q => {
+                                                const isSelected = formData.selectedQuestions.includes(q.id);
                                                 return (
                                                     <div key={q.id} className="flex items-start gap-2 p-2 bg-white dark:bg-gray-800 rounded border border-gray-100 dark:border-gray-700">
                                                         <input
@@ -297,10 +298,13 @@ export default function WeeklyExamManager() {
                                 <div className="space-y-4">
                                     <div className="flex justify-between items-center h-[42px]">
                                         <h5 className="font-medium text-sm text-gray-700 dark:text-gray-300">Questions retenues</h5>
-                                        {selectedQuestions.length > 0 && (
+                                        {formData.selectedQuestions.length > 0 && (
                                             <button
                                                 type="button"
-                                                onClick={() => setSelectedQuestions([])}
+                                                onClick={() => {
+                                                    setFormData(prev => ({ ...prev, selectedQuestions: [] }));
+                                                    setSelectedQuestionObjects([]);
+                                                }}
                                                 className="text-xs text-red-500 hover:text-red-600"
                                             >
                                                 Tout retirer
@@ -309,13 +313,13 @@ export default function WeeklyExamManager() {
                                     </div>
 
                                     <div className="h-96 overflow-y-auto border rounded-lg p-2 space-y-2 bg-blue-50/50 dark:bg-blue-900/10 border-blue-100 dark:border-blue-900/30">
-                                        {selectedQuestions.length === 0 ? (
+                                        {selectedQuestionObjects.length === 0 ? (
                                             <div className="h-full flex flex-col items-center justify-center text-gray-400 text-sm">
                                                 <p>Aucune question sélectionnée</p>
                                                 <p className="text-xs mt-1">Cochez des questions à gauche pour les ajouter</p>
                                             </div>
                                         ) : (
-                                            selectedQuestions.map((q, idx) => (
+                                            selectedQuestionObjects.map((q, idx) => (
                                                 <div key={q.id} className="flex items-start gap-2 p-2 bg-white dark:bg-gray-800 rounded border border-blue-200 dark:border-blue-800 shadow-sm relative group">
                                                     <span className="text-xs font-mono text-blue-500 mt-0.5 w-5">{idx + 1}.</span>
                                                     <div className="flex-1 min-w-0">
@@ -338,9 +342,9 @@ export default function WeeklyExamManager() {
                         </div>
 
                         <div className="flex justify-end gap-2 mt-6">
-                            <Button type="button" variant="ghost" onClick={() => setIsCreating(false)}>Annuler</Button>
-                            <Button type="submit" disabled={selectedQuestions.length === 0}>
-                                {editingExam ? 'Mettre à jour' : 'Créer l\'examen'}
+                            <Button type="button" variant="ghost" onClick={handleCancel}>Annuler</Button>
+                            <Button type="submit" disabled={formData.selectedQuestions.length === 0}>
+                                {editingId ? 'Mettre à jour' : 'Créer l\'examen'}
                             </Button>
                         </div>
                     </form>
