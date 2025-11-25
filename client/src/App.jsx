@@ -12,6 +12,7 @@ import HistoryPage from './pages/HistoryPage';
 import ProfilePage from './pages/ProfilePage';
 import WeeklyExamPage from './pages/WeeklyExamPage';
 import LeaderboardPage from './pages/LeaderboardPage';
+import ModuleCatalogPage from './pages/ModuleCatalogPage';
 import ProtectedRoute from './components/ProtectedRoute';
 import Layout from './components/Layout';
 import OnboardingWizard from './components/OnboardingWizard';
@@ -35,6 +36,14 @@ function App() {
               <ProtectedRoute>
                 <Layout>
                   <DashboardPage />
+                </Layout>
+              </ProtectedRoute>
+            } />
+
+            <Route path="/modules/:type" element={
+              <ProtectedRoute>
+                <Layout>
+                  <ModuleCatalogPage />
                 </Layout>
               </ProtectedRoute>
             } />

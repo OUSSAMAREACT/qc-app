@@ -22,8 +22,6 @@ export default function DashboardPage() {
     const [categories, setCategories] = useState([]);
     const [activeExam, setActiveExam] = useState(null);
 
-    const [showAllSpecialty, setShowAllSpecialty] = useState(false);
-    const [showAllCommon, setShowAllCommon] = useState(false);
     const INITIAL_DISPLAY_COUNT = 4;
 
     useEffect(() => {
@@ -198,7 +196,7 @@ export default function DashboardPage() {
                             ) : (
                                 <>
                                     <div className="grid sm:grid-cols-2 gap-6">
-                                        {specialtyCategories.slice(0, showAllSpecialty ? undefined : INITIAL_DISPLAY_COUNT).map((cat, index) => (
+                                        {specialtyCategories.slice(0, INITIAL_DISPLAY_COUNT).map((cat, index) => (
                                             <motion.div
                                                 whileHover={{ y: -5 }}
                                                 key={cat.id}
@@ -253,13 +251,10 @@ export default function DashboardPage() {
                                     </div>
                                     {specialtyCategories.length > INITIAL_DISPLAY_COUNT && (
                                         <div className="flex justify-center">
-                                            <button
-                                                onClick={() => setShowAllSpecialty(!showAllSpecialty)}
-                                                className="text-primary-600 dark:text-primary-400 font-medium hover:underline flex items-center gap-1"
-                                            >
-                                                {showAllSpecialty ? 'Voir moins' : 'Tout voir'}
-                                                <ChevronRight size={16} className={`transform transition-transform ${showAllSpecialty ? 'rotate-90' : ''}`} />
-                                            </button>
+                                            <Link to="/modules/specialty" className="text-primary-600 dark:text-primary-400 font-medium hover:underline flex items-center gap-1">
+                                                Tout voir
+                                                <ChevronRight size={16} />
+                                            </Link>
                                         </div>
                                     )}
                                 </>
@@ -286,7 +281,7 @@ export default function DashboardPage() {
                         ) : (
                             <>
                                 <div className="grid sm:grid-cols-2 gap-6">
-                                    {commonCategories.slice(0, showAllCommon ? undefined : INITIAL_DISPLAY_COUNT).map((cat, index) => (
+                                    {commonCategories.slice(0, INITIAL_DISPLAY_COUNT).map((cat, index) => (
                                         <motion.div
                                             whileHover={{ y: -5 }}
                                             key={cat.id}
@@ -341,13 +336,10 @@ export default function DashboardPage() {
                                 </div>
                                 {commonCategories.length > INITIAL_DISPLAY_COUNT && (
                                     <div className="flex justify-center">
-                                        <button
-                                            onClick={() => setShowAllCommon(!showAllCommon)}
-                                            className="text-primary-600 dark:text-primary-400 font-medium hover:underline flex items-center gap-1"
-                                        >
-                                            {showAllCommon ? 'Voir moins' : 'Tout voir'}
-                                            <ChevronRight size={16} className={`transform transition-transform ${showAllCommon ? 'rotate-90' : ''}`} />
-                                        </button>
+                                        <Link to="/modules/common" className="text-primary-600 dark:text-primary-400 font-medium hover:underline flex items-center gap-1">
+                                            Tout voir
+                                            <ChevronRight size={16} />
+                                        </Link>
                                     </div>
                                 )}
                             </>
