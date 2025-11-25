@@ -53,6 +53,7 @@ export default function DashboardPage() {
     const fetchCategories = async () => {
         try {
             const res = await axios.get('/categories');
+            console.log("Fetched Categories:", res.data);
             setCategories(res.data);
         } catch (error) {
             console.error("Failed to fetch categories", error);
