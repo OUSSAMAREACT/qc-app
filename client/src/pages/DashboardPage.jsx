@@ -97,7 +97,7 @@ export default function DashboardPage() {
         visible: { y: 0, opacity: 1 }
     };
 
-    const specialtyCategories = categories.filter(c => c.specialtyId && c.specialtyId === user?.specialtyId);
+    const specialtyCategories = categories.filter(c => c.specialtyId && c.specialtyId === user?.specialty?.id);
     const commonCategories = categories.filter(c => !c.specialtyId);
 
     return (
