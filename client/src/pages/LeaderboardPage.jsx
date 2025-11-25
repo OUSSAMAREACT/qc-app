@@ -68,7 +68,7 @@ export default function LeaderboardPage() {
                                             {entry.user.name || entry.user.email}
                                         </div>
                                         <div className="text-xs text-gray-500 dark:text-gray-400">
-                                            {entry.user.specialty || 'Général'}
+                                            {entry.user.specialty?.name || 'Général'}
                                         </div>
                                     </div>
                                     <div className="text-right">

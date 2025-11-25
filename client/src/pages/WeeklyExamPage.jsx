@@ -276,10 +276,7 @@ export default function WeeklyExamPage() {
                                 <h2 className="text-xl md:text-2xl font-bold text-gray-900 dark:text-white leading-relaxed">
                                     {currentQuestion.text}
                                 </h2>
-                                <p className="text-sm text-gray-500 dark:text-gray-400 mt-2 flex items-center gap-1">
-                                    <AlertCircle size={14} />
-                                    Sélectionnez toutes les bonnes réponses
-                                </p>
+
                             </div>
 
                             <div className="space-y-3">
