@@ -171,6 +171,82 @@ export default function DashboardPage() {
                         )}
                     </motion.div>
 
+                    {/* Specialty Modules */}
+                    {user?.specialty && (
+                        <motion.div variants={itemVariants} className="space-y-6">
+                            <div className="flex items-center justify-between">
+                                <h2 className="text-xl font-heading font-bold text-gray-900 dark:text-white flex items-center gap-2">
+                                    <Star className="text-yellow-500" size={24} /> Ma Spécialité : {user.specialty.name}
+                                </h2>
+                                <span className="text-sm text-gray-500 dark:text-gray-400 bg-white dark:bg-dark-card px-3 py-1 rounded-full border border-gray-200 dark:border-gray-700 shadow-sm">
+                                    {categories.filter(c => c.specialty).length} disponibles
+                                </span>
+                            </div>
+
+                            {categories.filter(c => c.specialty).length === 0 ? (
+                                <div className="text-center py-12 bg-white dark:bg-dark-card rounded-3xl border-2 border-dashed border-gray-200 dark:border-gray-700">
+                                    <Star className="mx-auto text-gray-300 dark:text-gray-600 mb-4" size={48} />
+                                    <p className="text-gray-500 dark:text-gray-400 font-medium">Aucun module de spécialité disponible pour le moment.</p>
+                                </div>
+                            ) : (
+                                <div className="grid sm:grid-cols-2 gap-6">
+                                    {categories.filter(c => c.specialty).map((cat, index) => (
+                                        <motion.div
+                                            whileHover={{ y: -5 }}
+                                            key={cat.id}
+                                            className="group relative bg-white dark:bg-dark-card rounded-3xl shadow-sm hover:shadow-2xl hover:shadow-yellow-500/10 transition-all duration-300 border border-gray-100 dark:border-gray-700 overflow-hidden flex flex-col h-full"
+                                        >
+                                            {/* Gradient Header */}
+                                            <div className={`h-32 w-full bg-gradient-to-br from-yellow-500 to-orange-600 relative overflow-hidden`}>
+                                                <div className="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors duration-300"></div>
+                                                <div className="absolute -bottom-6 -right-6 text-white/20 transform rotate-12 group-hover:scale-110 group-hover:rotate-6 transition-transform duration-500">
+                                                    <Star size={120} />
+                                                </div>
+                                                <div className="absolute top-6 left-6">
+                                                    <span className="bg-white/20 backdrop-blur-md text-white text-xs font-bold px-3 py-1 rounded-full border border-white/20 shadow-sm">
+                                                        Spécialité
+                                                    </span>
+                                                </div>
+                                            </div>
+
+                                            <div className="p-6 flex-1 flex flex-col relative">
+                                                {/* Floating Icon */}
+                                                <div className="absolute -top-10 left-6 w-16 h-16 bg-white dark:bg-gray-800 rounded-2xl shadow-lg flex items-center justify-center border-4 border-white dark:border-dark-card group-hover:scale-110 transition-transform duration-300">
+                                                    <div className="text-yellow-500">
+                                                        <Star size={32} className="text-gray-700 dark:text-white" />
+                                                    </div>
+                                                </div>
+
+                                                <div className="mt-8 mb-4">
+                                                    <h3 className="font-heading font-bold text-xl text-gray-900 dark:text-white group-hover:text-yellow-600 dark:group-hover:text-yellow-400 transition-colors line-clamp-2">
+                                                        {cat.name}
+                                                    </h3>
+                                                    <div className="flex items-center gap-2 mt-2 text-sm text-gray-500 dark:text-gray-400">
+                                                        <div className="flex items-center gap-1">
+                                                            <div className="w-2 h-2 rounded-full bg-green-500"></div>
+                                                            <span>{cat._count?.questions || 0} Questions</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div className="mt-auto pt-4 border-t border-gray-100 dark:border-gray-700/50">
+                                                    <Link to={`/quiz?category=${encodeURIComponent(cat.name)}`}>
+                                                        <button className="w-full bg-gray-50 dark:bg-gray-800 hover:bg-gray-900 dark:hover:bg-gray-700 text-gray-900 dark:text-white hover:text-white py-3 rounded-xl font-bold transition-all flex items-center justify-between px-4 group/btn">
+                                                            <span>Commencer</span>
+                                                            <div className="w-8 h-8 rounded-full bg-white dark:bg-gray-700 group-hover/btn:bg-yellow-500 group-hover/btn:text-white flex items-center justify-center transition-colors shadow-sm">
+                                                                <ArrowRight size={16} />
+                                                            </div>
+                                                        </button>
+                                                    </Link>
+                                                </div>
+                                            </div>
+                                        </motion.div>
+                                    ))}
+                                </div>
+                            )}
+                        </motion.div>
+                    )}
+
                     {/* Common Modules */}
                     <motion.div variants={itemVariants} className="space-y-6">
                         <div className="flex items-center justify-between">
