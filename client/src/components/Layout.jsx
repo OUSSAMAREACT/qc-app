@@ -3,9 +3,9 @@ import Navbar from './Navbar';
 
 export default function Layout({ children }) {
     return (
-        <div className="min-h-screen bg-gray-50 dark:bg-gray-900 font-sans transition-colors duration-300">
+        <div className="min-h-screen bg-gray-50 dark:bg-dark-bg font-sans transition-colors duration-300">
             <Navbar />
-            <main>
+            <main className="pt-20 pb-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
                 {children}
             </main>
         </div>

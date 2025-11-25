@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import axios from 'axios';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { Button } from '../components/ui/Button';
@@ -248,79 +249,92 @@ export default function QuizPage() {
                 </div>
 
                 {/* Question Card */}
-                <Card className="min-h-[400px] md:min-h-[450px] flex flex-col bg-white/80 dark:bg-gray-800/80 backdrop-blur-xl border border-white/60 dark:border-gray-700 shadow-[0_20px_50px_-12px_rgba(0,0,0,0.1)] dark:shadow-[0_20px_50px_-12px_rgba(0,0,0,0.3)] rounded-3xl overflow-hidden relative transition-colors duration-300">
-                    {/* Decorative background blob */}
-                    <div className="absolute -top-20 -right-20 w-64 h-64 bg-blue-50 dark:bg-blue-900/20 rounded-full blur-3xl opacity-50 pointer-events-none"></div>
-                    <div className="absolute -bottom-20 -left-20 w-64 h-64 bg-indigo-50 dark:bg-indigo-900/20 rounded-full blur-3xl opacity-50 pointer-events-none"></div>
+                <AnimatePresence mode="wait">
+                    <motion.div
+                        key={currentIndex}
+                        initial={{ x: 50, opacity: 0 }}
+                        animate={{ x: 0, opacity: 1 }}
+                        exit={{ x: -50, opacity: 0 }}
+                        transition={{ duration: 0.3, ease: "easeOut" }}
+                        className="w-full"
+                    >
+                        <Card className="min-h-[400px] md:min-h-[450px] flex flex-col bg-white/80 dark:bg-gray-800/80 backdrop-blur-xl border border-white/60 dark:border-gray-700 shadow-[0_20px_50px_-12px_rgba(0,0,0,0.1)] dark:shadow-[0_20px_50px_-12px_rgba(0,0,0,0.3)] rounded-3xl overflow-hidden relative transition-colors duration-300">
+                            {/* Decorative background blob */}
+                            <div className="absolute -top-20 -right-20 w-64 h-64 bg-blue-50 dark:bg-blue-900/20 rounded-full blur-3xl opacity-50 pointer-events-none"></div>
+                            <div className="absolute -bottom-20 -left-20 w-64 h-64 bg-indigo-50 dark:bg-indigo-900/20 rounded-full blur-3xl opacity-50 pointer-events-none"></div>
 
-                    <div className="p-6 md:p-10 flex flex-col flex-1 relative z-10">
-                        <h2 className="text-xl md:text-3xl font-bold mb-8 md:mb-10 text-gray-800 dark:text-gray-100 leading-tight">
-                            {currentQuestion.text}
-                        </h2>
+                            <div className="p-6 md:p-10 flex flex-col flex-1 relative z-10">
+                                <h2 className="text-xl md:text-3xl font-heading font-bold mb-8 md:mb-10 text-gray-800 dark:text-gray-100 leading-tight">
+                                    {currentQuestion.text}
+                                </h2>
 
-                        <div className="grid grid-cols-1 gap-3 md:gap-4 flex-1 content-start">
-                            {currentQuestion.choices.map((choice) => {
-                                const isSelected = (answers[currentQuestion.id] || []).includes(choice.id);
-                                return (
-                                    <div
-                                        key={choice.id}
-                                        onClick={() => handleToggleChoice(currentQuestion.id, choice.id)}
-                                        className={`group relative p-4 md:p-5 rounded-2xl border-2 cursor-pointer transition-all duration-300 flex items-center gap-4 md:gap-5 ${isSelected
-                                            ? 'border-indigo-500 bg-indigo-50/50 dark:bg-indigo-900/30 shadow-lg shadow-indigo-100 dark:shadow-indigo-900/20 scale-[1.01]'
-                                            : 'border-gray-100 dark:border-gray-700 bg-white/50 dark:bg-gray-800/50 hover:border-indigo-200 dark:hover:border-indigo-700 hover:bg-white dark:hover:bg-gray-800 hover:shadow-md hover:scale-[1.005]'
+                                <div className="grid grid-cols-1 gap-3 md:gap-4 flex-1 content-start">
+                                    {currentQuestion.choices.map((choice) => {
+                                        const isSelected = (answers[currentQuestion.id] || []).includes(choice.id);
+                                        return (
+                                            <motion.div
+                                                whileHover={{ scale: 1.01 }}
+                                                whileTap={{ scale: 0.99 }}
+                                                key={choice.id}
+                                                onClick={() => handleToggleChoice(currentQuestion.id, choice.id)}
+                                                className={`group relative p-4 md:p-5 rounded-2xl border-2 cursor-pointer transition-all duration-200 flex items-center gap-4 md:gap-5 ${isSelected
+                                                    ? 'border-primary-500 bg-primary-50/50 dark:bg-primary-900/30 shadow-lg shadow-primary-100 dark:shadow-primary-900/20'
+                                                    : 'border-gray-100 dark:border-gray-700 bg-white/50 dark:bg-gray-800/50 hover:border-primary-200 dark:hover:border-primary-700 hover:bg-white dark:hover:bg-gray-800'
+                                                    }`}
+                                            >
+                                                <div className={`w-6 h-6 md:w-8 md:h-8 rounded-lg md:rounded-xl border-2 flex items-center justify-center transition-all duration-300 flex-shrink-0 ${isSelected
+                                                    ? 'bg-primary-600 border-primary-600 shadow-md transform scale-110'
+                                                    : 'border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 group-hover:border-primary-300 dark:group-hover:border-primary-500'
+                                                    }`}>
+                                                    {isSelected && (
+                                                        <svg className="w-3 h-3 md:w-4 md:h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+                                                            <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                                                        </svg>
+                                                    )}
+                                                </div>
+                                                <span className={`text-base md:text-lg font-medium transition-colors duration-300 ${isSelected ? 'text-primary-900 dark:text-primary-200' : 'text-gray-600 dark:text-gray-300 group-hover:text-gray-900 dark:group-hover:text-white'
+                                                    }`}>
+                                                    {choice.text}
+                                                </span>
+                                            </motion.div>
+                                        );
+                                    })}
+                                </div>
+
+                                <div className="mt-8 md:mt-10 flex flex-col-reverse md:flex-row justify-between items-center gap-4 md:gap-0 pt-6 border-t border-gray-100/50 dark:border-gray-700/50">
+                                    <Button
+                                        variant="ghost"
+                                        onClick={() => setCurrentIndex(prev => Math.max(0, prev - 1))}
+                                        disabled={currentIndex === 0}
+                                        className={`w-full md:w-auto text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 hover:bg-gray-100/50 dark:hover:bg-gray-700/50 px-6 py-3 rounded-xl transition-all ${currentIndex === 0 ? 'opacity-0 pointer-events-none hidden md:block' : 'opacity-100'
                                             }`}
                                     >
-                                        <div className={`w-6 h-6 md:w-8 md:h-8 rounded-lg md:rounded-xl border-2 flex items-center justify-center transition-all duration-300 flex-shrink-0 ${isSelected
-                                            ? 'bg-indigo-600 border-indigo-600 shadow-indigo-200 dark:shadow-indigo-900/50 shadow-md transform scale-110'
-                                            : 'border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 group-hover:border-indigo-300 dark:group-hover:border-indigo-500'
-                                            }`}>
-                                            {isSelected && (
-                                                <svg className="w-3 h-3 md:w-4 md:h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
-                                                    <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                                                </svg>
-                                            )}
-                                        </div>
-                                        <span className={`text-base md:text-lg font-medium transition-colors duration-300 ${isSelected ? 'text-indigo-900 dark:text-indigo-200' : 'text-gray-600 dark:text-gray-300 group-hover:text-gray-900 dark:group-hover:text-white'
-                                            }`}>
-                                            {choice.text}
-                                        </span>
-                                    </div>
-                                );
-                            })}
-                        </div>
+                                        ← Précédent
+                                    </Button>
 
-                        <div className="mt-8 md:mt-10 flex flex-col-reverse md:flex-row justify-between items-center gap-4 md:gap-0 pt-6 border-t border-gray-100/50 dark:border-gray-700/50">
-                            <Button
-                                variant="ghost"
-                                onClick={() => setCurrentIndex(prev => Math.max(0, prev - 1))}
-                                disabled={currentIndex === 0}
-                                className={`w-full md:w-auto text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 hover:bg-gray-100/50 dark:hover:bg-gray-700/50 px-6 py-3 rounded-xl transition-all ${currentIndex === 0 ? 'opacity-0 pointer-events-none hidden md:block' : 'opacity-100'
-                                    }`}
-                            >
-                                ← Précédent
-                            </Button>
-
-                            {currentIndex === questions.length - 1 ? (
-                                <Button
-                                    variant="primary"
-                                    onClick={handleFinishClick}
-                                    disabled={submitting}
-                                    className="w-full md:w-auto bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white shadow-lg shadow-emerald-200 dark:shadow-emerald-900/30 px-8 py-3 rounded-xl font-bold text-lg transform hover:-translate-y-0.5 transition-all justify-center"
-                                >
-                                    {submitting ? 'Envoi...' : 'Terminer le quiz'}
-                                </Button>
-                            ) : (
-                                <Button
-                                    variant="primary"
-                                    onClick={() => setCurrentIndex(prev => Math.min(questions.length - 1, prev + 1))}
-                                    className="w-full md:w-auto bg-gray-900 dark:bg-gray-700 hover:bg-black dark:hover:bg-gray-600 text-white px-8 py-3 rounded-xl font-bold text-lg shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all flex items-center justify-center gap-2"
-                                >
-                                    Suivant →
-                                </Button>
-                            )}
-                        </div>
-                    </div>
-                </Card>
+                                    {currentIndex === questions.length - 1 ? (
+                                        <Button
+                                            variant="primary"
+                                            onClick={handleFinishClick}
+                                            disabled={submitting}
+                                            className="w-full md:w-auto bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white shadow-lg shadow-emerald-200 dark:shadow-emerald-900/30 px-8 py-3 rounded-xl font-bold text-lg transform hover:-translate-y-0.5 transition-all justify-center"
+                                        >
+                                            {submitting ? 'Envoi...' : 'Terminer le quiz'}
+                                        </Button>
+                                    ) : (
+                                        <Button
+                                            variant="primary"
+                                            onClick={() => setCurrentIndex(prev => Math.min(questions.length - 1, prev + 1))}
+                                            className="w-full md:w-auto bg-gray-900 dark:bg-gray-700 hover:bg-black dark:hover:bg-gray-600 text-white px-8 py-3 rounded-xl font-bold text-lg shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all flex items-center justify-center gap-2"
+                                        >
+                                            Suivant →
+                                        </Button>
+                                    )}
+                                </div>
+                            </div>
+                        </Card>
+                    </motion.div>
+                </AnimatePresence>
             </div>
 
             <Modal
