@@ -8,7 +8,7 @@ const prisma = new PrismaClient();
 
 router.post('/complete', authenticateToken, async (req, res) => {
     try {
-        const userId = req.user.id;
+        const userId = req.user.userId;
         const { examDate, studyMinutesPerDay } = req.body;
 
         // Calculate initial goals based on study time
