@@ -12,6 +12,7 @@ export default function WeeklyExamManager() {
     const [categories, setCategories] = useState([]);
     const [questions, setQuestions] = useState([]);
     const [selectedQuestionObjects, setSelectedQuestionObjects] = useState([]); // Array of {id, text}
+    const [loading, setLoading] = useState(true);
 
     // Form State
     const [formData, setFormData] = useState({
@@ -34,6 +35,8 @@ export default function WeeklyExamManager() {
             setExams(res.data);
         } catch (error) {
             console.error("Failed to fetch exams", error);
+        } finally {
+            setLoading(false);
         }
     };
 
