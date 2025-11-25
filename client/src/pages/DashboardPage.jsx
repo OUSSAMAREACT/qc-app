@@ -96,8 +96,8 @@ export default function DashboardPage() {
         visible: { y: 0, opacity: 1 }
     };
 
-    const specialtyCategories = categories.filter(c => c.specialty);
-    const commonCategories = categories.filter(c => !c.specialty);
+    const specialtyCategories = categories.filter(c => c.specialtyId !== null);
+    const commonCategories = categories.filter(c => c.specialtyId === null);
 
     return (
         <motion.div
