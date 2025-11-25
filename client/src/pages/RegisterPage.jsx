@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate, Link } from 'react-router-dom';
 import { Button } from '../components/ui/Button';
@@ -20,6 +21,19 @@ export default function RegisterPage() {
     const [showSuccessModal, setShowSuccessModal] = useState(false);
     const { register } = useAuth();
     const navigate = useNavigate();
+    const [specialties, setSpecialties] = useState([]);
+
+    useEffect(() => {
+        const fetchSpecialties = async () => {
+            try {
+                const res = await axios.get('/specialties');
+                setSpecialties(res.data);
+            } catch (error) {
+                console.error("Failed to fetch specialties", error);
+            }
+        };
+        fetchSpecialties();
+    }, []);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -87,6 +101,42 @@ export default function RegisterPage() {
                     <form onSubmit={handleSubmit} className="space-y-5">
                         <Input
                             label="Nom complet"
+                            type="text"
+                            placeholder="Votre nom"
+                            value={name}
+                            onChange={(e) => setName(e.target.value)}
+                            required
+                            className="bg-gray-50 dark:bg-gray-700 border-gray-200 dark:border-gray-600 focus:bg-white dark:focus:bg-gray-600 transition-colors text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500"
+                        />
+                        <Input
+                            label="Adresse e-mail"
+                            type="email"
+                            placeholder="exemple@email.com"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            required
+                            className="bg-gray-50 dark:bg-gray-700 border-gray-200 dark:border-gray-600 focus:bg-white dark:focus:bg-gray-600 transition-colors text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500"
+                        />
+
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Spécialité</label>
+                            <select
+                                value={specialty}
+                                onChange={(e) => setSpecialty(e.target.value)}
+                                required
+                                className="w-full px-4 py-2 rounded-lg border bg-gray-50 dark:bg-gray-700 border-gray-200 dark:border-gray-600 focus:bg-white dark:focus:bg-gray-600 transition-colors text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 outline-none"
+                            >
+                                <option value="" disabled>Choisir votre spécialité</option>
+                                {specialties.map((s) => (
+                                    <option key={s.id} value={s.id}>{s.name}</option>
+                                ))}
+                            </select>
+                        </div>
+
+                        <Input
+                            label="Mot de passe"
+                            type={showPassword ? "text" : "password"}
+                            placeholder="••••••••"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
                             required
