@@ -9,6 +9,7 @@ import CommonModulesView from '../components/admin/CommonModulesView';
 import SpecialtyView from '../components/admin/SpecialtyView';
 import CategoryDetailView from '../components/admin/CategoryDetailView';
 import WeeklyExamManager from '../components/admin/WeeklyExamManager';
+import UserManager from '../components/admin/UserManager';
 
 export default function AdminDashboardPage() {
     const { logout } = useAuth();
@@ -43,7 +44,7 @@ export default function AdminDashboardPage() {
             case 'weekly-exams':
                 return <WeeklyExamManager />;
             case 'users':
-                return <div className="p-8 text-center text-gray-500">Gestion des utilisateurs (Bientôt disponible)</div>;
+                return <UserManager />;
             default:
                 return <Overview />;
         }

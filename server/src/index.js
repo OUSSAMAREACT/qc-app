@@ -9,6 +9,7 @@ import specialtyRoutes from './routes/specialtyRoutes.js';
 import weeklyExamRoutes from './routes/weeklyExamRoutes.js';
 import gamificationRoutes from './routes/gamificationRoutes.js';
 import onboardingRoutes from './routes/onboardingRoutes.js';
+import userRoutes from './routes/userRoutes.js';
 
 dotenv.config();
 
@@ -34,6 +35,7 @@ app.use('/api/specialties', specialtyRoutes);
 app.use('/api/weekly-exams', weeklyExamRoutes);
 app.use('/api/gamification', gamificationRoutes);
 app.use('/api/onboarding', onboardingRoutes);
+app.use('/api/users', userRoutes);
 
 app.get('/', (req, res) => {
     res.send('Quiz API is running');
