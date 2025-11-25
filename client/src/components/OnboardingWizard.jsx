@@ -34,7 +34,8 @@ export default function OnboardingWizard() {
             window.location.reload(); // Simple way to refresh auth state and redirect
         } catch (error) {
             console.error("Onboarding failed", error);
-            alert("Une erreur est survenue.");
+            const message = error.response?.data?.message || "Une erreur est survenue.";
+            alert(`Erreur: ${message}`);
             setLoading(false);
         }
     };

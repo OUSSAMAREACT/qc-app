@@ -57,7 +57,7 @@ router.post('/complete', authenticateToken, async (req, res) => {
 
     } catch (error) {
         console.error("Error completing onboarding:", error);
-        res.status(500).json({ message: "Failed to complete onboarding" });
+        res.status(500).json({ message: "Failed to complete onboarding", error: error.message });
     }
 });
 
