@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { Link } from 'react-router-dom';
 import { Button } from '../ui/Button';
 import { Card } from '../ui/Card';
 import { Plus, Calendar, CheckSquare, Trash2, Users, Trophy, Pencil, X, CheckCircle } from 'lucide-react';
@@ -369,8 +370,8 @@ export default function WeeklyExamManager() {
                                                 <Trophy size={16} className="mr-2" /> Classement
                                             </Button>
                                         </Link>
-                                        <Button variant="ghost" size="sm" onClick={() => handleEdit(exam)}>
-                                            <Edit size={16} />
+                                        <Button variant="ghost" size="sm" onClick={() => handleEdit(exam.id)}>
+                                            <Pencil size={16} />
                                         </Button>
                                         {isActive && (
                                             <Button
