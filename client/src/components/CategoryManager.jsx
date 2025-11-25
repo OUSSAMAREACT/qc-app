@@ -9,6 +9,7 @@ import { Trash2, Plus, AlertTriangle, Edit2, Check, X } from 'lucide-react';
 export default function CategoryManager() {
     const [categories, setCategories] = useState([]);
     const [newCategory, setNewCategory] = useState('');
+    const [specialty, setSpecialty] = useState('');
     const [loading, setLoading] = useState(false);
 
     // Modal state
@@ -37,11 +38,12 @@ export default function CategoryManager() {
         setLoading(true);
         try {
             if (editingCategory) {
-                await axios.put(`/categories/${editingCategory.id}`, { name: newCategory });
+                await axios.put(`/categories/${editingCategory.id}`, { name: newCategory, specialty: specialty || null });
             } else {
-                await axios.post('/categories', { name: newCategory });
+                await axios.post('/categories', { name: newCategory, specialty: specialty || null });
             }
             setNewCategory('');
+            setSpecialty('');
             setEditingCategory(null);
             fetchCategories();
         } catch (error) {
@@ -56,11 +58,13 @@ export default function CategoryManager() {
     const startEdit = (category) => {
         setEditingCategory(category);
         setNewCategory(category.name);
+        setSpecialty(category.specialty || '');
     };
 
     const cancelEdit = () => {
         setEditingCategory(null);
         setNewCategory('');
+        setSpecialty('');
     };
 
     const confirmDelete = (category) => {
@@ -88,22 +92,37 @@ export default function CategoryManager() {
             <Card className="bg-white dark:bg-gray-800 border-gray-100 dark:border-gray-700">
                 <h2 className="text-xl font-bold mb-4 text-gray-900 dark:text-white">Gérer les Catégories</h2>
 
-                <form onSubmit={handleSubmit} className="flex gap-2 mb-6">
+                <form onSubmit={handleSubmit} className="flex flex-col md:flex-row gap-2 mb-6">
                     <Input
                         placeholder="Nouvelle catégorie..."
                         value={newCategory}
                         onChange={(e) => setNewCategory(e.target.value)}
                         className="flex-1 bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500"
                     />
+                    <select
+                        value={specialty}
+                        onChange={(e) => setSpecialty(e.target.value)}
+                        className="px-4 py-2 rounded-lg border bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 focus:bg-white dark:focus:bg-gray-600 transition-colors text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 outline-none"
+                    >
+                        <option value="">Commun (Tous)</option>
+                        <option value="POLYVALENT">Polyvalent</option>
+                        <option value="ANESTHESIE">Anesthésie</option>
+                        <option value="RADIOLOGIE">Radiologie</option>
+                        <option value="KINESITHERAPIE">Kinésithérapie</option>
+                        <option value="SANTE_MENTALE">Santé Mentale</option>
+                        <option value="LABORATOIRE">Laboratoire</option>
+                        <option value="SAGE_FEMME">Sage Femme</option>
+                        <option value="ASSISTANTE_SOCIALE">Assistante Sociale</option>
+                    </select>
                     {editingCategory ? (
-                        <>
+                        <div className="flex gap-2">
                             <Button type="submit" disabled={loading} className="bg-green-600 hover:bg-green-700 text-white">
                                 <Check size={20} />
                             </Button>
                             <Button type="button" onClick={cancelEdit} disabled={loading} variant="secondary">
                                 <X size={20} />
                             </Button>
-                        </>
+                        </div>
                     ) : (
                         <Button type="submit" disabled={loading} className="bg-blue-600 hover:bg-blue-700 text-white">
                             <Plus size={20} />
@@ -117,6 +136,11 @@ export default function CategoryManager() {
                             <div>
                                 <span className="font-medium text-gray-900 dark:text-white">{cat.name}</span>
                                 <span className="text-xs text-gray-500 dark:text-gray-400 ml-2">({cat._count?.questions || 0} questions)</span>
+                                {cat.specialty && (
+                                    <span className="ml-2 px-2 py-0.5 bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 text-xs rounded-full border border-emerald-200 dark:border-emerald-800">
+                                        {cat.specialty}
+                                    </span>
+                                )}
                             </div>
                             <div className="flex gap-1">
                                 <button

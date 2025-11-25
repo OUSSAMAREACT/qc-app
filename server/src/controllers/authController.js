@@ -4,7 +4,7 @@ import jwt from 'jsonwebtoken';
 
 export const register = async (req, res) => {
     try {
-        const { email, password, name } = req.body;
+        const { email, password, name, specialty } = req.body;
 
         // Check if user exists
         const existingUser = await prisma.user.findUnique({ where: { email } });
@@ -28,6 +28,7 @@ export const register = async (req, res) => {
                 password: hashedPassword,
                 name,
                 role: "STUDENT",
+                specialty,
             },
         });
 
@@ -38,7 +39,7 @@ export const register = async (req, res) => {
 
         res.status(201).json({
             token,
-            user: { id: user.id, email: user.email, name: user.name, role: user.role }
+            user: { id: user.id, email: user.email, name: user.name, role: user.role, specialty: user.specialty }
         });
     } catch (error) {
         console.error("Register error:", error);
@@ -67,7 +68,7 @@ export const login = async (req, res) => {
             expiresIn: '7d',
         });
 
-        res.json({ token, user: { id: user.id, email: user.email, name: user.name, role: user.role } });
+        res.json({ token, user: { id: user.id, email: user.email, name: user.name, role: user.role, specialty: user.specialty } });
     } catch (error) {
         console.error("Login error:", error);
         res.status(500).json({ message: "Erreur lors de la connexion." });
@@ -80,7 +81,7 @@ export const getMe = async (req, res) => {
         if (!user) {
             return res.status(404).json({ message: "Utilisateur non trouvé." });
         }
-        res.json({ user: { id: user.id, email: user.email, name: user.name, role: user.role } });
+        res.json({ user: { id: user.id, email: user.email, name: user.name, role: user.role, specialty: user.specialty } });
     } catch (error) {
         res.status(500).json({ message: "Erreur serveur." });
     }

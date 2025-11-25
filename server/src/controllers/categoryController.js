@@ -2,7 +2,23 @@ import prisma from '../prisma.js';
 
 export const getCategories = async (req, res) => {
     try {
+        const userId = req.user.userId;
+        const user = await prisma.user.findUnique({ where: { id: userId } });
+
+        if (!user) {
+            return res.status(404).json({ message: "Utilisateur non trouvé." });
+        }
+
+        const where = {};
+        if (user.role !== 'ADMIN') {
+            where.OR = [
+                { specialty: null }, // Common modules
+                { specialty: user.specialty } // User's specialty
+            ];
+        }
+
         const categories = await prisma.category.findMany({
+            where,
             include: {
                 _count: {
                     select: { questions: true }
@@ -11,17 +27,18 @@ export const getCategories = async (req, res) => {
         });
         res.json(categories);
     } catch (error) {
+        console.error("Get categories error:", error);
         res.status(500).json({ message: "Erreur lors de la récupération des catégories." });
     }
 };
 
 export const createCategory = async (req, res) => {
     try {
-        const { name } = req.body;
+        const { name, specialty } = req.body;
         if (!name) return res.status(400).json({ message: "Le nom est requis." });
 
         const category = await prisma.category.create({
-            data: { name }
+            data: { name, specialty: specialty || null }
         });
         console.log("Category created:", category);
         res.status(201).json(category);
@@ -37,12 +54,12 @@ export const createCategory = async (req, res) => {
 export const updateCategory = async (req, res) => {
     try {
         const { id } = req.params;
-        const { name } = req.body;
+        const { name, specialty } = req.body;
         if (!name) return res.status(400).json({ message: "Le nom est requis." });
 
         const category = await prisma.category.update({
             where: { id: parseInt(id) },
-            data: { name }
+            data: { name, specialty: specialty || null }
         });
         res.json(category);
     } catch (error) {

@@ -11,12 +11,24 @@ datasource db {
   directUrl = env("DIRECT_URL")
 }
 
+enum Specialty {
+  POLYVALENT
+  ANESTHESIE
+  RADIOLOGIE
+  KINESITHERAPIE
+  SANTE_MENTALE
+  LABORATOIRE
+  SAGE_FEMME
+  ASSISTANTE_SOCIALE
+}
+
 model User {
   id        Int      @id @default(autoincrement())
   email     String   @unique
   password  String
   name      String?
   role      String   @default("STUDENT") // "STUDENT" or "ADMIN"
+  specialty Specialty? // Nullable for admin or legacy users, but required for new students
 
   createdAt DateTime @default(now())
   results   QuizResult[]
@@ -25,6 +37,7 @@ model User {
 model Category {
   id        Int        @id @default(autoincrement())
   name      String     @unique
+  specialty Specialty? // Nullable = Commun, Set = Spécialité
   questions Question[]
   createdAt DateTime   @default(now())
 }

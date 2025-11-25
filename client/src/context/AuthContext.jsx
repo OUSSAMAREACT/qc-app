@@ -44,8 +44,8 @@ export const AuthProvider = ({ children }) => {
     };
 
     // Register now only creates the account, does not log in
-    const register = async (name, email, password) => {
-        const res = await axios.post('/auth/register', { name, email, password });
+    const register = async (name, email, password, specialty) => {
+        const res = await axios.post('/auth/register', { name, email, password, specialty });
         return res.data;
     };
 
