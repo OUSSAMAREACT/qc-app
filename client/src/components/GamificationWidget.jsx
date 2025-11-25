@@ -57,9 +57,6 @@ export default function GamificationWidget() {
                     <h3 className="font-bold text-gray-900 dark:text-white flex items-center gap-2">
                         <Target size={18} className="text-blue-500" /> Objectifs de la semaine
                     </h3>
-                    <span className="text-xs text-gray-500 bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded-full">
-                        Semaine {weeklyProgress.weekNumber}
-                    </span>
                 </div>
 
                 <div className="space-y-4">
