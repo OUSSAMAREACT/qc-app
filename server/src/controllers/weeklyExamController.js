@@ -203,13 +203,17 @@ export const submitExam = async (req, res) => {
         });
 
         // Create Submission
-        const submission = await prisma.examSubmission.create({
+        await prisma.examSubmission.create({
             data: {
                 userId,
                 examId: parseInt(examId),
                 score
             }
         });
+
+        // Update Gamification Stats
+        const { updateGamificationStats } = await import('../services/gamificationService.js');
+        await updateGamificationStats(userId, Object.keys(answers).length);
 
         // Clear progress after submission
         await prisma.examProgress.deleteMany({
@@ -219,7 +223,7 @@ export const submitExam = async (req, res) => {
             }
         });
 
-        res.json({ message: "Exam submitted successfully", score, total: exam.questions.length });
+        res.json({ message: "Examen soumis avec succès !", score, total: exam.questions.length });
 
     } catch (error) {
         console.error("Error submitting exam:", error);

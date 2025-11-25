@@ -108,6 +108,12 @@ export const submitQuiz = async (req, res) => {
             },
         });
 
+        // Update Gamification Stats
+        // We assume any quiz submission counts as activity.
+        // We pass totalQuestions as questionsAnswered count.
+        const { updateGamificationStats } = await import('../services/gamificationService.js');
+        await updateGamificationStats(userId, totalQuestions);
+
         res.json({
             score,
             totalQuestions,

@@ -5,6 +5,7 @@ import { Card } from '../components/ui/Card';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import { User, Lock, Save, ArrowLeft, Shield, CheckCircle, AlertCircle, Award } from 'lucide-react';
+import PremiumBadge from '../components/ui/PremiumBadge';
 
 export default function ProfilePage() {
     const { user, login } = useAuth(); // We might need to update the user in context after save
@@ -109,13 +110,8 @@ export default function ProfilePage() {
                             <h3 className="text-lg font-semibold text-gray-900 dark:text-white border-b border-gray-200 dark:border-gray-700 pb-2 mb-4">Mes Badges</h3>
                             <div className="flex flex-wrap gap-4">
                                 {user.badges.map(badge => (
-                                    <div key={badge.id} className="flex flex-col items-center p-3 bg-gray-50 dark:bg-gray-700/50 rounded-xl border border-gray-100 dark:border-gray-700">
-                                        <div className={`w-12 h-12 rounded-full flex items-center justify-center mb-2 ${badge.type === 'GOLD' ? 'bg-yellow-100 text-yellow-600' :
-                                            badge.type === 'SILVER' ? 'bg-gray-100 text-gray-600' :
-                                                'bg-orange-100 text-orange-600'
-                                            }`}>
-                                            <Award size={24} />
-                                        </div>
+                                    <div key={badge.id} className="flex flex-col items-center p-4 bg-white dark:bg-gray-800 rounded-xl border border-gray-100 dark:border-gray-700 shadow-sm hover:shadow-md transition-shadow">
+                                        <PremiumBadge type={badge.type} size={80} className="mb-3" />
                                         <span className="font-bold text-sm text-gray-900 dark:text-white">{badge.type}</span>
                                         <span className="text-xs text-gray-500">{new Date(badge.awardedAt).toLocaleDateString()}</span>
                                     </div>

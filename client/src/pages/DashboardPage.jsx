@@ -6,6 +6,7 @@ import { Link } from 'react-router-dom';
 import axios from 'axios';
 import { Play, Clock, Award, BarChart2, BookOpen } from 'lucide-react';
 import WeeklyExamCard from '../components/WeeklyExamCard';
+import GamificationWidget from '../components/GamificationWidget';
 
 export default function DashboardPage() {
     const { user } = useAuth();
@@ -92,6 +93,9 @@ export default function DashboardPage() {
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 md:gap-8">
                     {/* Main Content: Modules */}
                     <div className="lg:col-span-2 space-y-8">
+                        {/* Gamification Widget */}
+                        <GamificationWidget />
+
                         {/* Weekly Exam Card */}
                         {activeExam && <WeeklyExamCard exam={activeExam} />}
 

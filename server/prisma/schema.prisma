@@ -29,6 +29,27 @@ model User {
   submissions ExamSubmission[]
   badges      Badge[]
   progress    ExamProgress[]
+  
+  // Gamification
+  currentStreak Int      @default(0)
+  longestStreak Int      @default(0)
+  lastStudyDate DateTime?
+  weeklyProgress WeeklyProgress[]
+}
+
+model WeeklyProgress {
+  id                Int      @id @default(autoincrement())
+  userId            Int
+  user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  year              Int
+  weekNumber        Int
+  questionsAnswered Int      @default(0)
+  daysStudied       Int      @default(0)
+  goalQuestions     Int      @default(100)
+  goalDays          Int      @default(5)
+  updatedAt         DateTime @updatedAt
+
+  @@unique([userId, year, weekNumber])
 }
 
 model Category {
