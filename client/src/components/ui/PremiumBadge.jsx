@@ -87,6 +87,20 @@ export default function PremiumBadge({ type, size = 64, className = '' }) {
 
                 {/* Shine Effect */}
                 <circle cx="50" cy="50" r="40" fill={`url(#${uniqueId}-shine)`} />
+
+                {/* Rank Number */}
+                <text
+                    x="50"
+                    y="62"
+                    textAnchor="middle"
+                    fill={colors.text}
+                    fontSize="24"
+                    fontWeight="bold"
+                    filter="drop-shadow(0px 2px 2px rgba(0,0,0,0.3))"
+                    style={{ fontFamily: 'serif' }}
+                >
+                    {type === 'GOLD' ? '1' : type === 'SILVER' ? '2' : '3'}
+                </text>
             </svg>
 
             {/* Optional Label below or tooltip could be added here if needed, but SVG is self-contained */}

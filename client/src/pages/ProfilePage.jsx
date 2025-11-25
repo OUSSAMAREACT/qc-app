@@ -22,9 +22,21 @@ export default function ProfilePage() {
     const [error, setError] = useState('');
     const [stats, setStats] = useState(null);
 
+    const [specialties, setSpecialties] = useState([]);
+
     useEffect(() => {
         fetchStats();
+        fetchSpecialties();
     }, []);
+
+    const fetchSpecialties = async () => {
+        try {
+            const res = await axios.get('/specialties');
+            setSpecialties(res.data);
+        } catch (error) {
+            console.error("Failed to fetch specialties", error);
+        }
+    };
 
     const fetchStats = async () => {
         try {
@@ -45,7 +57,13 @@ export default function ProfilePage() {
         setError('');
 
         try {
-            const res = await axios.put('/auth/profile', formData);
+            const updateData = { ...formData };
+            // Only include specialtyId if it's selected and user doesn't have one
+            if (!user.specialty && formData.specialtyId) {
+                updateData.specialtyId = formData.specialtyId;
+            }
+
+            const res = await axios.put('/auth/profile', updateData);
             setMessage(res.data.message);
             login(res.data.token, res.data.user); // Update context
             setIsEditing(false);
@@ -103,10 +121,15 @@ export default function ProfilePage() {
                             <Award size={16} className="text-yellow-500" />
                             <span>{user?.role === 'ADMIN' ? 'Administrateur' : 'Étudiant'}</span>
                         </div>
-                        {user?.specialty && (
+                        {user?.specialty ? (
                             <div className="flex items-center gap-2 bg-white dark:bg-gray-800 px-3 py-1 rounded-full shadow-sm border border-gray-100 dark:border-gray-700">
                                 <span className="w-2 h-2 bg-primary-500 rounded-full"></span>
                                 <span>{user.specialty.name}</span>
+                            </div>
+                        ) : (
+                            <div className="flex items-center gap-2 bg-yellow-50 dark:bg-yellow-900/20 px-3 py-1 rounded-full shadow-sm border border-yellow-100 dark:border-yellow-800 text-yellow-700 dark:text-yellow-400 text-sm">
+                                <span className="w-2 h-2 bg-yellow-500 rounded-full animate-pulse"></span>
+                                <span>Spécialité non définie</span>
                             </div>
                         )}
                     </div>
@@ -244,6 +267,46 @@ export default function ProfilePage() {
                                     />
                                 </div>
                             </div>
+
+                            {/* Specialty Selection - Only if not set */}
+                            {!user?.specialty && (
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5 ml-1">
+                                        Spécialité <span className="text-xs text-yellow-600 dark:text-yellow-400">(Choix unique)</span>
+                                    </label>
+                                    <div className="relative">
+                                        <BookOpen className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
+                                        <select
+                                            name="specialtyId"
+                                            value={formData.specialtyId || ''}
+                                            onChange={handleChange}
+                                            disabled={!isEditing}
+                                            className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all disabled:opacity-60 disabled:cursor-not-allowed appearance-none"
+                                        >
+                                            <option value="">Sélectionner une spécialité</option>
+                                            {specialties.map(s => (
+                                                <option key={s.id} value={s.id}>{s.name}</option>
+                                            ))}
+                                        </select>
+                                    </div>
+                                </div>
+                            )}
+
+                            {/* Display Specialty if set */}
+                            {user?.specialty && (
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5 ml-1">Spécialité</label>
+                                    <div className="relative">
+                                        <BookOpen className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
+                                        <input
+                                            type="text"
+                                            value={user.specialty.name}
+                                            disabled
+                                            className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-100 dark:bg-gray-800/50 text-gray-500 dark:text-gray-400 cursor-not-allowed"
+                                        />
+                                    </div>
+                                </div>
+                            )}
 
                             {isEditing && (
                                 <motion.div

@@ -151,6 +151,17 @@ export const updateProfile = async (req, res) => {
             updates.password = await bcrypt.hash(newPassword, 10);
         }
 
+        // Allow setting specialty ONLY if it's currently null
+        if (req.body.specialtyId) {
+            if (user.specialtyId === null) {
+                updates.specialtyId = parseInt(req.body.specialtyId);
+            } else {
+                // If user tries to change it but already has one, we can either ignore or throw error.
+                // Let's ignore it to be safe, or return a message if strict.
+                // For now, we'll just ignore it if they already have one, effectively making it immutable.
+            }
+        }
+
         const updatedUser = await prisma.user.update({
             where: { id: userId },
             data: updates,
