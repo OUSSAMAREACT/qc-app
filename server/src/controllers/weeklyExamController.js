@@ -318,3 +318,63 @@ export const getLeaderboard = async (req, res) => {
         res.status(500).json({ message: "Failed to fetch leaderboard." });
     }
 };
+// Finalize an exam (End it now and award badges)
+export const finalizeExam = async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        // 1. End the exam immediately
+        const exam = await prisma.weeklyExam.update({
+            where: { id: parseInt(id) },
+            data: { endDate: new Date() },
+            include: { questions: true }
+        });
+
+        // 2. Calculate Leaderboard
+        const submissions = await prisma.examSubmission.findMany({
+            where: { examId: parseInt(id) },
+            orderBy: [
+                { score: 'desc' },
+                { submittedAt: 'asc' }
+            ],
+            take: 3 // Top 3 for badges
+        });
+
+        // 3. Award Badges
+        const badgesToCreate = [];
+        if (submissions.length > 0) {
+            badgesToCreate.push({
+                userId: submissions[0].userId,
+                examId: exam.id,
+                type: 'GOLD'
+            });
+        }
+        if (submissions.length > 1) {
+            badgesToCreate.push({
+                userId: submissions[1].userId,
+                examId: exam.id,
+                type: 'SILVER'
+            });
+        }
+        if (submissions.length > 2) {
+            badgesToCreate.push({
+                userId: submissions[2].userId,
+                examId: exam.id,
+                type: 'BRONZE'
+            });
+        }
+
+        if (badgesToCreate.length > 0) {
+            await prisma.badge.createMany({
+                data: badgesToCreate,
+                skipDuplicates: true // Avoid duplicate badges if run multiple times
+            });
+        }
+
+        res.json({ message: "Exam finalized and badges awarded.", exam });
+
+    } catch (error) {
+        console.error("Error finalizing exam:", error);
+        res.status(500).json({ message: "Failed to finalize exam." });
+    }
+};

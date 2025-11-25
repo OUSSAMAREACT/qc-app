@@ -9,7 +9,8 @@ import {
     deleteExam,
     getExamById,
     updateExam,
-    saveProgress
+    saveProgress,
+    finalizeExam
 } from '../controllers/weeklyExamController.js';
 
 const router = express.Router();
@@ -26,6 +27,7 @@ router.post('/', authenticateToken, requireAdmin, createExam);
 router.get('/', authenticateToken, requireAdmin, getExams);
 router.get('/:id', authenticateToken, requireAdmin, getExamById);
 router.put('/:id', authenticateToken, requireAdmin, updateExam);
+router.post('/:id/finalize', authenticateToken, requireAdmin, finalizeExam);
 router.delete('/:id', authenticateToken, requireAdmin, deleteExam);
 
 export default router;
