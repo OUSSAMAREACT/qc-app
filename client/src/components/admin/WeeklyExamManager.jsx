@@ -95,6 +95,19 @@ export default function WeeklyExamManager() {
         }
     };
 
+    const handleDelete = async (examId) => {
+        if (!window.confirm("Êtes-vous sûr de vouloir supprimer cet examen ? Cette action est irréversible.")) {
+            return;
+        }
+        try {
+            await axios.delete(`/weekly-exams/${examId}`);
+            fetchExams();
+        } catch (error) {
+            console.error("Failed to delete exam", error);
+            alert("Erreur lors de la suppression de l'examen");
+        }
+    };
+
     return (
         <div className="space-y-8">
             <div className="flex justify-between items-center">
@@ -212,6 +225,9 @@ export default function WeeklyExamManager() {
                                 </div>
                                 <div className="flex gap-2">
                                     {/* Placeholder for future actions like Edit/Delete/Leaderboard */}
+                                    <Button variant="ghost" size="sm" className="text-red-600 hover:text-red-700 hover:bg-red-50 dark:hover:bg-red-900/20" onClick={() => handleDelete(exam.id)}>
+                                        <Trash2 size={18} />
+                                    </Button>
                                     <Button variant="ghost" size="sm" className="text-blue-600">
                                         <Trophy size={18} />
                                     </Button>

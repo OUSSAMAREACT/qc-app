@@ -45,11 +45,18 @@ export default function WeeklyExamCard({ exam }) {
                         </Link>
                     </div>
                 ) : (
-                    <Link to={`/weekly-exam/${exam.id}`}>
-                        <Button className="w-full bg-white text-indigo-600 hover:bg-indigo-50 border-0">
-                            Participer maintenant
-                        </Button>
-                    </Link>
+                    <div className="flex gap-2">
+                        <Link to={`/weekly-exam/${exam.id}`} className="flex-1">
+                            <Button className="w-full bg-white text-indigo-600 hover:bg-indigo-50 border-0">
+                                Participer maintenant
+                            </Button>
+                        </Link>
+                        <Link to={`/weekly-exam/${exam.id}/leaderboard`}>
+                            <Button className="bg-white/20 text-white hover:bg-white/30 border-0 px-3">
+                                <Trophy size={20} />
+                            </Button>
+                        </Link>
+                    </div>
                 )}
             </div>
 

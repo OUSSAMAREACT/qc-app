@@ -10,7 +10,7 @@ export default function WeeklyExamPage() {
     const navigate = useNavigate();
     const [exam, setExam] = useState(null);
     const [loading, setLoading] = useState(true);
-    const [answers, setAnswers] = useState({}); // { questionId: choiceId }
+    const [answers, setAnswers] = useState({}); // { questionId: [choiceId1, choiceId2] }
     const [submitting, setSubmitting] = useState(false);
 
     useEffect(() => {
@@ -36,10 +36,17 @@ export default function WeeklyExamPage() {
     };
 
     const handleOptionSelect = (questionId, choiceId) => {
-        setAnswers(prev => ({
-            ...prev,
-            [questionId]: choiceId
-        }));
+        setAnswers(prev => {
+            const currentAnswers = prev[questionId] || [];
+            if (currentAnswers.includes(choiceId)) {
+                // Remove if already selected
+                const newAnswers = currentAnswers.filter(id => id !== choiceId);
+                return { ...prev, [questionId]: newAnswers.length > 0 ? newAnswers : undefined };
+            } else {
+                // Add if not selected
+                return { ...prev, [questionId]: [...currentAnswers, choiceId] };
+            }
+        });
     };
 
     const handleSubmit = async () => {
@@ -49,9 +56,15 @@ export default function WeeklyExamPage() {
 
         setSubmitting(true);
         try {
+            // Clean up undefined answers before sending
+            const cleanAnswers = {};
+            Object.keys(answers).forEach(key => {
+                if (answers[key]) cleanAnswers[key] = answers[key];
+            });
+
             await axios.post('/weekly-exams/submit', {
                 examId: exam.id,
-                answers
+                answers: cleanAnswers
             });
             navigate('/dashboard');
         } catch (error) {
@@ -65,7 +78,7 @@ export default function WeeklyExamPage() {
     if (!exam) return <div className="p-8 text-center">Aucun examen trouvé.</div>;
     if (exam.isSubmitted) return <div className="p-8 text-center">Vous avez déjà participé à cet examen.</div>;
 
-    const answeredCount = Object.keys(answers).length;
+    const answeredCount = Object.keys(answers).filter(k => answers[k] && answers[k].length > 0).length;
     const totalQuestions = exam.questions.length;
 
     return (
@@ -90,28 +103,32 @@ export default function WeeklyExamPage() {
                             <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-4">
                                 <span className="text-gray-400 mr-2">{index + 1}.</span>
                                 {q.text}
+                                <span className="ml-2 text-xs text-gray-400 font-normal">(Plusieurs choix possibles)</span>
                             </h3>
                             <div className="space-y-3">
-                                {q.choices.map(c => (
-                                    <div
-                                        key={c.id}
-                                        onClick={() => handleOptionSelect(q.id, c.id)}
-                                        className={`p-4 rounded-xl border cursor-pointer transition-all ${answers[q.id] === c.id
+                                {q.choices.map(c => {
+                                    const isSelected = answers[q.id]?.includes(c.id);
+                                    return (
+                                        <div
+                                            key={c.id}
+                                            onClick={() => handleOptionSelect(q.id, c.id)}
+                                            className={`p-4 rounded-xl border cursor-pointer transition-all ${isSelected
                                                 ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/20 ring-1 ring-blue-500'
                                                 : 'border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800'
-                                            }`}
-                                    >
-                                        <div className="flex items-center gap-3">
-                                            <div className={`w-5 h-5 rounded-full border flex items-center justify-center ${answers[q.id] === c.id
+                                                }`}
+                                        >
+                                            <div className="flex items-center gap-3">
+                                                <div className={`w-5 h-5 rounded border flex items-center justify-center ${isSelected
                                                     ? 'border-blue-500 bg-blue-500'
                                                     : 'border-gray-300 dark:border-gray-600'
-                                                }`}>
-                                                {answers[q.id] === c.id && <div className="w-2 h-2 bg-white rounded-full" />}
+                                                    }`}>
+                                                    {isSelected && <CheckCircle size={14} className="text-white" />}
+                                                </div>
+                                                <span className="text-gray-700 dark:text-gray-300">{c.text}</span>
                                             </div>
-                                            <span className="text-gray-700 dark:text-gray-300">{c.text}</span>
                                         </div>
-                                    </div>
-                                ))}
+                                    );
+                                })}
                             </div>
                         </Card>
                     ))}

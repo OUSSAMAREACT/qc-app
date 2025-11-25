@@ -113,7 +113,7 @@ export const getActiveExam = async (req, res) => {
 // Submit an exam
 export const submitExam = async (req, res) => {
     try {
-        const { examId, answers } = req.body; // answers: { questionId: choiceId }
+        const { examId, answers } = req.body; // answers: { questionId: [choiceId1, choiceId2] }
         const userId = req.user.userId;
 
         if (!examId || !answers) {
@@ -152,9 +152,14 @@ export const submitExam = async (req, res) => {
         // Calculate Score
         let score = 0;
         exam.questions.forEach(question => {
-            const userChoiceId = answers[question.id];
-            const correctChoice = question.choices.find(c => c.isCorrect);
-            if (correctChoice && correctChoice.id === userChoiceId) {
+            const userChoiceIds = answers[question.id] || [];
+            const correctChoiceIds = question.choices.filter(c => c.isCorrect).map(c => c.id);
+
+            // Check if arrays match (same length and all elements match)
+            const isCorrect = userChoiceIds.length === correctChoiceIds.length &&
+                userChoiceIds.every(id => correctChoiceIds.includes(id));
+
+            if (isCorrect) {
                 score++;
             }
         });
@@ -173,6 +178,18 @@ export const submitExam = async (req, res) => {
     } catch (error) {
         console.error("Error submitting exam:", error);
         res.status(500).json({ message: "Failed to submit exam." });
+    }
+};
+
+// Delete an exam
+export const deleteExam = async (req, res) => {
+    try {
+        const { id } = req.params;
+        await prisma.weeklyExam.delete({ where: { id: parseInt(id) } });
+        res.json({ message: "Exam deleted successfully." });
+    } catch (error) {
+        console.error("Error deleting exam:", error);
+        res.status(500).json({ message: "Failed to delete exam." });
     }
 };
 

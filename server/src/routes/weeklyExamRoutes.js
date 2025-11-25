@@ -5,7 +5,8 @@ import {
     getExams,
     getActiveExam,
     submitExam,
-    getLeaderboard
+    getLeaderboard,
+    deleteExam
 } from '../controllers/weeklyExamController.js';
 
 const router = express.Router();
@@ -16,7 +17,9 @@ router.post('/submit', authenticateToken, submitExam);
 router.get('/:examId/leaderboard', authenticateToken, getLeaderboard);
 
 // Admin routes
+// Admin routes
 router.post('/', authenticateToken, requireAdmin, createExam);
 router.get('/', authenticateToken, requireAdmin, getExams);
+router.delete('/:id', authenticateToken, requireAdmin, deleteExam);
 
 export default router;
