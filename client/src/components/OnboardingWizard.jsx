@@ -31,7 +31,7 @@ export default function OnboardingWizard() {
             // For now, we rely on the fact that the backend is updated.
             // A page refresh or context reload would be needed to persist the state in the app if we check it globally.
             // We can force a reload or update the user object if AuthContext exposes a setter (it doesn't currently, but we can trigger a fetch).
-            window.location.reload(); // Simple way to refresh auth state and redirect
+            // window.location.reload(); // Removed to allow user to see the plan
         } catch (error) {
             console.error("Onboarding failed", error);
             const message = error.response?.data?.message || "Une erreur est survenue.";
