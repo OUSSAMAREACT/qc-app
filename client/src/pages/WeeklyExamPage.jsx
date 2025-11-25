@@ -45,8 +45,14 @@ export default function WeeklyExamPage() {
             const res = await axios.get('/weekly-exams/active');
             if (res.data && res.data.id === parseInt(id)) {
                 setExam(res.data);
+                if (res.data.savedAnswers) {
+                    setAnswers(res.data.savedAnswers);
+                }
             } else {
                 setExam(res.data);
+                if (res.data && res.data.savedAnswers) {
+                    setAnswers(res.data.savedAnswers);
+                }
             }
         } catch (error) {
             console.error("Failed to fetch exam", error);
@@ -58,13 +64,43 @@ export default function WeeklyExamPage() {
     const handleOptionSelect = (questionId, choiceId) => {
         setAnswers(prev => {
             const currentAnswers = prev[questionId] || [];
+            let newAnswersForQuestion;
+
             if (currentAnswers.includes(choiceId)) {
-                const newAnswers = currentAnswers.filter(id => id !== choiceId);
-                return { ...prev, [questionId]: newAnswers.length > 0 ? newAnswers : undefined };
+                newAnswersForQuestion = currentAnswers.filter(id => id !== choiceId);
             } else {
-                return { ...prev, [questionId]: [...currentAnswers, choiceId] };
+                newAnswersForQuestion = [...currentAnswers, choiceId];
             }
+
+            const newAnswers = {
+                ...prev,
+                [questionId]: newAnswersForQuestion.length > 0 ? newAnswersForQuestion : undefined
+            };
+
+            // Debounced save
+            saveProgress(newAnswers);
+
+            return newAnswers;
         });
+    };
+
+    // Simple debounce for saving progress
+    const saveProgress = async (currentAnswers) => {
+        if (!exam) return;
+        try {
+            // Clean up undefined answers before sending
+            const cleanAnswers = {};
+            Object.keys(currentAnswers).forEach(key => {
+                if (currentAnswers[key]) cleanAnswers[key] = currentAnswers[key];
+            });
+
+            await axios.post('/weekly-exams/progress', {
+                examId: exam.id,
+                answers: cleanAnswers
+            });
+        } catch (error) {
+            console.error("Failed to save progress", error);
+        }
     };
 
     const handleNext = () => {
@@ -256,14 +292,14 @@ export default function WeeklyExamPage() {
                                             whileTap={{ scale: 0.99 }}
                                             onClick={() => handleOptionSelect(currentQuestion.id, choice.id)}
                                             className={`relative p-4 md:p-5 rounded-xl border-2 cursor-pointer transition-all duration-200 group ${isSelected
-                                                    ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/20 shadow-md shadow-blue-500/10'
-                                                    : 'border-gray-100 dark:border-gray-700 hover:border-blue-200 dark:hover:border-blue-800 hover:bg-gray-50 dark:hover:bg-gray-700/50'
+                                                ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/20 shadow-md shadow-blue-500/10'
+                                                : 'border-gray-100 dark:border-gray-700 hover:border-blue-200 dark:hover:border-blue-800 hover:bg-gray-50 dark:hover:bg-gray-700/50'
                                                 }`}
                                         >
                                             <div className="flex items-start gap-4">
                                                 <div className={`mt-0.5 w-6 h-6 rounded-md border-2 flex items-center justify-center flex-shrink-0 transition-colors ${isSelected
-                                                        ? 'border-blue-500 bg-blue-500 text-white'
-                                                        : 'border-gray-300 dark:border-gray-600 group-hover:border-blue-400'
+                                                    ? 'border-blue-500 bg-blue-500 text-white'
+                                                    : 'border-gray-300 dark:border-gray-600 group-hover:border-blue-400'
                                                     }`}>
                                                     {isSelected && <CheckCircle size={16} />}
                                                 </div>
@@ -344,10 +380,10 @@ export default function WeeklyExamPage() {
                                             key={q.id}
                                             onClick={() => handleJumpTo(idx)}
                                             className={`aspect-square rounded-lg flex items-center justify-center text-sm font-medium transition-all ${isCurrent
-                                                    ? 'bg-blue-600 text-white ring-2 ring-blue-300 dark:ring-blue-900'
-                                                    : isAnswered
-                                                        ? 'bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-800'
-                                                        : 'bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-600'
+                                                ? 'bg-blue-600 text-white ring-2 ring-blue-300 dark:ring-blue-900'
+                                                : isAnswered
+                                                    ? 'bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-800'
+                                                    : 'bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-600'
                                                 }`}
                                         >
                                             {idx + 1}

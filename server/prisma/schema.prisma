@@ -28,6 +28,7 @@ model User {
   specialty   Specialty?   @relation(fields: [specialtyId], references: [id])
   submissions ExamSubmission[]
   badges      Badge[]
+  progress    ExamProgress[]
 }
 
 model Category {
@@ -68,6 +69,7 @@ model WeeklyExam {
   questions   Question[]
   submissions ExamSubmission[]
   badges      Badge[]
+  progress    ExamProgress[]
   createdAt   DateTime  @default(now())
 }
 
@@ -101,4 +103,16 @@ model QuizResult {
   userId         Int
   categoryName   String?
   user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model ExamProgress {
+  id        Int        @id @default(autoincrement())
+  userId    Int
+  user      User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  examId    Int
+  exam      WeeklyExam @relation(fields: [examId], references: [id], onDelete: Cascade)
+  answers   Json       // Stores { questionId: [choiceId, ...] }
+  updatedAt DateTime   @updatedAt
+
+  @@unique([userId, examId])
 }

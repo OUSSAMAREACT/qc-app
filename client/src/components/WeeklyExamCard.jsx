@@ -26,7 +26,7 @@ export default function WeeklyExamCard({ exam }) {
                     </div>
                 </div>
 
-                <h3 className="text-xl font-bold mb-1">Partie Commune Hebdomadaire</h3>
+                <h3 className="text-xl font-bold mb-1">Examen de la semaine (Partie Commune)</h3>
                 <p className="text-indigo-100 text-sm mb-4">{exam.title}</p>
 
                 {isSubmitted ? (

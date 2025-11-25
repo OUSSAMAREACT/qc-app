@@ -8,7 +8,8 @@ import {
     getLeaderboard,
     deleteExam,
     getExamById,
-    updateExam
+    updateExam,
+    saveProgress
 } from '../controllers/weeklyExamController.js';
 
 const router = express.Router();
@@ -16,6 +17,7 @@ const router = express.Router();
 // Public/User routes
 router.get('/active', authenticateToken, getActiveExam);
 router.post('/submit', authenticateToken, submitExam);
+router.post('/progress', authenticateToken, saveProgress);
 router.get('/:examId/leaderboard', authenticateToken, getLeaderboard);
 
 // Admin routes

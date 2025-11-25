@@ -70,6 +70,9 @@ export const getActiveExam = async (req, res) => {
                 },
                 submissions: {
                     where: { userId: userId }
+                },
+                progress: {
+                    where: { userId: userId }
                 }
             },
             orderBy: { endDate: 'asc' } // Get the one ending soonest if multiple overlap
@@ -101,12 +104,47 @@ export const getActiveExam = async (req, res) => {
             ...exam,
             questions: sanitizedQuestions,
             isSubmitted,
-            userScore: isSubmitted ? exam.submissions[0].score : null
+            userScore: isSubmitted ? exam.submissions[0].score : null,
+            savedAnswers: exam.progress.length > 0 ? exam.progress[0].answers : {}
         });
 
     } catch (error) {
         console.error("Error fetching active exam:", error);
         res.status(500).json({ message: "Failed to fetch active exam." });
+    }
+};
+
+// Save exam progress
+export const saveProgress = async (req, res) => {
+    try {
+        const { examId, answers } = req.body;
+        const userId = req.user.userId;
+
+        if (!examId || !answers) {
+            return res.status(400).json({ message: "Exam ID and answers are required." });
+        }
+
+        await prisma.examProgress.upsert({
+            where: {
+                userId_examId: {
+                    userId,
+                    examId: parseInt(examId)
+                }
+            },
+            update: {
+                answers
+            },
+            create: {
+                userId,
+                examId: parseInt(examId),
+                answers
+            }
+        });
+
+        res.json({ message: "Progress saved." });
+    } catch (error) {
+        console.error("Error saving progress:", error);
+        res.status(500).json({ message: "Failed to save progress." });
     }
 };
 
@@ -170,6 +208,14 @@ export const submitExam = async (req, res) => {
                 userId,
                 examId: parseInt(examId),
                 score
+            }
+        });
+
+        // Clear progress after submission
+        await prisma.examProgress.deleteMany({
+            where: {
+                userId,
+                examId: parseInt(examId)
             }
         });
 

@@ -162,7 +162,7 @@ export default function WeeklyExamManager() {
         <div className="space-y-8">
             <div className="flex justify-between items-center">
                 <div>
-                    <h2 className="text-2xl font-bold text-gray-900 dark:text-white tracking-tight">Partie Commune</h2>
+                    <h2 className="text-2xl font-bold text-gray-900 dark:text-white tracking-tight">Examen de la semaine (Partie Commune)</h2>
                     <p className="text-gray-500 dark:text-gray-400 mt-1">Gérez les examens hebdomadaires et consultez les classements.</p>
                 </div>
                 {!isCreating && (
