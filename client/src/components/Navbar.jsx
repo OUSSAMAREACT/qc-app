@@ -32,7 +32,7 @@ export default function Navbar() {
     }, [location]);
 
     const navLinks = [
-        { path: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
+        { path: '/dashboard', label: 'Tableau de bord', icon: LayoutDashboard },
         { path: '/quiz', label: 'Quiz', icon: BookOpen },
         { path: '/history', label: 'Historique', icon: History },
     ];
@@ -51,7 +51,7 @@ export default function Navbar() {
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex justify-between items-center h-16">
                     {/* Logo */}
-                    <Link to="/" className="flex items-center gap-2 group">
+                    <Link to="/" className="flex items-center gap-2 group mr-8">
                         <div className="w-8 h-8 bg-primary-600 rounded-lg flex items-center justify-center text-white font-bold text-xl shadow-lg shadow-primary-500/30 transition-transform group-hover:scale-105">
                             Q
                         </div>
@@ -61,7 +61,7 @@ export default function Navbar() {
                     </Link>
 
                     {/* Desktop Navigation */}
-                    <div className="hidden md:flex items-center gap-1">
+                    <div className="hidden md:flex items-center gap-2">
                         {navLinks.map((link) => {
                             const Icon = link.icon;
                             const isActive = location.pathname === link.path;
