@@ -22,6 +22,8 @@ model User {
   password    String
   name        String?
   role        String       @default("STUDENT")
+  resetToken  String?
+  resetTokenExpiry DateTime?
   createdAt   DateTime     @default(now())
   specialtyId Int?
   results     QuizResult[]
