@@ -108,30 +108,36 @@ export default function DashboardPage() {
             className="space-y-8"
         >
             {/* Hero Section */}
-            <motion.div variants={itemVariants} className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-primary-600 to-primary-800 text-white p-8 md:p-12 shadow-xl">
+            <motion.div
+                variants={itemVariants}
+                className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-primary-600 via-primary-700 to-primary-900 text-white p-8 md:p-12 shadow-2xl shadow-primary-900/20"
+            >
+                {/* Abstract Pattern Overlay */}
+                <div className="absolute inset-0 opacity-10 bg-[radial-gradient(circle_at_top_right,_var(--tw-gradient-stops))] from-white via-transparent to-transparent" />
+
                 <div className="relative z-10">
-                    <h1 className="text-3xl md:text-5xl font-heading font-bold mb-4">
-                        {greeting}, {user?.name?.split(' ')[0]} !
+                    <h1 className="text-3xl md:text-5xl font-heading font-bold mb-4 tracking-tight">
+                        {greeting}, <span className="text-primary-100">{user?.name?.split(' ')[0]}</span> !
                     </h1>
-                    <p className="text-primary-100 text-lg md:text-xl max-w-2xl mb-8">
+                    <p className="text-primary-100/90 text-lg md:text-xl max-w-2xl mb-8 font-medium leading-relaxed">
                         Prêt à relever de nouveaux défis aujourd'hui ? Continuez sur votre lancée et atteignez vos objectifs.
                     </p>
                     <div className="flex flex-wrap gap-4">
                         <Link to="/quiz">
-                            <button className="bg-white text-primary-700 hover:bg-primary-50 px-6 py-3 rounded-xl font-bold flex items-center gap-2 transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-1">
+                            <button className="bg-white text-primary-700 hover:bg-primary-50 px-8 py-4 rounded-2xl font-bold flex items-center gap-2 transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-1 active:scale-95">
                                 <Play size={20} fill="currentColor" /> Quiz Rapide
                             </button>
                         </Link>
                         <Link to="/profile">
-                            <button className="bg-primary-700/50 hover:bg-primary-700/70 text-white border border-primary-500/50 px-6 py-3 rounded-xl font-semibold flex items-center gap-2 transition-all backdrop-blur-sm">
+                            <button className="bg-primary-800/40 hover:bg-primary-800/60 text-white border border-white/20 px-8 py-4 rounded-2xl font-semibold flex items-center gap-2 transition-all backdrop-blur-md hover:border-white/40">
                                 <Target size={20} /> Voir mes objectifs
                             </button>
                         </Link>
                     </div>
                 </div>
                 {/* Decorative Background Elements */}
-                <div className="absolute top-0 right-0 -mt-10 -mr-10 w-64 h-64 bg-white/10 rounded-full blur-3xl"></div>
-                <div className="absolute bottom-0 left-0 -mb-10 -ml-10 w-40 h-40 bg-primary-400/20 rounded-full blur-2xl"></div>
+                <div className="absolute top-0 right-0 -mt-20 -mr-20 w-80 h-80 bg-white/10 rounded-full blur-3xl animate-pulse"></div>
+                <div className="absolute bottom-0 left-0 -mb-20 -ml-20 w-60 h-60 bg-primary-400/20 rounded-full blur-3xl"></div>
             </motion.div>
 
             {/* Main Grid */}

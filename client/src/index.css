@@ -19,6 +19,11 @@
     @apply font-heading;
   }
 
+  /* Premium Selection */
+  ::selection {
+    @apply bg-blue-500/30 text-blue-900 dark:text-white;
+  }
+
   /* Premium Scrollbar */
   ::-webkit-scrollbar {
     width: 8px;
