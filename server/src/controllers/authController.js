@@ -50,6 +50,7 @@ export const register = async (req, res) => {
                 email: user.email,
                 name: user.name,
                 role: user.role,
+                status: user.status,
                 specialty: user.specialty,
                 onboardingCompleted: user.onboardingCompleted
             }
@@ -73,6 +74,22 @@ export const login = async (req, res) => {
             return res.status(400).json({ message: "Email ou mot de passe incorrect." });
         }
 
+        // Verify password
+        const isValid = await bcrypt.compare(password, user.password);
+        if (!isValid) {
+            return res.status(400).json({ message: "Email ou mot de passe incorrect." });
+        }
+
+        // Check status (Admins bypass this check)
+        // We allow PENDING users to login now, but frontend will redirect them
+
+        if (user.status === 'REJECTED') {
+            return res.status(403).json({
+                message: "Compte désactivé.",
+                code: "ACCOUNT_REJECTED"
+            });
+        }
+
         // Generate token
         const token = jwt.sign({ userId: user.id, role: user.role }, process.env.JWT_SECRET, {
             expiresIn: '7d',
@@ -85,6 +102,7 @@ export const login = async (req, res) => {
                 email: user.email,
                 name: user.name,
                 role: user.role,
+                status: user.status,
                 specialty: user.specialty,
                 onboardingCompleted: user.onboardingCompleted
             }
@@ -110,6 +128,7 @@ export const getMe = async (req, res) => {
                 email: user.email,
                 name: user.name,
                 role: user.role,
+                status: user.status,
                 specialty: user.specialty,
                 badges: user.badges,
                 onboardingCompleted: user.onboardingCompleted
