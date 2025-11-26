@@ -5,7 +5,6 @@ import { useNavigate, Link } from 'react-router-dom';
 import { Button } from '../components/ui/Button';
 import { Input } from '../components/ui/Input';
 import { Card } from '../components/ui/Card';
-import { SuccessModal } from '../components/ui/SuccessModal';
 import { BookOpen, UserPlus, ArrowLeft, Eye, EyeOff } from 'lucide-react';
 
 export default function RegisterPage() {
@@ -18,7 +17,6 @@ export default function RegisterPage() {
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
     const [error, setError] = useState('');
     const [isLoading, setIsLoading] = useState(false);
-    const [showSuccessModal, setShowSuccessModal] = useState(false);
     const { register } = useAuth();
     const navigate = useNavigate();
     const [specialties, setSpecialties] = useState([]);
@@ -53,7 +51,7 @@ export default function RegisterPage() {
         setIsLoading(true);
         try {
             await register(name, email, password, specialty);
-            setShowSuccessModal(true);
+            navigate('/payment');
         } catch (err) {
             setError(err.response?.data?.message || "Erreur d'inscription");
         } finally {
@@ -61,20 +59,8 @@ export default function RegisterPage() {
         }
     };
 
-    const handleModalClose = () => {
-        setShowSuccessModal(false);
-        navigate('/login');
-    };
-
     return (
         <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-600 to-indigo-900 dark:from-gray-900 dark:to-gray-800 p-4 font-sans transition-colors duration-300">
-            <SuccessModal
-                isOpen={showSuccessModal}
-                onClose={handleModalClose}
-                title="Inscription réussie !"
-                message="Votre inscription a été prise en compte. Votre compte est en attente de validation par l'administrateur. Vous ne pourrez vous connecter qu'après activation."
-                buttonText="Se connecter"
-            />
 
             <div className="w-full max-w-md">
                 <div className="text-center mb-8">

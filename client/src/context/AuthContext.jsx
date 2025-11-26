@@ -47,10 +47,14 @@ export const AuthProvider = ({ children }) => {
         return user;
     };
 
-    // Register now only creates the account, does not log in
+    // Register now logs in automatically
     const register = async (name, email, password, specialtyId) => {
         const res = await axios.post('/auth/register', { name, email, password, specialtyId });
-        return res.data;
+        const { token, user } = res.data;
+        localStorage.setItem('token', token);
+        axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+        setUser(user);
+        return user;
     };
 
     const logout = () => {
