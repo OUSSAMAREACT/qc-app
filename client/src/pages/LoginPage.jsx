@@ -4,7 +4,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { Button } from '../components/ui/Button';
 import { Input } from '../components/ui/Input';
 import { Card } from '../components/ui/Card';
-import { BookOpen, LogIn, ArrowRight, ArrowLeft, Eye, EyeOff } from 'lucide-react';
+import { BookOpen, LogIn, ArrowRight, ArrowLeft, Eye, EyeOff, Shield } from 'lucide-react';
 
 export default function LoginPage() {
     const [email, setEmail] = useState('');
@@ -15,6 +15,8 @@ export default function LoginPage() {
     const { login } = useAuth();
     const navigate = useNavigate();
 
+    const [showPendingModal, setShowPendingModal] = useState(false);
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         setError('');
@@ -23,7 +25,11 @@ export default function LoginPage() {
             await login(email, password);
             navigate('/dashboard');
         } catch (err) {
-            setError(err.response?.data?.message || "Erreur de connexion");
+            if (err.response?.data?.code === 'ACCOUNT_PENDING') {
+                setShowPendingModal(true);
+            } else {
+                setError(err.response?.data?.message || "Erreur de connexion");
+            }
         } finally {
             setIsLoading(false);
         }
@@ -31,7 +37,7 @@ export default function LoginPage() {
 
     const handleForgotPassword = (e) => {
         e.preventDefault();
-        alert("La réinitialisation du mot de passe sera bientôt disponible. Veuillez contacter l'administrateur.");
+        navigate('/forgot-password');
     };
 
     return (
@@ -123,6 +129,29 @@ export default function LoginPage() {
                     © 2024 QCM Echelle 11. Tous droits réservés.
                 </p>
             </div>
+
+            {/* Premium Pending Modal */}
+            {showPendingModal && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-in fade-in duration-200">
+                    <div className="bg-white dark:bg-gray-800 rounded-3xl shadow-2xl w-full max-w-sm overflow-hidden transform scale-100 animate-in zoom-in-95 duration-200">
+                        <div className="p-8 text-center">
+                            <div className="w-20 h-20 bg-yellow-100 dark:bg-yellow-900/30 text-yellow-600 rounded-full flex items-center justify-center mx-auto mb-6 animate-bounce">
+                                <Shield size={40} />
+                            </div>
+                            <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-3">Compte en attente</h3>
+                            <p className="text-gray-500 dark:text-gray-400 mb-8 leading-relaxed">
+                                Votre inscription a bien été prise en compte. L'administrateur doit valider votre compte avant que vous puissiez accéder à la plateforme.
+                            </p>
+                            <Button
+                                onClick={() => setShowPendingModal(false)}
+                                className="w-full bg-gray-900 hover:bg-gray-800 text-white py-3 rounded-xl shadow-lg shadow-gray-500/20"
+                            >
+                                Compris
+                            </Button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }

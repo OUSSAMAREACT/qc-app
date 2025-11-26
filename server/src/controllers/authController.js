@@ -79,6 +79,21 @@ export const login = async (req, res) => {
             return res.status(400).json({ message: "Email ou mot de passe incorrect." });
         }
 
+        // Check status
+        if (user.status === 'PENDING') {
+            return res.status(403).json({
+                message: "Compte en attente de validation.",
+                code: "ACCOUNT_PENDING"
+            });
+        }
+
+        if (user.status === 'REJECTED') {
+            return res.status(403).json({
+                message: "Compte désactivé.",
+                code: "ACCOUNT_REJECTED"
+            });
+        }
+
         // Generate token
         const token = jwt.sign({ userId: user.id, role: user.role }, process.env.JWT_SECRET, {
             expiresIn: '7d',

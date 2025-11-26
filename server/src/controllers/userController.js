@@ -10,6 +10,7 @@ export const getUsers = async (req, res) => {
                 email: true,
                 name: true,
                 role: true,
+                status: true,
                 specialtyId: true,
                 specialty: {
                     select: {
@@ -32,12 +33,13 @@ export const getUsers = async (req, res) => {
 
 export const updateUser = async (req, res) => {
     const { id } = req.params;
-    const { name, password, role } = req.body;
+    const { name, password, role, status } = req.body;
 
     try {
         const updateData = {};
         if (name) updateData.name = name;
         if (role) updateData.role = role;
+        if (status) updateData.status = status;
         if (password) {
             const salt = await bcrypt.genSalt(10);
             updateData.password = await bcrypt.hash(password, salt);
@@ -50,15 +52,17 @@ export const updateUser = async (req, res) => {
                 id: true,
                 email: true,
                 name: true,
-                role: true
+                role: true,
+                status: true
             }
+        }
         });
 
-        res.json(user);
-    } catch (error) {
-        console.error("Error updating user:", error);
-        res.status(500).json({ message: "Error updating user" });
-    }
+    res.json(user);
+} catch (error) {
+    console.error("Error updating user:", error);
+    res.status(500).json({ message: "Error updating user" });
+}
 };
 
 export const deleteUser = async (req, res) => {

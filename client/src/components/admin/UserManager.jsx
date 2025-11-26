@@ -13,6 +13,8 @@ export default function UserManager() {
     const [deleteConfirm, setDeleteConfirm] = useState(null);
     const [formData, setFormData] = useState({ name: '', password: '' });
 
+    const [filterStatus, setFilterStatus] = useState('ALL'); // ALL, PENDING, ACTIVE
+
     useEffect(() => {
         fetchUsers();
     }, []);
@@ -35,6 +37,16 @@ export default function UserManager() {
 
     const handleDeleteClick = (user) => {
         setDeleteConfirm(user);
+    };
+
+    const handleActivate = async (user) => {
+        try {
+            await axios.put(`/users/${user.id}`, { status: 'ACTIVE' });
+            setUsers(users.map(u => u.id === user.id ? { ...u, status: 'ACTIVE' } : u));
+        } catch (error) {
+            console.error("Failed to activate user", error);
+            alert("Erreur lors de l'activation");
+        }
     };
 
     const handleUpdate = async (e) => {
@@ -65,10 +77,16 @@ export default function UserManager() {
         }
     };
 
-    const filteredUsers = users.filter(user =>
-        user.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        user.email?.toLowerCase().includes(searchTerm.toLowerCase())
-    );
+    const filteredUsers = users.filter(user => {
+        const matchesSearch = user.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            user.email?.toLowerCase().includes(searchTerm.toLowerCase());
+
+        const matchesStatus = filterStatus === 'ALL' || user.status === filterStatus;
+
+        return matchesSearch && matchesStatus;
+    });
+
+    const pendingCount = users.filter(u => u.status === 'PENDING').length;
 
     return (
         <div className="space-y-6">
@@ -89,6 +107,42 @@ export default function UserManager() {
                 </div>
             </div>
 
+            {/* Status Filters */}
+            <div className="flex gap-2 p-1 bg-gray-100 dark:bg-gray-800 rounded-xl w-fit">
+                <button
+                    onClick={() => setFilterStatus('ALL')}
+                    className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${filterStatus === 'ALL'
+                        ? 'bg-white dark:bg-gray-700 text-gray-900 dark:text-white shadow-sm'
+                        : 'text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
+                        }`}
+                >
+                    Tous
+                </button>
+                <button
+                    onClick={() => setFilterStatus('PENDING')}
+                    className={`px-4 py-2 rounded-lg text-sm font-medium transition-all flex items-center gap-2 ${filterStatus === 'PENDING'
+                        ? 'bg-white dark:bg-gray-700 text-gray-900 dark:text-white shadow-sm'
+                        : 'text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
+                        }`}
+                >
+                    En attente
+                    {pendingCount > 0 && (
+                        <span className="bg-red-500 text-white text-xs px-1.5 py-0.5 rounded-full">
+                            {pendingCount}
+                        </span>
+                    )}
+                </button>
+                <button
+                    onClick={() => setFilterStatus('ACTIVE')}
+                    className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${filterStatus === 'ACTIVE'
+                        ? 'bg-white dark:bg-gray-700 text-gray-900 dark:text-white shadow-sm'
+                        : 'text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
+                        }`}
+                >
+                    Actifs
+                </button>
+            </div>
+
             <Card className="overflow-hidden border-0 shadow-sm bg-transparent dark:bg-transparent md:bg-white md:dark:bg-gray-800">
                 {/* Desktop Table View */}
                 <div className="hidden md:block overflow-x-auto bg-white dark:bg-gray-800 rounded-2xl">
@@ -98,7 +152,7 @@ export default function UserManager() {
                                 <th className="p-4 font-semibold text-gray-600 dark:text-gray-300">Utilisateur</th>
                                 <th className="p-4 font-semibold text-gray-600 dark:text-gray-300">Email</th>
                                 <th className="p-4 font-semibold text-gray-600 dark:text-gray-300">Rôle</th>
-                                <th className="p-4 font-semibold text-gray-600 dark:text-gray-300">Date d'inscription</th>
+                                <th className="p-4 font-semibold text-gray-600 dark:text-gray-300">Statut</th>
                                 <th className="p-4 font-semibold text-gray-600 dark:text-gray-300 text-right">Actions</th>
                             </tr>
                         </thead>
@@ -131,11 +185,27 @@ export default function UserManager() {
                                                 {user.role}
                                             </span>
                                         </td>
-                                        <td className="p-4 text-gray-500 dark:text-gray-400 text-sm">
-                                            {new Date(user.createdAt).toLocaleDateString()}
+                                        <td className="p-4">
+                                            <span className={`px-2 py-1 rounded-full text-xs font-medium ${user.status === 'PENDING'
+                                                ? 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-300'
+                                                : user.status === 'ACTIVE'
+                                                    ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300'
+                                                    : 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-300'
+                                                }`}>
+                                                {user.status || 'PENDING'}
+                                            </span>
                                         </td>
                                         <td className="p-4 text-right">
                                             <div className="flex justify-end gap-2">
+                                                {user.status === 'PENDING' && (
+                                                    <button
+                                                        onClick={() => handleActivate(user)}
+                                                        className="p-2 text-green-600 hover:bg-green-50 dark:hover:bg-green-900/20 rounded-lg transition-colors"
+                                                        title="Activer"
+                                                    >
+                                                        <Check size={18} />
+                                                    </button>
+                                                )}
                                                 <button
                                                     onClick={() => handleEditClick(user)}
                                                     className="p-2 text-gray-500 hover:text-primary-600 hover:bg-primary-50 dark:hover:bg-primary-900/20 rounded-lg transition-colors"
@@ -182,13 +252,26 @@ export default function UserManager() {
                                                 }`}>
                                                 {user.role}
                                             </span>
-                                            <span className="text-xs text-gray-400">
-                                                {new Date(user.createdAt).toLocaleDateString()}
+                                            <span className={`px-2 py-0.5 rounded-full text-[10px] font-medium ${user.status === 'PENDING'
+                                                ? 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-300'
+                                                : user.status === 'ACTIVE'
+                                                    ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300'
+                                                    : 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-300'
+                                                }`}>
+                                                {user.status || 'PENDING'}
                                             </span>
                                         </div>
                                     </div>
                                 </div>
                                 <div className="flex flex-col gap-1">
+                                    {user.status === 'PENDING' && (
+                                        <button
+                                            onClick={() => handleActivate(user)}
+                                            className="p-2 text-green-600 hover:bg-green-50 dark:hover:bg-green-900/20 rounded-lg"
+                                        >
+                                            <Check size={16} />
+                                        </button>
+                                    )}
                                     <button
                                         onClick={() => handleEditClick(user)}
                                         className="p-2 text-gray-500 hover:text-primary-600 bg-gray-50 dark:bg-gray-700/50 rounded-lg"
