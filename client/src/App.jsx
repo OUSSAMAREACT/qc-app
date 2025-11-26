@@ -16,6 +16,7 @@ import LeaderboardPage from './pages/LeaderboardPage';
 import ModuleCatalogPage from './pages/ModuleCatalogPage';
 import LandingPage from './pages/LandingPage';
 import PaymentPage from './pages/PaymentPage';
+import ProtectedRoute from './components/ProtectedRoute';
 import { useAuth } from './context/AuthContext';
 
 // Wrapper for routes that require active status
