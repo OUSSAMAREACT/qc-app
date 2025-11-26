@@ -55,14 +55,13 @@ export const updateUser = async (req, res) => {
                 role: true,
                 status: true
             }
-        }
         });
 
-    res.json(user);
-} catch (error) {
-    console.error("Error updating user:", error);
-    res.status(500).json({ message: "Error updating user" });
-}
+        res.json(user);
+    } catch (error) {
+        console.error("Error updating user:", error);
+        res.status(500).json({ message: "Error updating user" });
+    }
 };
 
 export const deleteUser = async (req, res) => {
