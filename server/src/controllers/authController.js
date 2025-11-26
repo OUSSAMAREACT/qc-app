@@ -77,28 +77,28 @@ export const login = async (req, res) => {
             message: "Compte désactivé.",
             code: "ACCOUNT_REJECTED"
         });
-    }
+
 
         // Generate token
         const token = jwt.sign({ userId: user.id, role: user.role }, process.env.JWT_SECRET, {
-        expiresIn: '7d',
-    });
+            expiresIn: '7d',
+        });
 
-    res.json({
-        token,
-        user: {
-            id: user.id,
-            email: user.email,
-            name: user.name,
-            role: user.role,
-            specialty: user.specialty,
-            onboardingCompleted: user.onboardingCompleted
-        }
-    });
-} catch (error) {
-    console.error("Login error:", error);
-    res.status(500).json({ message: "Erreur lors de la connexion." });
-}
+        res.json({
+            token,
+            user: {
+                id: user.id,
+                email: user.email,
+                name: user.name,
+                role: user.role,
+                specialty: user.specialty,
+                onboardingCompleted: user.onboardingCompleted
+            }
+        });
+    } catch (error) {
+        console.error("Login error:", error);
+        res.status(500).json({ message: "Erreur lors de la connexion." });
+    }
 };
 
 export const getMe = async (req, res) => {
