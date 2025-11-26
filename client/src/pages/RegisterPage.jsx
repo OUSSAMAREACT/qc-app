@@ -72,7 +72,7 @@ export default function RegisterPage() {
                 isOpen={showSuccessModal}
                 onClose={handleModalClose}
                 title="Inscription réussie !"
-                message="Votre compte a été créé avec succès. Vous pouvez maintenant vous connecter pour accéder à votre espace."
+                message="Votre inscription a été prise en compte. Votre compte est en attente de validation par l'administrateur. Vous ne pourrez vous connecter qu'après activation."
                 buttonText="Se connecter"
             />
 
