@@ -15,7 +15,7 @@ export default function ProtectedRoute({ children, requireAdmin }) {
     }
 
     // Onboarding Check
-    if (!user.onboardingCompleted && location.pathname !== '/onboarding' && !requireAdmin) {
+    if (!user.onboardingCompleted && location.pathname !== '/onboarding' && location.pathname !== '/payment' && !requireAdmin) {
         return <Navigate to="/onboarding" />;
     }
 
