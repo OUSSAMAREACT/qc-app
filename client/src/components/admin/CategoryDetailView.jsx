@@ -37,18 +37,32 @@ export default function CategoryDetailView({ categoryId, onBack }) {
 
     return (
         <div className="space-y-6">
-            <div className="flex items-center gap-4 mb-6">
-                <Button variant="ghost" onClick={onBack} className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800">
-                    <ArrowLeft size={24} />
-                </Button>
+            <div className="flex flex-col md:flex-row md:items-center gap-4 mb-6">
+                <div className="flex items-center gap-4">
+                    <Button variant="ghost" onClick={onBack} className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800">
+                        <ArrowLeft size={24} />
+                    </Button>
 
-                {isEditingName ? (
-                    <div className="flex items-center gap-2 flex-1">
+                    {!isEditingName && (
+                        <div className="flex items-center gap-3 group">
+                            <h2 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white tracking-tight">{category.name}</h2>
+                            <button
+                                onClick={() => setIsEditingName(true)}
+                                className="md:opacity-0 group-hover:opacity-100 p-1.5 text-gray-400 hover:text-blue-600 transition-all"
+                            >
+                                <Edit size={18} />
+                            </button>
+                        </div>
+                    )}
+                </div>
+
+                {isEditingName && (
+                    <div className="flex items-center gap-2 flex-1 w-full md:w-auto">
                         <input
                             type="text"
                             value={newName}
                             onChange={(e) => setNewName(e.target.value)}
-                            className="text-2xl font-bold bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-1 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            className="flex-1 text-xl md:text-2xl font-bold bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-1 focus:outline-none focus:ring-2 focus:ring-blue-500"
                             autoFocus
                         />
                         <Button onClick={handleUpdateName} className="p-2 bg-green-600 hover:bg-green-700 text-white rounded-lg">
@@ -57,16 +71,6 @@ export default function CategoryDetailView({ categoryId, onBack }) {
                         <Button onClick={() => setIsEditingName(false)} variant="ghost" className="p-2 text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg">
                             <X size={20} />
                         </Button>
-                    </div>
-                ) : (
-                    <div className="flex items-center gap-3 group">
-                        <h2 className="text-3xl font-bold text-gray-900 dark:text-white tracking-tight">{category.name}</h2>
-                        <button
-                            onClick={() => setIsEditingName(true)}
-                            className="opacity-0 group-hover:opacity-100 p-1.5 text-gray-400 hover:text-blue-600 transition-all"
-                        >
-                            <Edit size={18} />
-                        </button>
                     </div>
                 )}
             </div>

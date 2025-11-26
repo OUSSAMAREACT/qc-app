@@ -113,7 +113,7 @@ export default function SpecialtyView({ onSelectCategory }) {
 
                 {isCreatingCategory && (
                     <Card className="p-6 border-blue-100 dark:border-blue-900/30 bg-blue-50/50 dark:bg-blue-900/10 mb-6 animate-in fade-in slide-in-from-top-4">
-                        <form onSubmit={handleCreateCategory} className="flex gap-4 items-end">
+                        <form onSubmit={handleCreateCategory} className="flex flex-col md:flex-row gap-4 md:items-end">
                             <div className="flex-1">
                                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Nom du module</label>
                                 <input
@@ -126,8 +126,10 @@ export default function SpecialtyView({ onSelectCategory }) {
                                     required
                                 />
                             </div>
-                            <Button type="submit">Créer</Button>
-                            <Button type="button" variant="ghost" onClick={() => setIsCreatingCategory(false)}>Annuler</Button>
+                            <div className="flex gap-2">
+                                <Button type="submit" className="flex-1 md:flex-none">Créer</Button>
+                                <Button type="button" variant="ghost" onClick={() => setIsCreatingCategory(false)} className="flex-1 md:flex-none">Annuler</Button>
+                            </div>
                         </form>
                     </Card>
                 )}
@@ -183,7 +185,7 @@ export default function SpecialtyView({ onSelectCategory }) {
 
             {isCreatingSpecialty && (
                 <Card className="p-6 border-blue-100 dark:border-blue-900/30 bg-blue-50/50 dark:bg-blue-900/10 mb-6 animate-in fade-in slide-in-from-top-4">
-                    <form onSubmit={handleCreateSpecialty} className="flex gap-4 items-end">
+                    <form onSubmit={handleCreateSpecialty} className="flex flex-col md:flex-row gap-4 md:items-end">
                         <div className="flex-1">
                             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Nom de la spécialité</label>
                             <input
@@ -196,8 +198,10 @@ export default function SpecialtyView({ onSelectCategory }) {
                                 required
                             />
                         </div>
-                        <Button type="submit">Créer</Button>
-                        <Button type="button" variant="ghost" onClick={() => setIsCreatingSpecialty(false)}>Annuler</Button>
+                        <div className="flex gap-2">
+                            <Button type="submit" className="flex-1 md:flex-none">Créer</Button>
+                            <Button type="button" variant="ghost" onClick={() => setIsCreatingSpecialty(false)} className="flex-1 md:flex-none">Annuler</Button>
+                        </div>
                     </form>
                 </Card>
             )}

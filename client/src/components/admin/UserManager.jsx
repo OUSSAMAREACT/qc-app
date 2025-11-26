@@ -89,8 +89,9 @@ export default function UserManager() {
                 </div>
             </div>
 
-            <Card className="overflow-hidden border-0 shadow-sm">
-                <div className="overflow-x-auto">
+            <Card className="overflow-hidden border-0 shadow-sm bg-transparent dark:bg-transparent md:bg-white md:dark:bg-gray-800">
+                {/* Desktop Table View */}
+                <div className="hidden md:block overflow-x-auto bg-white dark:bg-gray-800 rounded-2xl">
                     <table className="w-full text-left border-collapse">
                         <thead>
                             <tr className="bg-gray-50 dark:bg-gray-800/50 border-b border-gray-100 dark:border-gray-700">
@@ -124,8 +125,8 @@ export default function UserManager() {
                                         <td className="p-4 text-gray-600 dark:text-gray-400">{user.email}</td>
                                         <td className="p-4">
                                             <span className={`px-2 py-1 rounded-full text-xs font-medium ${user.role === 'ADMIN'
-                                                    ? 'bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-300'
-                                                    : 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300'
+                                                ? 'bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-300'
+                                                : 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300'
                                                 }`}>
                                                 {user.role}
                                             </span>
@@ -156,6 +157,54 @@ export default function UserManager() {
                             )}
                         </tbody>
                     </table>
+                </div>
+
+                {/* Mobile Card View */}
+                <div className="md:hidden space-y-4">
+                    {loading ? (
+                        <div className="p-8 text-center text-gray-500">Chargement...</div>
+                    ) : filteredUsers.length === 0 ? (
+                        <div className="p-8 text-center text-gray-500">Aucun utilisateur trouvé.</div>
+                    ) : (
+                        filteredUsers.map((user) => (
+                            <div key={user.id} className="bg-white dark:bg-gray-800 p-4 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 flex items-center justify-between">
+                                <div className="flex items-center gap-3">
+                                    <div className="w-10 h-10 rounded-full bg-primary-100 dark:bg-primary-900/30 text-primary-600 dark:text-primary-400 flex items-center justify-center font-bold shrink-0">
+                                        {user.name?.charAt(0).toUpperCase()}
+                                    </div>
+                                    <div>
+                                        <h3 className="font-medium text-gray-900 dark:text-white">{user.name}</h3>
+                                        <p className="text-sm text-gray-500 dark:text-gray-400">{user.email}</p>
+                                        <div className="flex items-center gap-2 mt-1">
+                                            <span className={`px-2 py-0.5 rounded-full text-[10px] font-medium ${user.role === 'ADMIN'
+                                                ? 'bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-300'
+                                                : 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300'
+                                                }`}>
+                                                {user.role}
+                                            </span>
+                                            <span className="text-xs text-gray-400">
+                                                {new Date(user.createdAt).toLocaleDateString()}
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="flex flex-col gap-1">
+                                    <button
+                                        onClick={() => handleEditClick(user)}
+                                        className="p-2 text-gray-500 hover:text-primary-600 bg-gray-50 dark:bg-gray-700/50 rounded-lg"
+                                    >
+                                        <Edit2 size={16} />
+                                    </button>
+                                    <button
+                                        onClick={() => handleDeleteClick(user)}
+                                        className="p-2 text-gray-500 hover:text-red-600 bg-gray-50 dark:bg-gray-700/50 rounded-lg"
+                                    >
+                                        <Trash2 size={16} />
+                                    </button>
+                                </div>
+                            </div>
+                        ))
+                    )}
                 </div>
             </Card>
 

@@ -61,7 +61,7 @@ export default function CommonModulesView({ onSelectCategory }) {
 
             {isCreating && (
                 <Card className="p-6 border-blue-100 dark:border-blue-900/30 bg-blue-50/50 dark:bg-blue-900/10 mb-6 animate-in fade-in slide-in-from-top-4">
-                    <form onSubmit={handleCreate} className="flex gap-4 items-end">
+                    <form onSubmit={handleCreate} className="flex flex-col md:flex-row gap-4 md:items-end">
                         <div className="flex-1">
                             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Nom du module</label>
                             <input
@@ -74,8 +74,10 @@ export default function CommonModulesView({ onSelectCategory }) {
                                 required
                             />
                         </div>
-                        <Button type="submit">Créer</Button>
-                        <Button type="button" variant="ghost" onClick={() => setIsCreating(false)}>Annuler</Button>
+                        <div className="flex gap-2">
+                            <Button type="submit" className="flex-1 md:flex-none">Créer</Button>
+                            <Button type="button" variant="ghost" onClick={() => setIsCreating(false)} className="flex-1 md:flex-none">Annuler</Button>
+                        </div>
                     </form>
                 </Card>
             )}
