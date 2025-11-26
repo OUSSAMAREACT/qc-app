@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '../components/ui/Button';
 import { Card } from '../components/ui/Card';
@@ -9,6 +9,24 @@ import { useAuth } from '../context/AuthContext';
 
 export default function LandingPage() {
     const { user } = useAuth();
+    const [questionCount, setQuestionCount] = useState("1000+");
+
+    useEffect(() => {
+        const fetchCount = async () => {
+            try {
+                // Use relative path if proxy is set up, or full URL if env var is available
+                // Assuming Vite proxy or same origin in production
+                const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:5001/api'}/questions/count`);
+                if (response.ok) {
+                    const data = await response.json();
+                    setQuestionCount(data.count + "+");
+                }
+            } catch (error) {
+                console.error("Failed to fetch question count", error);
+            }
+        };
+        fetchCount();
+    }, []);
 
     return (
         <div className="min-h-screen bg-gray-50 dark:bg-gray-900 font-sans text-gray-900 dark:text-gray-100 transition-colors duration-300 selection:bg-blue-500 selection:text-white">
@@ -117,7 +135,7 @@ export default function LandingPage() {
                         transition={{ duration: 0.7, delay: 0.2 }}
                         className="mt-24 grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto"
                     >
-                        <StatCard number="1000+" label="Questions QCM" color="text-blue-600 dark:text-blue-400" />
+                        <StatCard number={questionCount} label="Questions QCM" color="text-blue-600 dark:text-blue-400" />
                         <StatCard number="Hebdo" label="Examens Blancs" color="text-indigo-600 dark:text-indigo-400" />
                         <StatCard number="100%" label="Suivi de Progression" color="text-purple-600 dark:text-purple-400" />
                     </motion.div>

@@ -1,8 +1,11 @@
 import express from 'express';
-import { getQuestions, createQuestion, updateQuestion, deleteQuestion } from '../controllers/questionController.js';
+import { getQuestions, createQuestion, updateQuestion, deleteQuestion, getQuestionCount } from '../controllers/questionController.js';
 import { authenticateToken, requireAdmin } from '../middleware/authMiddleware.js';
 
 const router = express.Router();
+
+// Public: Get total question count
+router.get('/count', getQuestionCount);
 
 // Public or Student: Get questions (maybe filter fields for students later, but for now send all)
 // Actually, for students taking a quiz, we shouldn't send 'isCorrect'.
