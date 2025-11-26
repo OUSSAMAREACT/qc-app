@@ -15,6 +15,7 @@ export default function AdminDashboardPage() {
     const { logout } = useAuth();
     const [currentView, setCurrentView] = useState('overview');
     const [selectedCategory, setSelectedCategory] = useState(null);
+    const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
     const handleCategorySelect = (category) => {
         setSelectedCategory(category);
@@ -51,45 +52,68 @@ export default function AdminDashboardPage() {
     };
 
     return (
-        <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex font-sans transition-colors duration-300">
+        <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex font-sans transition-colors duration-300 relative">
+            {/* Mobile Header */}
+            <div className="lg:hidden fixed top-0 left-0 right-0 h-16 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between px-4 z-30">
+                <div className="flex items-center gap-2">
+                    <LayoutDashboard className="text-blue-600" />
+                    <span className="font-bold text-gray-900 dark:text-white">Admin Panel</span>
+                </div>
+                <Button variant="ghost" size="icon" onClick={() => setIsSidebarOpen(!isSidebarOpen)}>
+                    {isSidebarOpen ? <ArrowLeft /> : <LayoutDashboard />}
+                </Button>
+            </div>
+
+            {/* Sidebar Backdrop */}
+            {isSidebarOpen && (
+                <div
+                    className="fixed inset-0 bg-black/50 z-30 lg:hidden backdrop-blur-sm"
+                    onClick={() => setIsSidebarOpen(false)}
+                />
+            )}
+
             {/* Sidebar */}
-            <aside className="w-64 bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 flex flex-col fixed h-full z-20 transition-colors duration-300">
-                <div className="p-6 border-b border-gray-100 dark:border-gray-700">
+            <aside className={`
+                fixed lg:static inset-y-0 left-0 z-40 w-64 bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 
+                flex flex-col transition-transform duration-300 ease-in-out
+                ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
+            `}>
+                <div className="p-6 border-b border-gray-100 dark:border-gray-700 hidden lg:block">
                     <h1 className="text-xl font-bold text-gray-900 dark:text-white tracking-tight flex items-center gap-2">
                         <LayoutDashboard className="text-blue-600" /> Admin Panel
                     </h1>
                 </div>
 
-                <nav className="flex-1 p-4 space-y-2 overflow-y-auto">
+                <nav className="flex-1 p-4 space-y-2 overflow-y-auto mt-16 lg:mt-0">
                     <SidebarItem
                         icon={<LayoutDashboard size={20} />}
                         label="Vue d'ensemble"
                         isActive={currentView === 'overview' && !selectedCategory}
-                        onClick={() => { setCurrentView('overview'); setSelectedCategory(null); }}
+                        onClick={() => { setCurrentView('overview'); setSelectedCategory(null); setIsSidebarOpen(false); }}
                     />
                     <SidebarItem
                         icon={<BookOpen size={20} />}
                         label="Modules Communs"
                         isActive={currentView === 'common' || (selectedCategory && !selectedCategory.specialtyId)}
-                        onClick={() => { setCurrentView('common'); setSelectedCategory(null); }}
+                        onClick={() => { setCurrentView('common'); setSelectedCategory(null); setIsSidebarOpen(false); }}
                     />
                     <SidebarItem
                         icon={<Award size={20} />}
                         label="Spécialités"
                         isActive={currentView === 'specialties' || (selectedCategory && selectedCategory.specialtyId)}
-                        onClick={() => { setCurrentView('specialties'); setSelectedCategory(null); }}
+                        onClick={() => { setCurrentView('specialties'); setSelectedCategory(null); setIsSidebarOpen(false); }}
                     />
                     <SidebarItem
-                        icon={<Award size={20} />} // Reusing Award icon for now, or maybe Trophy
+                        icon={<Award size={20} />}
                         label="Partie Commune"
                         isActive={currentView === 'weekly-exams'}
-                        onClick={() => { setCurrentView('weekly-exams'); setSelectedCategory(null); }}
+                        onClick={() => { setCurrentView('weekly-exams'); setSelectedCategory(null); setIsSidebarOpen(false); }}
                     />
                     <SidebarItem
                         icon={<Users size={20} />}
                         label="Utilisateurs"
                         isActive={currentView === 'users'}
-                        onClick={() => { setCurrentView('users'); setSelectedCategory(null); }}
+                        onClick={() => { setCurrentView('users'); setSelectedCategory(null); setIsSidebarOpen(false); }}
                     />
                 </nav>
 
@@ -106,7 +130,7 @@ export default function AdminDashboardPage() {
             </aside>
 
             {/* Main Content */}
-            <main className="flex-1 ml-64 p-8 overflow-y-auto h-screen">
+            <main className="flex-1 p-4 lg:p-8 overflow-y-auto h-screen pt-20 lg:pt-8">
                 <div className="max-w-7xl mx-auto">
                     {renderContent()}
                 </div>
@@ -132,25 +156,53 @@ function SidebarItem({ icon, label, isActive, onClick }) {
 
 function Overview() {
     return (
-        <div className="space-y-6">
-            <h2 className="text-3xl font-bold text-gray-900 dark:text-white tracking-tight">Bienvenue sur l'administration</h2>
-            <p className="text-gray-500 dark:text-gray-400">Sélectionnez une section dans le menu pour commencer à gérer le contenu.</p>
+        <div className="space-y-8">
+            <div>
+                <h2 className="text-3xl font-bold text-gray-900 dark:text-white tracking-tight">Bienvenue sur l'administration</h2>
+                <p className="text-gray-500 dark:text-gray-400 mt-2">Gérez le contenu et les utilisateurs de votre plateforme.</p>
+            </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
-                <div className="bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl p-6 text-white shadow-lg shadow-blue-500/20">
-                    <h3 className="text-lg font-medium opacity-90">Modules Communs</h3>
-                    <p className="text-3xl font-bold mt-2">Gérez</p>
-                    <p className="text-sm opacity-75 mt-1">les questions transversales</p>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div className="group relative overflow-hidden bg-white dark:bg-gray-800 rounded-3xl p-8 shadow-sm hover:shadow-xl transition-all duration-300 border border-gray-100 dark:border-gray-700">
+                    <div className="absolute top-0 right-0 -mt-4 -mr-4 w-32 h-32 bg-blue-500/10 rounded-full blur-2xl group-hover:bg-blue-500/20 transition-colors"></div>
+                    <div className="relative z-10">
+                        <div className="w-12 h-12 bg-blue-100 dark:bg-blue-900/30 text-blue-600 rounded-2xl flex items-center justify-center mb-6">
+                            <BookOpen size={24} />
+                        </div>
+                        <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">Modules Communs</h3>
+                        <p className="text-gray-500 dark:text-gray-400 mb-6">Gérez les questions transversales et les catégories générales.</p>
+                        <div className="flex items-center text-blue-600 font-medium">
+                            Gérer <ArrowRight size={16} className="ml-2 group-hover:translate-x-1 transition-transform" />
+                        </div>
+                    </div>
                 </div>
-                <div className="bg-gradient-to-br from-purple-500 to-purple-600 rounded-2xl p-6 text-white shadow-lg shadow-purple-500/20">
-                    <h3 className="text-lg font-medium opacity-90">Spécialités</h3>
-                    <p className="text-3xl font-bold mt-2">Organisez</p>
-                    <p className="text-sm opacity-75 mt-1">les parcours spécifiques</p>
+
+                <div className="group relative overflow-hidden bg-white dark:bg-gray-800 rounded-3xl p-8 shadow-sm hover:shadow-xl transition-all duration-300 border border-gray-100 dark:border-gray-700">
+                    <div className="absolute top-0 right-0 -mt-4 -mr-4 w-32 h-32 bg-purple-500/10 rounded-full blur-2xl group-hover:bg-purple-500/20 transition-colors"></div>
+                    <div className="relative z-10">
+                        <div className="w-12 h-12 bg-purple-100 dark:bg-purple-900/30 text-purple-600 rounded-2xl flex items-center justify-center mb-6">
+                            <Award size={24} />
+                        </div>
+                        <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">Spécialités</h3>
+                        <p className="text-gray-500 dark:text-gray-400 mb-6">Organisez les parcours spécifiques et les modules dédiés.</p>
+                        <div className="flex items-center text-purple-600 font-medium">
+                            Gérer <ArrowRight size={16} className="ml-2 group-hover:translate-x-1 transition-transform" />
+                        </div>
+                    </div>
                 </div>
-                <div className="bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-2xl p-6 text-white shadow-lg shadow-emerald-500/20">
-                    <h3 className="text-lg font-medium opacity-90">Utilisateurs</h3>
-                    <p className="text-3xl font-bold mt-2">Suivez</p>
-                    <p className="text-sm opacity-75 mt-1">la progression des étudiants</p>
+
+                <div className="group relative overflow-hidden bg-white dark:bg-gray-800 rounded-3xl p-8 shadow-sm hover:shadow-xl transition-all duration-300 border border-gray-100 dark:border-gray-700">
+                    <div className="absolute top-0 right-0 -mt-4 -mr-4 w-32 h-32 bg-emerald-500/10 rounded-full blur-2xl group-hover:bg-emerald-500/20 transition-colors"></div>
+                    <div className="relative z-10">
+                        <div className="w-12 h-12 bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 rounded-2xl flex items-center justify-center mb-6">
+                            <Users size={24} />
+                        </div>
+                        <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">Utilisateurs</h3>
+                        <p className="text-gray-500 dark:text-gray-400 mb-6">Suivez la progression des étudiants et gérez les accès.</p>
+                        <div className="flex items-center text-emerald-600 font-medium">
+                            Gérer <ArrowRight size={16} className="ml-2 group-hover:translate-x-1 transition-transform" />
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

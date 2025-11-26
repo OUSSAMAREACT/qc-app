@@ -153,47 +153,70 @@ export default function Navbar() {
                 </div>
             </div>
 
-            {/* Mobile Menu */}
+            {/* Mobile Menu Overlay */}
             <AnimatePresence>
                 {isMobileMenuOpen && (
                     <motion.div
-                        initial={{ opacity: 0, height: 0 }}
-                        animate={{ opacity: 1, height: 'auto' }}
-                        exit={{ opacity: 0, height: 0 }}
-                        className="md:hidden bg-white dark:bg-dark-card border-b border-gray-200 dark:border-gray-700 overflow-hidden"
+                        initial={{ opacity: 0, y: -20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -20 }}
+                        transition={{ duration: 0.2 }}
+                        className="md:hidden fixed inset-0 z-40 bg-white/95 dark:bg-dark-bg/95 backdrop-blur-xl pt-20 px-6"
                     >
-                        <div className="px-4 py-4 space-y-2">
-                            {navLinks.map((link) => {
+                        <div className="flex flex-col space-y-4">
+                            {navLinks.map((link, index) => {
                                 const Icon = link.icon;
                                 const isActive = location.pathname === link.path;
                                 return (
-                                    <Link
+                                    <motion.div
+                                        initial={{ opacity: 0, x: -20 }}
+                                        animate={{ opacity: 1, x: 0 }}
+                                        transition={{ delay: index * 0.1 }}
                                         key={link.path}
-                                        to={link.path}
-                                        className={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${isActive
-                                            ? 'bg-primary-50 dark:bg-primary-900/20 text-primary-600'
-                                            : 'text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800'
-                                            }`}
                                     >
-                                        <Icon size={20} />
-                                        {link.label}
-                                    </Link>
+                                        <Link
+                                            to={link.path}
+                                            onClick={() => setIsMobileMenuOpen(false)}
+                                            className={`flex items-center gap-4 p-4 rounded-2xl text-lg font-medium transition-all ${isActive
+                                                ? 'bg-primary-50 dark:bg-primary-900/20 text-primary-600'
+                                                : 'text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800'
+                                                }`}
+                                        >
+                                            <div className={`p-2 rounded-xl ${isActive ? 'bg-primary-100 dark:bg-primary-900/40' : 'bg-gray-100 dark:bg-gray-800'}`}>
+                                                <Icon size={24} />
+                                            </div>
+                                            {link.label}
+                                        </Link>
+                                    </motion.div>
                                 );
                             })}
-                            <div className="pt-4 border-t border-gray-100 dark:border-gray-700 mt-4">
+
+                            <motion.div
+                                initial={{ opacity: 0, x: -20 }}
+                                animate={{ opacity: 1, x: 0 }}
+                                transition={{ delay: 0.3 }}
+                                className="pt-6 mt-6 border-t border-gray-100 dark:border-gray-800"
+                            >
                                 <Link
                                     to="/profile"
-                                    className="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800"
+                                    onClick={() => setIsMobileMenuOpen(false)}
+                                    className="flex items-center gap-4 p-4 rounded-2xl text-lg font-medium text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800"
                                 >
-                                    <User size={20} /> Mon Profil
+                                    <div className="p-2 rounded-xl bg-gray-100 dark:bg-gray-800">
+                                        <User size={24} />
+                                    </div>
+                                    Mon Profil
                                 </Link>
                                 <button
-                                    onClick={logout}
-                                    className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20"
+                                    onClick={() => { logout(); setIsMobileMenuOpen(false); }}
+                                    className="w-full flex items-center gap-4 p-4 rounded-2xl text-lg font-medium text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 mt-2"
                                 >
-                                    <LogOut size={20} /> Déconnexion
+                                    <div className="p-2 rounded-xl bg-red-100 dark:bg-red-900/30">
+                                        <LogOut size={24} />
+                                    </div>
+                                    Déconnexion
                                 </button>
-                            </div>
+                            </motion.div>
                         </div>
                     </motion.div>
                 )}
