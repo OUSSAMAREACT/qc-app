@@ -73,47 +73,32 @@ export const login = async (req, res) => {
             return res.status(400).json({ message: "Email ou mot de passe incorrect." });
         }
 
-        // Verify password
-        const isValid = await bcrypt.compare(password, user.password);
-        if (!isValid) {
-            return res.status(400).json({ message: "Email ou mot de passe incorrect." });
-        }
-
-        // Check status
-        if (user.status === 'PENDING') {
-            return res.status(403).json({
-                message: "Compte en attente de validation.",
-                code: "ACCOUNT_PENDING"
-            });
-        }
-
-        if (user.status === 'REJECTED') {
-            return res.status(403).json({
-                message: "Compte désactivé.",
-                code: "ACCOUNT_REJECTED"
-            });
-        }
+        return res.status(403).json({
+            message: "Compte désactivé.",
+            code: "ACCOUNT_REJECTED"
+        });
+    }
 
         // Generate token
         const token = jwt.sign({ userId: user.id, role: user.role }, process.env.JWT_SECRET, {
-            expiresIn: '7d',
-        });
+        expiresIn: '7d',
+    });
 
-        res.json({
-            token,
-            user: {
-                id: user.id,
-                email: user.email,
-                name: user.name,
-                role: user.role,
-                specialty: user.specialty,
-                onboardingCompleted: user.onboardingCompleted
-            }
-        });
-    } catch (error) {
-        console.error("Login error:", error);
-        res.status(500).json({ message: "Erreur lors de la connexion." });
-    }
+    res.json({
+        token,
+        user: {
+            id: user.id,
+            email: user.email,
+            name: user.name,
+            role: user.role,
+            specialty: user.specialty,
+            onboardingCompleted: user.onboardingCompleted
+        }
+    });
+} catch (error) {
+    console.error("Login error:", error);
+    res.status(500).json({ message: "Erreur lors de la connexion." });
+}
 };
 
 export const getMe = async (req, res) => {
