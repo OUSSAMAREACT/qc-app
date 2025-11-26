@@ -15,9 +15,22 @@ import WeeklyExamPage from './pages/WeeklyExamPage';
 import LeaderboardPage from './pages/LeaderboardPage';
 import ModuleCatalogPage from './pages/ModuleCatalogPage';
 import LandingPage from './pages/LandingPage';
-import ProtectedRoute from './components/ProtectedRoute';
-import Layout from './components/Layout';
-import OnboardingWizard from './components/OnboardingWizard';
+import PaymentPage from './pages/PaymentPage';
+import { useAuth } from './context/AuthContext';
+
+// Wrapper for routes that require active status
+const RequireActive = ({ children }) => {
+  const { user, loading } = useAuth();
+
+  if (loading) return null; // Or a spinner
+
+  // If user is pending and NOT admin, redirect to payment
+  if (user && user.status === 'PENDING' && user.role !== 'ADMIN') {
+    return <Navigate to="/payment" />;
+  }
+
+  return children;
+};
 
 function App() {
   return (
@@ -32,33 +45,48 @@ function App() {
               <Route path="/login" element={<LoginPage />} />
               <Route path="/register" element={<RegisterPage />} />
 
+              {/* Payment Page - Accessible by PENDING users */}
+              <Route path="/payment" element={
+                <ProtectedRoute>
+                  <PaymentPage />
+                </ProtectedRoute>
+              } />
+
               <Route path="/onboarding" element={
                 <ProtectedRoute>
-                  <OnboardingWizard />
+                  <RequireActive>
+                    <OnboardingWizard />
+                  </RequireActive>
                 </ProtectedRoute>
               } />
 
               <Route path="/dashboard" element={
                 <ProtectedRoute>
-                  <Layout>
-                    <DashboardPage />
-                  </Layout>
+                  <RequireActive>
+                    <Layout>
+                      <DashboardPage />
+                    </Layout>
+                  </RequireActive>
                 </ProtectedRoute>
               } />
 
               <Route path="/modules/:type" element={
                 <ProtectedRoute>
-                  <Layout>
-                    <ModuleCatalogPage />
-                  </Layout>
+                  <RequireActive>
+                    <Layout>
+                      <ModuleCatalogPage />
+                    </Layout>
+                  </RequireActive>
                 </ProtectedRoute>
               } />
 
               <Route path="/history" element={
                 <ProtectedRoute>
-                  <Layout>
-                    <HistoryPage />
-                  </Layout>
+                  <RequireActive>
+                    <Layout>
+                      <HistoryPage />
+                    </Layout>
+                  </RequireActive>
                 </ProtectedRoute>
               } />
 
@@ -72,33 +100,41 @@ function App() {
 
               <Route path="/quiz" element={
                 <ProtectedRoute>
-                  <Layout>
-                    <QuizPage />
-                  </Layout>
+                  <RequireActive>
+                    <Layout>
+                      <QuizPage />
+                    </Layout>
+                  </RequireActive>
                 </ProtectedRoute>
               } />
 
               <Route path="/result" element={
                 <ProtectedRoute>
-                  <Layout>
-                    <ResultPage />
-                  </Layout>
+                  <RequireActive>
+                    <Layout>
+                      <ResultPage />
+                    </Layout>
+                  </RequireActive>
                 </ProtectedRoute>
               } />
 
               <Route path="/weekly-exam/:id" element={
                 <ProtectedRoute>
-                  <Layout>
-                    <WeeklyExamPage />
-                  </Layout>
+                  <RequireActive>
+                    <Layout>
+                      <WeeklyExamPage />
+                    </Layout>
+                  </RequireActive>
                 </ProtectedRoute>
               } />
 
               <Route path="/weekly-exam/:id/leaderboard" element={
                 <ProtectedRoute>
-                  <Layout>
-                    <LeaderboardPage />
-                  </Layout>
+                  <RequireActive>
+                    <Layout>
+                      <LeaderboardPage />
+                    </Layout>
+                  </RequireActive>
                 </ProtectedRoute>
               } />
 
