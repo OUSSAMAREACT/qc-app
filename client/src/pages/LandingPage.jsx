@@ -16,7 +16,11 @@ export default function LandingPage() {
             try {
                 // Use relative path if proxy is set up, or full URL if env var is available
                 // Assuming Vite proxy or same origin in production
-                const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:5001/api'}/questions/count`);
+                let apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5001/api';
+                if (window.location.protocol === 'https:' && apiUrl.startsWith('http:')) {
+                    apiUrl = apiUrl.replace('http:', 'https:');
+                }
+                const response = await fetch(`${apiUrl}/questions/count`);
                 if (response.ok) {
                     const data = await response.json();
                     setQuestionCount(data.count + "+");
