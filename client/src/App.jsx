@@ -1,5 +1,6 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { HelmetProvider } from 'react-helmet-async';
 import { AuthProvider } from './context/AuthContext';
 import { ThemeProvider } from './context/ThemeContext';
 import LoginPage from './pages/LoginPage';
@@ -13,103 +14,109 @@ import ProfilePage from './pages/ProfilePage';
 import WeeklyExamPage from './pages/WeeklyExamPage';
 import LeaderboardPage from './pages/LeaderboardPage';
 import ModuleCatalogPage from './pages/ModuleCatalogPage';
+import LandingPage from './pages/LandingPage';
 import ProtectedRoute from './components/ProtectedRoute';
 import Layout from './components/Layout';
 import OnboardingWizard from './components/OnboardingWizard';
 
 function App() {
   return (
-    <BrowserRouter>
-      <AuthProvider>
-        <ThemeProvider>
-          <Routes>
-            <Route path="/login" element={<LoginPage />} />
-            <Route path="/register" element={<RegisterPage />} />
+    <HelmetProvider>
+      <BrowserRouter>
+        <AuthProvider>
+          <ThemeProvider>
+            <Routes>
+              {/* Public Landing Page */}
+              <Route path="/" element={<LandingPage />} />
 
-            <Route path="/onboarding" element={
-              <ProtectedRoute>
-                <OnboardingWizard />
-              </ProtectedRoute>
-            } />
+              <Route path="/login" element={<LoginPage />} />
+              <Route path="/register" element={<RegisterPage />} />
 
-            <Route path="/dashboard" element={
-              <ProtectedRoute>
-                <Layout>
-                  <DashboardPage />
-                </Layout>
-              </ProtectedRoute>
-            } />
+              <Route path="/onboarding" element={
+                <ProtectedRoute>
+                  <OnboardingWizard />
+                </ProtectedRoute>
+              } />
 
-            <Route path="/modules/:type" element={
-              <ProtectedRoute>
-                <Layout>
-                  <ModuleCatalogPage />
-                </Layout>
-              </ProtectedRoute>
-            } />
+              <Route path="/dashboard" element={
+                <ProtectedRoute>
+                  <Layout>
+                    <DashboardPage />
+                  </Layout>
+                </ProtectedRoute>
+              } />
 
-            <Route path="/history" element={
-              <ProtectedRoute>
-                <Layout>
-                  <HistoryPage />
-                </Layout>
-              </ProtectedRoute>
-            } />
+              <Route path="/modules/:type" element={
+                <ProtectedRoute>
+                  <Layout>
+                    <ModuleCatalogPage />
+                  </Layout>
+                </ProtectedRoute>
+              } />
 
-            <Route path="/profile" element={
-              <ProtectedRoute>
-                <Layout>
-                  <ProfilePage />
-                </Layout>
-              </ProtectedRoute>
-            } />
+              <Route path="/history" element={
+                <ProtectedRoute>
+                  <Layout>
+                    <HistoryPage />
+                  </Layout>
+                </ProtectedRoute>
+              } />
 
-            <Route path="/quiz" element={
-              <ProtectedRoute>
-                <Layout>
-                  <QuizPage />
-                </Layout>
-              </ProtectedRoute>
-            } />
+              <Route path="/profile" element={
+                <ProtectedRoute>
+                  <Layout>
+                    <ProfilePage />
+                  </Layout>
+                </ProtectedRoute>
+              } />
 
-            <Route path="/result" element={
-              <ProtectedRoute>
-                <Layout>
-                  <ResultPage />
-                </Layout>
-              </ProtectedRoute>
-            } />
+              <Route path="/quiz" element={
+                <ProtectedRoute>
+                  <Layout>
+                    <QuizPage />
+                  </Layout>
+                </ProtectedRoute>
+              } />
 
-            <Route path="/weekly-exam/:id" element={
-              <ProtectedRoute>
-                <Layout>
-                  <WeeklyExamPage />
-                </Layout>
-              </ProtectedRoute>
-            } />
+              <Route path="/result" element={
+                <ProtectedRoute>
+                  <Layout>
+                    <ResultPage />
+                  </Layout>
+                </ProtectedRoute>
+              } />
 
-            <Route path="/weekly-exam/:id/leaderboard" element={
-              <ProtectedRoute>
-                <Layout>
-                  <LeaderboardPage />
-                </Layout>
-              </ProtectedRoute>
-            } />
+              <Route path="/weekly-exam/:id" element={
+                <ProtectedRoute>
+                  <Layout>
+                    <WeeklyExamPage />
+                  </Layout>
+                </ProtectedRoute>
+              } />
 
-            <Route path="/admin" element={
-              <ProtectedRoute requireAdmin>
-                <Layout>
-                  <AdminDashboardPage />
-                </Layout>
-              </ProtectedRoute>
-            } />
+              <Route path="/weekly-exam/:id/leaderboard" element={
+                <ProtectedRoute>
+                  <Layout>
+                    <LeaderboardPage />
+                  </Layout>
+                </ProtectedRoute>
+              } />
 
-            {/* Redirect root to dashboard or login */}
-            <Route path="/" element={<Navigate to="/dashboard" />} />
-          </Routes>
-        </ThemeProvider>
-      </AuthProvider>
-    </BrowserRouter>
+              <Route path="/admin" element={
+                <ProtectedRoute requireAdmin>
+                  <Layout>
+                    <AdminDashboardPage />
+                  </Layout>
+                </ProtectedRoute>
+              } />
+
+              {/* Catch all - redirect to home */}
+              <Route path="*" element={<Navigate to="/" />} />
+            </Routes>
+          </ThemeProvider>
+        </AuthProvider>
+      </BrowserRouter>
+    </HelmetProvider>
   );
 }
 
