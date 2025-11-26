@@ -17,6 +17,7 @@ import ModuleCatalogPage from './pages/ModuleCatalogPage';
 import LandingPage from './pages/LandingPage';
 import PaymentPage from './pages/PaymentPage';
 import ProtectedRoute from './components/ProtectedRoute';
+import OnboardingWizard from './components/OnboardingWizard';
 import { useAuth } from './context/AuthContext';
 
 // Wrapper for routes that require active status
