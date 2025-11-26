@@ -73,10 +73,26 @@ export const login = async (req, res) => {
             return res.status(400).json({ message: "Email ou mot de passe incorrect." });
         }
 
-        return res.status(403).json({
-            message: "Compte désactivé.",
-            code: "ACCOUNT_REJECTED"
-        });
+        // Verify password
+        const isValid = await bcrypt.compare(password, user.password);
+        if (!isValid) {
+            return res.status(400).json({ message: "Email ou mot de passe incorrect." });
+        }
+
+        // Check status (Admins bypass this check)
+        if (user.status === 'PENDING' && user.role !== 'ADMIN') {
+            return res.status(403).json({
+                message: "Compte en attente de validation.",
+                code: "ACCOUNT_PENDING"
+            });
+        }
+
+        if (user.status === 'REJECTED') {
+            return res.status(403).json({
+                message: "Compte désactivé.",
+                code: "ACCOUNT_REJECTED"
+            });
+        }
 
 
         // Generate token
