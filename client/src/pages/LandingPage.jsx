@@ -195,7 +195,7 @@ export default function LandingPage() {
                     <p className="mb-6 text-sm">
                         La plateforme n°1 pour la préparation aux examens professionnels.
                     </p>
-                    <p className="text-sm opacity-70">© 2024 QCMEchelle11. Tous droits réservés.</p>
+                    <p className="text-sm opacity-70">© {new Date().getFullYear()} QCMEchelle11. Tous droits réservés.</p>
                 </div>
             </footer>
         </div>
