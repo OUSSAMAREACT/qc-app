@@ -6,7 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "postinstall": "prisma generate",
-    "start": "prisma db push && node prisma/seed.js && node src/index.js"
+    "seed": "node prisma/seed.js",
+    "start": "prisma db push && node src/index.js"
   },
   "keywords": [],
   "author": "",
