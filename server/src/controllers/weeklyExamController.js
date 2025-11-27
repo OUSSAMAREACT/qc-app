@@ -79,7 +79,7 @@ export const getActiveExam = async (req, res) => {
         });
 
         if (!exam) {
-            return res.status(404).json({ message: "No active exam found." });
+            return res.json(null);
         }
 
         // Check if user already submitted

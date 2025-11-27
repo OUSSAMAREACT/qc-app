@@ -2,13 +2,15 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '../components/ui/Button';
 import { Card } from '../components/ui/Card';
-import { BookOpen, Trophy, Target, Users, ArrowRight, LayoutDashboard, LogIn } from 'lucide-react';
+import { BookOpen, Trophy, Target, Users, ArrowRight, LayoutDashboard, LogIn, Sun, Moon } from 'lucide-react';
 import SEO from '../components/SEO';
 import { motion } from 'framer-motion';
 import { useAuth } from '../context/AuthContext';
+import { useTheme } from '../context/ThemeContext';
 
 export default function LandingPage() {
     const { user } = useAuth();
+    const { theme, toggleTheme } = useTheme();
     const [questionCount, setQuestionCount] = useState("1000+");
 
     useEffect(() => {
@@ -54,6 +56,12 @@ export default function LandingPage() {
                             </span>
                         </div>
                         <div className="flex items-center gap-4">
+                            <button
+                                onClick={toggleTheme}
+                                className="p-2 rounded-full text-gray-500 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-800 transition-colors"
+                            >
+                                {theme === 'dark' ? <Sun size={20} /> : <Moon size={20} />}
+                            </button>
                             {user ? (
                                 <Link to="/dashboard">
                                     <Button className="bg-blue-600 hover:bg-blue-700 text-white shadow-lg shadow-blue-500/30 rounded-xl px-6">

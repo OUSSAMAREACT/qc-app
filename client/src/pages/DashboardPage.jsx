@@ -53,7 +53,6 @@ export default function DashboardPage() {
     const fetchCategories = async () => {
         try {
             const res = await axios.get('/categories');
-            console.log("Fetched Categories:", res.data);
             setCategories(res.data);
         } catch (error) {
             console.error("Failed to fetch categories", error);
@@ -63,14 +62,13 @@ export default function DashboardPage() {
     const fetchActiveExam = async () => {
         try {
             const res = await axios.get('/weekly-exams/active');
-            setActiveExam(res.data);
-        } catch (error) {
-            if (error.response && error.response.status === 404) {
-                // No active exam, this is expected
-                setActiveExam(null);
+            if (res.data) {
+                setActiveExam(res.data);
             } else {
-                console.log("Error fetching active exam", error);
+                setActiveExam(null);
             }
+        } catch (error) {
+            console.log("Error fetching active exam", error);
         }
     };
 

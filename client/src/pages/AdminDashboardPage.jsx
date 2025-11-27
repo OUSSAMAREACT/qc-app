@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '../components/ui/Button';
-import { LayoutDashboard, BookOpen, Award, Users, ArrowLeft, LogOut, ArrowRight } from 'lucide-react';
+import { LayoutDashboard, BookOpen, Award, Users, ArrowLeft, LogOut, ArrowRight, Sun, Moon } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
+import { useTheme } from '../context/ThemeContext';
 
 // Views
 import CommonModulesView from '../components/admin/CommonModulesView';
@@ -13,6 +14,7 @@ import UserManager from '../components/admin/UserManager';
 
 export default function AdminDashboardPage() {
     const { logout } = useAuth();
+    const { theme, toggleTheme } = useTheme();
     const [currentView, setCurrentView] = useState('overview');
     const [selectedCategory, setSelectedCategory] = useState(null);
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -59,9 +61,17 @@ export default function AdminDashboardPage() {
                     <LayoutDashboard className="text-blue-600" />
                     <span className="font-bold text-gray-900 dark:text-white">Admin Panel</span>
                 </div>
-                <Button variant="ghost" size="icon" onClick={() => setIsSidebarOpen(!isSidebarOpen)}>
-                    {isSidebarOpen ? <ArrowLeft /> : <LayoutDashboard />}
-                </Button>
+                <div className="flex items-center gap-2">
+                    <button
+                        onClick={toggleTheme}
+                        className="p-2 rounded-full text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700"
+                    >
+                        {theme === 'dark' ? <Sun size={20} /> : <Moon size={20} />}
+                    </button>
+                    <Button variant="ghost" size="icon" onClick={() => setIsSidebarOpen(!isSidebarOpen)}>
+                        {isSidebarOpen ? <ArrowLeft /> : <LayoutDashboard />}
+                    </Button>
+                </div>
             </div>
 
             {/* Sidebar Backdrop */}
@@ -118,6 +128,13 @@ export default function AdminDashboardPage() {
                 </nav>
 
                 <div className="p-4 border-t border-gray-100 dark:border-gray-700 space-y-2">
+                    <button
+                        onClick={toggleTheme}
+                        className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-white transition-all cursor-pointer"
+                    >
+                        {theme === 'dark' ? <Sun size={20} /> : <Moon size={20} />}
+                        {theme === 'dark' ? 'Mode Clair' : 'Mode Sombre'}
+                    </button>
                     <Link to="/dashboard" className="block">
                         <Button variant="ghost" className="w-full justify-start text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700">
                             <ArrowLeft size={18} className="mr-2" /> Retour au site
