@@ -7,6 +7,7 @@ import SEO from '../components/SEO';
 import { motion } from 'framer-motion';
 import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
+import CountdownTimer from '../components/CountdownTimer';
 
 export default function LandingPage() {
     const { user } = useAuth();
@@ -126,9 +127,11 @@ export default function LandingPage() {
                                 </span>
                             </h1>
 
-                            <p className="mt-6 text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto mb-12 leading-relaxed font-medium">
+                            <p className="mt-6 text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto mb-8 leading-relaxed font-medium">
                                 Une plateforme d'excellence conçue pour les candidats ambitieux. QCMs ciblés, examens blancs et analyses de performance avancées.
                             </p>
+
+                            <CountdownTimer />
 
                             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
                                 {user ? (

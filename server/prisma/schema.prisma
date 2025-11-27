@@ -145,3 +145,10 @@ model ExamProgress {
 
   @@unique([userId, examId])
 }
+
+model SystemSetting {
+  id        Int      @id @default(autoincrement())
+  key       String   @unique
+  value     String
+  updatedAt DateTime @updatedAt
+}
