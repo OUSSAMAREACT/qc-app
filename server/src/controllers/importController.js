@@ -3,8 +3,15 @@ import csv from 'csv-parser';
 import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 
-// Helper to normalize strings (trim, handle nulls)
-const normalize = (str) => str ? str.trim() : '';
+// Helper to normalize strings (trim, handle nulls, remove invisible chars)
+const normalize = (str) => {
+    if (!str) return '';
+    return str
+        .toString()
+        .replace(/[\u200B-\u200D\uFEFF]/g, '') // Remove zero-width spaces/joiners
+        .replace(/\s+/g, ' ') // Collapse multiple spaces to one
+        .trim();
+};
 
 export const importQuestionsFromCSV = async (req, res) => {
     if (!req.file) {
