@@ -65,7 +65,12 @@ export default function DashboardPage() {
             const res = await axios.get('/weekly-exams/active');
             setActiveExam(res.data);
         } catch (error) {
-            console.log("No active exam or error fetching", error);
+            if (error.response && error.response.status === 404) {
+                // No active exam, this is expected
+                setActiveExam(null);
+            } else {
+                console.log("Error fetching active exam", error);
+            }
         }
     };
 
