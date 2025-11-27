@@ -71,10 +71,7 @@ export default function NotificationBell() {
         // We need to navigate to result page, but we might not have the full result object
         // So for now, let's just navigate to dashboard if link is generic, or handle specific logic
         if (notification.link) {
-            // If it's a result link, we might need to fetch the question context or just go to dashboard
-            // For simplicity in this MVP, we'll go to dashboard but ideally we'd open the specific question
-            navigate('/dashboard');
-            // In a real app, we'd have a route like /question/:id or /discussion/:id
+            navigate(notification.link);
         }
     };
 
