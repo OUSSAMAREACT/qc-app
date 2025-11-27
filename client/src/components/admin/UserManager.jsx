@@ -197,6 +197,26 @@ export default function UserManager() {
                                         </td>
                                         <td className="p-4 text-right">
                                             <div className="flex justify-end gap-2">
+                                                <button
+                                                    onClick={async () => {
+                                                        if (confirm(`Voulez-vous vraiment changer le rôle de ${user.name} ?`)) {
+                                                            try {
+                                                                const newRole = user.role === 'ADMIN' ? 'STUDENT' : 'ADMIN';
+                                                                await axios.put(`/users/${user.id}`, { role: newRole });
+                                                                setUsers(users.map(u => u.id === user.id ? { ...u, role: newRole } : u));
+                                                            } catch (e) {
+                                                                alert("Erreur lors du changement de rôle");
+                                                            }
+                                                        }
+                                                    }}
+                                                    className={`p-2 rounded-lg transition-colors ${user.role === 'ADMIN'
+                                                        ? 'text-purple-600 hover:bg-purple-50 dark:hover:bg-purple-900/20'
+                                                        : 'text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/20'
+                                                        }`}
+                                                    title={user.role === 'ADMIN' ? "Rétrograder en Étudiant" : "Promouvoir Admin"}
+                                                >
+                                                    <Shield size={18} />
+                                                </button>
                                                 {user.status === 'PENDING' && (
                                                     <button
                                                         onClick={() => handleActivate(user)}
