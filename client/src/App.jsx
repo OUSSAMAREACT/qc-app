@@ -19,11 +19,24 @@ import AboutPage from './pages/AboutPage';
 import PaymentPage from './pages/PaymentPage';
 import PublicRoute from './components/PublicRoute';
 
-// ... existing imports ...
+import ProtectedRoute from './components/ProtectedRoute';
+import OnboardingWizard from './components/OnboardingWizard';
+import Layout from './components/Layout';
+import { useAuth } from './context/AuthContext';
+import ScrollToTop from './components/ScrollToTop';
 
 // Wrapper for routes that require active status
 const RequireActive = ({ children }) => {
-  // ... existing code ...
+  const { user, loading } = useAuth();
+
+  if (loading) return null; // Or a spinner
+
+  // If user is pending and NOT admin, redirect to payment
+  if (user && user.status === 'PENDING' && user.role !== 'ADMIN') {
+    return <Navigate to="/payment" />;
+  }
+
+  return children;
 };
 
 function App() {
