@@ -21,6 +21,8 @@ import OnboardingWizard from './components/OnboardingWizard';
 import Layout from './components/Layout';
 import { useAuth } from './context/AuthContext';
 
+import ScrollToTop from './components/ScrollToTop';
+
 // Wrapper for routes that require active status
 const RequireActive = ({ children }) => {
   const { user, loading } = useAuth();
@@ -39,6 +41,7 @@ function App() {
   return (
     <HelmetProvider>
       <BrowserRouter>
+        <ScrollToTop />
         <AuthProvider>
           <ThemeProvider>
             <Routes>
