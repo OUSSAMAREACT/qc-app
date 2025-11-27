@@ -181,12 +181,7 @@ export default function LandingPage() {
                             </p>
                         </div>
 
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-                            <FeatureCard
-                                icon={<BookOpen className="h-8 w-8 text-blue-500" />}
-                                title="Management & Qualité"
-                                description="Maîtrisez les outils de gestion (AMDEC, PRISMA), la certification HAS et les indicateurs de performance hospitalière."
-                            />
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                             <FeatureCard
                                 icon={<Target className="h-8 w-8 text-red-500" />}
                                 title="Santé Publique"
@@ -218,7 +213,7 @@ export default function LandingPage() {
                                             <Target size={24} />
                                         </div>
                                         <div>
-                                            <h3 className="text-xl font-bold mb-2">Contenu Actualisé 2024</h3>
+                                            <h3 className="text-xl font-bold mb-2">Contenu Actualisé {new Date().getFullYear()}</h3>
                                             <p className="text-gray-600 dark:text-gray-400">Nos cours et QCM sont mis à jour régulièrement pour refléter les dernières réformes (GST, Loi 06-22).</p>
                                         </div>
                                     </div>
