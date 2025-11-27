@@ -11,6 +11,7 @@ import gamificationRoutes from './routes/gamificationRoutes.js';
 import onboardingRoutes from './routes/onboardingRoutes.js';
 import userRoutes from './routes/userRoutes.js';
 import systemSettingsRoutes from './routes/systemSettingsRoutes.js';
+import debugRoutes from './routes/debugRoutes.js';
 
 dotenv.config();
 
@@ -40,6 +41,7 @@ app.use('/api/gamification', gamificationRoutes);
 app.use('/api/onboarding', onboardingRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/settings', systemSettingsRoutes);
+app.use('/api/debug', debugRoutes);
 
 app.get('/', (req, res) => {
     res.send('Quiz API is running');
