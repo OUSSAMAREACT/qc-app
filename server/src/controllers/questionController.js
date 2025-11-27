@@ -23,6 +23,8 @@ export const getQuestions = async (req, res) => {
 export const getQuestionCount = async (req, res) => {
     try {
         const count = await prisma.question.count();
+        // Cache for 5 minutes, allow stale for another 10 minutes
+        res.set('Cache-Control', 'public, max-age=300, stale-while-revalidate=600');
         res.json({ count });
     } catch (error) {
         res.status(500).json({ message: "Erreur lors du comptage des questions." });
