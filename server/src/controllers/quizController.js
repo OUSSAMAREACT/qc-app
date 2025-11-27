@@ -38,6 +38,7 @@ export const startQuiz = async (req, res) => {
         // Remove isCorrect from choices and shuffle them
         const sanitized = shuffled.map(q => ({
             ...q,
+            text: q.text.replace(/\s*\(plusieurs\s+réponses?\)/gi, '').trim(),
             choices: q.choices
                 .sort(() => 0.5 - Math.random()) // Shuffle choices
                 .map(c => ({ id: c.id, text: c.text, questionId: c.questionId })),
