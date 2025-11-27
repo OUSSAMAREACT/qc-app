@@ -42,7 +42,9 @@ model User {
   // Onboarding
   onboardingCompleted Boolean  @default(false)
   examDate            DateTime?
+  examDate            DateTime?
   studyMinutesPerDay  Int?
+  comments            Comment[]
 }
 
 model WeeklyProgress {
@@ -79,6 +81,7 @@ model Question {
   choices     Choice[]
   category    Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
   weeklyExams WeeklyExam[]
+  comments    Comment[]
 }
 
 model Choice {
@@ -151,4 +154,14 @@ model SystemSetting {
   key       String   @unique
   value     String
   updatedAt DateTime @updatedAt
+}
+
+model Comment {
+  id         Int      @id @default(autoincrement())
+  text       String
+  createdAt  DateTime @default(now())
+  userId     Int
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  questionId Int
+  question   Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
 }
