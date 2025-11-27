@@ -100,7 +100,7 @@ export const importQuestionsFromCSV = async (req, res) => {
         // Create "Imported" category if not exists
         let category = await prisma.category.findFirst({ where: { name: "Imported" } });
         if (!category) {
-            category = await prisma.category.create({ data: { name: "Imported", description: "Imported from CSV" } });
+            category = await prisma.category.create({ data: { name: "Imported" } });
         }
 
         let importedCount = 0;
@@ -125,7 +125,7 @@ export const importQuestionsFromCSV = async (req, res) => {
         });
 
         // Clean up file
-        fs.unlinkSync(filePath);
+        if (fs.existsSync(filePath)) fs.unlinkSync(filePath);
 
         res.json({
             message: "Import successful",
@@ -135,6 +135,10 @@ export const importQuestionsFromCSV = async (req, res) => {
     } catch (error) {
         console.error("Import error:", error);
         if (fs.existsSync(filePath)) fs.unlinkSync(filePath);
-        res.status(500).json({ message: "Error processing CSV", error: error.message });
+        res.status(500).json({
+            message: "Error processing CSV",
+            error: error.message,
+            details: process.env.NODE_ENV === 'development' ? error.stack : undefined
+        });
     }
 };
