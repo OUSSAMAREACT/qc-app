@@ -5,6 +5,7 @@ const AuthContext = createContext(null);
 
 export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
+    const [token, setToken] = useState(localStorage.getItem('token'));
     const [loading, setLoading] = useState(true);
 
     // Set base URL for API
@@ -16,9 +17,10 @@ export const AuthProvider = ({ children }) => {
 
     // On mount, try to restore session from localStorage
     useEffect(() => {
-        const token = localStorage.getItem('token');
-        if (token) {
-            axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+        const storedToken = localStorage.getItem('token');
+        if (storedToken) {
+            setToken(storedToken);
+            axios.defaults.headers.common['Authorization'] = `Bearer ${storedToken}`;
             fetchCurrentUser();
         } else {
             setLoading(false);
@@ -32,6 +34,7 @@ export const AuthProvider = ({ children }) => {
         } catch (err) {
             console.error('Auth check failed', err);
             localStorage.removeItem('token');
+            setToken(null);
             delete axios.defaults.headers.common['Authorization'];
         } finally {
             setLoading(false);
@@ -40,9 +43,10 @@ export const AuthProvider = ({ children }) => {
 
     const login = async (email, password) => {
         const res = await axios.post('/auth/login', { email, password });
-        const { token, user } = res.data;
-        localStorage.setItem('token', token);
-        axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+        const { token: newToken, user } = res.data;
+        localStorage.setItem('token', newToken);
+        setToken(newToken);
+        axios.defaults.headers.common['Authorization'] = `Bearer ${newToken}`;
         setUser(user);
         return user;
     };
@@ -50,20 +54,22 @@ export const AuthProvider = ({ children }) => {
     // Register now logs in automatically
     const register = async (name, email, password, specialtyId) => {
         const res = await axios.post('/auth/register', { name, email, password, specialtyId });
-        const { token, user } = res.data;
-        localStorage.setItem('token', token);
-        axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+        const { token: newToken, user } = res.data;
+        localStorage.setItem('token', newToken);
+        setToken(newToken);
+        axios.defaults.headers.common['Authorization'] = `Bearer ${newToken}`;
         setUser(user);
         return user;
     };
 
     const logout = () => {
         localStorage.removeItem('token');
+        setToken(null);
         delete axios.defaults.headers.common['Authorization'];
         setUser(null);
     };
 
-    const value = { user, login, register, logout, loading };
+    const value = { user, token, login, register, logout, loading };
 
     if (loading) {
         return (
