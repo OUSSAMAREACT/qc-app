@@ -38,6 +38,19 @@ async function main() {
         console.log(`Assigned default specialty to ${updateResult.count} users.`);
     }
 
+    // --- Promote Admin ---
+    const adminEmail = "oussamaqarbach@gmail.com";
+    const adminUser = await prisma.user.findUnique({ where: { email: adminEmail } });
+    if (adminUser) {
+        await prisma.user.update({
+            where: { email: adminEmail },
+            data: { role: 'ADMIN', status: 'ACTIVE' }
+        });
+        console.log(`Promoted ${adminEmail} to ADMIN and ACTIVE status.`);
+    } else {
+        console.log(`User ${adminEmail} not found. Register this user to become Admin.`);
+    }
+
     // --- Seeding Categories and Questions ---
     console.log('Seeding categories and questions...');
 
