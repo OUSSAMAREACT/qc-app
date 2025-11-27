@@ -52,11 +52,16 @@ export default function CountdownTimer() {
     if (loading || !timeLeft) return null;
 
     return (
-        <div className="flex justify-center gap-4 sm:gap-8 my-8">
-            <TimeUnit value={timeLeft.days} label="Jours" />
-            <TimeUnit value={timeLeft.hours} label="Heures" />
-            <TimeUnit value={timeLeft.minutes} label="Minutes" />
-            <TimeUnit value={timeLeft.seconds} label="Secondes" />
+        <div className="flex flex-col items-center my-12">
+            <h3 className="text-lg sm:text-xl font-semibold text-blue-900 dark:text-blue-100 mb-6 uppercase tracking-widest">
+                Temps restant avant l'EAP Echelle 11
+            </h3>
+            <div className="flex justify-center gap-3 sm:gap-6">
+                <TimeUnit value={timeLeft.days} label="Jours" />
+                <TimeUnit value={timeLeft.hours} label="Heures" />
+                <TimeUnit value={timeLeft.minutes} label="Minutes" />
+                <TimeUnit value={timeLeft.seconds} label="Secondes" />
+            </div>
         </div>
     );
 }
@@ -68,11 +73,11 @@ function TimeUnit({ value, label }) {
                 key={value}
                 initial={{ scale: 0.9, opacity: 0.8 }}
                 animate={{ scale: 1, opacity: 1 }}
-                className="w-16 h-16 sm:w-20 sm:h-20 bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 flex items-center justify-center text-2xl sm:text-3xl font-bold text-white shadow-lg"
+                className="w-16 h-16 sm:w-24 sm:h-24 bg-white/80 dark:bg-white/10 backdrop-blur-md rounded-2xl border border-blue-100 dark:border-white/20 flex items-center justify-center text-2xl sm:text-4xl font-bold text-blue-600 dark:text-white shadow-xl shadow-blue-900/5 dark:shadow-none"
             >
                 {value < 10 ? `0${value}` : value}
             </motion.div>
-            <span className="text-xs sm:text-sm text-blue-100 mt-2 font-medium uppercase tracking-wider">{label}</span>
+            <span className="text-[10px] sm:text-xs text-blue-800 dark:text-blue-200 mt-3 font-bold uppercase tracking-wider">{label}</span>
         </div>
     );
 }
