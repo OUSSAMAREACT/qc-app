@@ -17,7 +17,6 @@ export default function QuizPage() {
     const [answers, setAnswers] = useState({}); // { questionId: [choiceId, choiceId] }
     const [loading, setLoading] = useState(true);
     const [submitting, setSubmitting] = useState(false);
-    const [submitting, setSubmitting] = useState(false);
     const [confirmModalOpen, setConfirmModalOpen] = useState(false);
     const [commentsOpen, setCommentsOpen] = useState(false);
 

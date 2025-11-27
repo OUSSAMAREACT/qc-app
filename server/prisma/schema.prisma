@@ -42,7 +42,6 @@ model User {
   // Onboarding
   onboardingCompleted Boolean  @default(false)
   examDate            DateTime?
-  examDate            DateTime?
   studyMinutesPerDay  Int?
   comments            Comment[]
 }
