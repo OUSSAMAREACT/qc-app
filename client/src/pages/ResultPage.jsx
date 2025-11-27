@@ -8,6 +8,7 @@ import autoTable from 'jspdf-autotable';
 import { CheckCircle, XCircle, ArrowRight, RefreshCw, Download, Info, MessageCircle, Trophy, Target, Calendar } from 'lucide-react';
 import CommentsSheet from '../components/CommentsSheet';
 import { motion } from 'framer-motion';
+import axios from 'axios';
 
 export default function ResultPage() {
     const location = useLocation();
@@ -22,11 +23,84 @@ export default function ResultPage() {
         setCommentsOpen(true);
     };
 
-    if (!result) {
+    const [loadingQuestion, setLoadingQuestion] = useState(false);
+
+    // Handle direct access via notification (URL query param)
+    const queryParams = new URLSearchParams(location.search);
+    const questionIdParam = queryParams.get('questionId');
+
+    React.useEffect(() => {
+        if (!result && questionIdParam) {
+            fetchQuestion(questionIdParam);
+        }
+    }, [result, questionIdParam]);
+
+    const fetchQuestion = async (id) => {
+        setLoadingQuestion(true);
+        try {
+            const res = await axios.get(`/questions/${id}`);
+            setSelectedQuestion(res.data);
+            setCommentsOpen(true); // Auto open comments
+        } catch (error) {
+            console.error("Failed to fetch question", error);
+        } finally {
+            setLoadingQuestion(false);
+        }
+    };
+
+    if (!result && !questionIdParam) {
         return (
             <div className="min-h-screen flex flex-col items-center justify-center gap-4 bg-gray-50 dark:bg-gray-900">
                 <p className="text-gray-500">Aucun résultat disponible.</p>
                 <Button onClick={() => navigate('/dashboard')}>Retour au tableau de bord</Button>
+            </div>
+        );
+    }
+
+    // If loading question
+    if (loadingQuestion) {
+        return (
+            <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900">
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+            </div>
+        );
+    }
+
+    // If showing single question (Discussion Mode)
+    if (!result && selectedQuestion) {
+        return (
+            <div className="min-h-screen bg-gray-50 dark:bg-gray-900 p-4 md:p-8 font-sans">
+                <div className="max-w-4xl mx-auto space-y-8">
+                    <div className="flex justify-between items-center">
+                        <Button onClick={() => navigate('/dashboard')} variant="secondary">
+                            <ArrowRight className="rotate-180 mr-2" size={16} /> Retour
+                        </Button>
+                        <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Discussion</h1>
+                    </div>
+
+                    <Card className="p-8 shadow-xl border-0">
+                        <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-6">
+                            {selectedQuestion.text}
+                        </h3>
+                        <div className="flex justify-center">
+                            <Button
+                                onClick={() => setCommentsOpen(true)}
+                                className="bg-blue-600 text-white rounded-xl flex items-center gap-2"
+                            >
+                                <MessageCircle size={20} /> Voir la discussion
+                            </Button>
+                        </div>
+                    </Card>
+                </div>
+                <CommentsSheet
+                    isOpen={commentsOpen}
+                    onClose={() => {
+                        setCommentsOpen(false);
+                        // Optional: navigate back if they close? No, let them stay.
+                    }}
+                    questionId={selectedQuestion.id}
+                    questionText={selectedQuestion.text}
+                />
             </div>
         );
     }
@@ -261,8 +335,8 @@ export default function ResultPage() {
                         return (
                             <motion.div variants={itemVariants} key={detail.questionId}>
                                 <Card className={`overflow-hidden border-0 shadow-lg transition-all duration-300 hover:shadow-xl ${isCorrect
-                                        ? 'shadow-emerald-100 dark:shadow-emerald-900/10'
-                                        : 'shadow-red-100 dark:shadow-red-900/10'
+                                    ? 'shadow-emerald-100 dark:shadow-emerald-900/10'
+                                    : 'shadow-red-100 dark:shadow-red-900/10'
                                     }`}>
                                     {/* Status Bar */}
                                     <div className={`h-1.5 w-full ${isCorrect ? 'bg-emerald-500' : 'bg-red-500'}`} />
@@ -272,8 +346,8 @@ export default function ResultPage() {
                                         <div className="flex justify-between items-start gap-4 mb-6">
                                             <div className="flex gap-4">
                                                 <span className={`flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm ${isCorrect
-                                                        ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400'
-                                                        : 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400'
+                                                    ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400'
+                                                    : 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400'
                                                     }`}>
                                                     {index + 1}
                                                 </span>
@@ -333,8 +407,8 @@ export default function ResultPage() {
                                                         </div>
 
                                                         <span className={`flex-1 text-sm md:text-base ${isChoiceCorrect ? 'font-medium text-emerald-900 dark:text-emerald-200' :
-                                                                isSelected ? 'font-medium text-red-900 dark:text-red-200' :
-                                                                    'text-gray-600 dark:text-gray-400'
+                                                            isSelected ? 'font-medium text-red-900 dark:text-red-200' :
+                                                                'text-gray-600 dark:text-gray-400'
                                                             }`}>
                                                             {choice.text}
                                                         </span>

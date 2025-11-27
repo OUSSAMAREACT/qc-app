@@ -1,5 +1,5 @@
 import express from 'express';
-import { getQuestions, createQuestion, updateQuestion, deleteQuestion, getQuestionCount } from '../controllers/questionController.js';
+import { getQuestions, createQuestion, updateQuestion, deleteQuestion, getQuestionCount, getQuestionById } from '../controllers/questionController.js';
 import { authenticateToken, requireAdmin } from '../middleware/authMiddleware.js';
 
 const router = express.Router();
@@ -11,6 +11,7 @@ router.get('/count', getQuestionCount);
 // Actually, for students taking a quiz, we shouldn't send 'isCorrect'.
 // But this endpoint might be general. Let's keep it simple for now and handle quiz logic separately.
 router.get('/', authenticateToken, getQuestions);
+router.get('/:id', authenticateToken, getQuestionById);
 
 // Admin only
 router.post('/', authenticateToken, requireAdmin, createQuestion);

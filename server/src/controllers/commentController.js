@@ -41,6 +41,13 @@ export const addComment = async (req, res) => {
             }
         });
 
+        // Fetch current user to get name for notification
+        const currentUser = await prisma.user.findUnique({
+            where: { id: userId },
+            select: { name: true }
+        });
+        const userName = currentUser?.name || 'Utilisateur';
+
         // --- Notification Logic ---
         // 1. Find all Admins
         const admins = await prisma.user.findMany({
@@ -71,7 +78,7 @@ export const addComment = async (req, res) => {
         const notificationsData = Array.from(recipientIds).map(recipientId => ({
             userId: recipientId,
             type: 'COMMENT',
-            message: `Nouveau commentaire de ${req.user.name || 'Utilisateur'} sur une question.`,
+            message: `Nouveau commentaire de ${userName} sur une question.`,
             link: `/result?questionId=${questionId}`,
             read: false
         }));
