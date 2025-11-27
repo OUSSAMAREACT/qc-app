@@ -72,7 +72,7 @@ export const addComment = async (req, res) => {
             userId: recipientId,
             type: 'COMMENT',
             message: `Nouveau commentaire de ${req.user.name || 'Utilisateur'} sur une question.`,
-            link: `/result?questionId=${questionId}`, // We might need a better way to link directly, but this is a start
+            link: `/result?questionId=${questionId}`,
             read: false
         }));
 
@@ -87,5 +87,35 @@ export const addComment = async (req, res) => {
     } catch (error) {
         console.error("Add comment error:", error);
         res.status(500).json({ message: "Erreur lors de l'ajout du commentaire." });
+    }
+};
+
+export const deleteComment = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const userId = req.user.userId;
+        const userRole = req.user.role;
+
+        const comment = await prisma.comment.findUnique({
+            where: { id: parseInt(id) }
+        });
+
+        if (!comment) {
+            return res.status(404).json({ message: "Commentaire non trouvé." });
+        }
+
+        // Allow deletion if user is Admin, Super Admin, or the author of the comment
+        if (userRole !== 'ADMIN' && userRole !== 'SUPER_ADMIN' && comment.userId !== userId) {
+            return res.status(403).json({ message: "Non autorisé." });
+        }
+
+        await prisma.comment.delete({
+            where: { id: parseInt(id) }
+        });
+
+        res.json({ message: "Commentaire supprimé." });
+    } catch (error) {
+        console.error("Delete comment error:", error);
+        res.status(500).json({ message: "Erreur lors de la suppression du commentaire." });
     }
 };
