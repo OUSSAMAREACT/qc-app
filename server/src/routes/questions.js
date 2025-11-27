@@ -1,5 +1,5 @@
 import express from 'express';
-import { getQuestions, createQuestion, updateQuestion, deleteQuestion, getQuestionCount, getQuestionById } from '../controllers/questionController.js';
+import { getQuestions, createQuestion, updateQuestion, deleteQuestion, getQuestionCount, getQuestionById, moveQuestions, deleteQuestionsBatch } from '../controllers/questionController.js';
 import { authenticateToken, requireAdmin } from '../middleware/authMiddleware.js';
 
 const router = express.Router();
@@ -17,5 +17,7 @@ router.get('/:id', authenticateToken, getQuestionById);
 router.post('/', authenticateToken, requireAdmin, createQuestion);
 router.put('/:id', authenticateToken, requireAdmin, updateQuestion);
 router.delete('/:id', authenticateToken, requireAdmin, deleteQuestion);
+router.post('/move', authenticateToken, requireAdmin, moveQuestions);
+router.post('/batch-delete', authenticateToken, requireAdmin, deleteQuestionsBatch);
 
 export default router;

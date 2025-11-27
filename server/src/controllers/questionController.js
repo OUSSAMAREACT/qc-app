@@ -137,3 +137,48 @@ export const getQuestionById = async (req, res) => {
         res.status(500).json({ message: "Erreur lors de la récupération de la question." });
     }
 };
+
+export const moveQuestions = async (req, res) => {
+    try {
+        const { questionIds, targetCategoryId } = req.body;
+
+        if (!questionIds || !Array.isArray(questionIds) || !targetCategoryId) {
+            return res.status(400).json({ message: "Données invalides." });
+        }
+
+        await prisma.question.updateMany({
+            where: {
+                id: { in: questionIds.map(id => parseInt(id)) }
+            },
+            data: {
+                categoryId: parseInt(targetCategoryId)
+            }
+        });
+
+        res.json({ message: "Questions déplacées avec succès." });
+    } catch (error) {
+        console.error("Move questions error:", error);
+        res.status(500).json({ message: "Erreur lors du déplacement des questions." });
+    }
+};
+
+export const deleteQuestionsBatch = async (req, res) => {
+    try {
+        const { questionIds } = req.body;
+
+        if (!questionIds || !Array.isArray(questionIds)) {
+            return res.status(400).json({ message: "Données invalides." });
+        }
+
+        await prisma.question.deleteMany({
+            where: {
+                id: { in: questionIds.map(id => parseInt(id)) }
+            }
+        });
+
+        res.json({ message: "Questions supprimées avec succès." });
+    } catch (error) {
+        console.error("Delete questions batch error:", error);
+        res.status(500).json({ message: "Erreur lors de la suppression des questions." });
+    }
+};
