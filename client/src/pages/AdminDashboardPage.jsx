@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '../components/ui/Button';
-import { LayoutDashboard, BookOpen, Award, Users, ArrowLeft, LogOut, ArrowRight, Sun, Moon, Settings } from 'lucide-react';
+import { LayoutDashboard, BookOpen, Award, Users, ArrowLeft, LogOut, ArrowRight, Sun, Moon, Settings, Trophy } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
 
