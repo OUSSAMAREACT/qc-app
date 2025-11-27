@@ -17,25 +17,13 @@ import ModuleCatalogPage from './pages/ModuleCatalogPage';
 import LandingPage from './pages/LandingPage';
 import AboutPage from './pages/AboutPage';
 import PaymentPage from './pages/PaymentPage';
-import ProtectedRoute from './components/ProtectedRoute';
-import OnboardingWizard from './components/OnboardingWizard';
-import Layout from './components/Layout';
-import { useAuth } from './context/AuthContext';
+import PublicRoute from './components/PublicRoute';
 
-import ScrollToTop from './components/ScrollToTop';
+// ... existing imports ...
 
 // Wrapper for routes that require active status
 const RequireActive = ({ children }) => {
-  const { user, loading } = useAuth();
-
-  if (loading) return null; // Or a spinner
-
-  // If user is pending and NOT admin, redirect to payment
-  if (user && user.status === 'PENDING' && user.role !== 'ADMIN') {
-    return <Navigate to="/payment" />;
-  }
-
-  return children;
+  // ... existing code ...
 };
 
 function App() {
@@ -50,8 +38,16 @@ function App() {
               <Route path="/" element={<LandingPage />} />
               <Route path="/about" element={<AboutPage />} />
 
-              <Route path="/login" element={<LoginPage />} />
-              <Route path="/register" element={<RegisterPage />} />
+              <Route path="/login" element={
+                <PublicRoute>
+                  <LoginPage />
+                </PublicRoute>
+              } />
+              <Route path="/register" element={
+                <PublicRoute>
+                  <RegisterPage />
+                </PublicRoute>
+              } />
 
               {/* Payment Page - Accessible by PENDING users */}
               <Route path="/payment" element={
