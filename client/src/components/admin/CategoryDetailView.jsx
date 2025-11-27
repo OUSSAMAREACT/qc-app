@@ -48,7 +48,7 @@ export default function CategoryDetailView({ categoryId, onBack }) {
                             <h2 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white tracking-tight">{category.name}</h2>
                             <button
                                 onClick={() => setIsEditingName(true)}
-                                className="md:opacity-0 group-hover:opacity-100 p-1.5 text-gray-400 hover:text-blue-600 transition-all"
+                                className="md:opacity-0 group-hover:opacity-100 p-1.5 text-gray-400 hover:text-blue-600 transition-all cursor-pointer"
                             >
                                 <Edit size={18} />
                             </button>

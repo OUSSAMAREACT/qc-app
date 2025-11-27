@@ -37,7 +37,7 @@ export default function AdminDashboardPage() {
 
         switch (currentView) {
             case 'overview':
-                return <Overview />;
+                return <Overview onNavigate={setCurrentView} />;
             case 'common':
                 return <CommonModulesView onSelectCategory={handleCategorySelect} />;
             case 'specialties':
@@ -47,7 +47,7 @@ export default function AdminDashboardPage() {
             case 'users':
                 return <UserManager />;
             default:
-                return <Overview />;
+                return <Overview onNavigate={setCurrentView} />;
         }
     };
 
@@ -143,7 +143,7 @@ function SidebarItem({ icon, label, isActive, onClick }) {
     return (
         <button
             onClick={onClick}
-            className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200 ${isActive
+            className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200 cursor-pointer ${isActive
                 ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300 shadow-sm'
                 : 'text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-white'
                 }`}
@@ -154,7 +154,7 @@ function SidebarItem({ icon, label, isActive, onClick }) {
     );
 }
 
-function Overview() {
+function Overview({ onNavigate }) {
     return (
         <div className="space-y-8">
             <div>
@@ -163,7 +163,10 @@ function Overview() {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div className="group relative overflow-hidden bg-white dark:bg-gray-800 rounded-3xl p-8 shadow-sm hover:shadow-xl transition-all duration-300 border border-gray-100 dark:border-gray-700">
+                <div
+                    onClick={() => onNavigate('common')}
+                    className="group relative overflow-hidden bg-white dark:bg-gray-800 rounded-3xl p-8 shadow-sm hover:shadow-xl transition-all duration-300 border border-gray-100 dark:border-gray-700 cursor-pointer"
+                >
                     <div className="absolute top-0 right-0 -mt-4 -mr-4 w-32 h-32 bg-blue-500/10 rounded-full blur-2xl group-hover:bg-blue-500/20 transition-colors"></div>
                     <div className="relative z-10">
                         <div className="w-12 h-12 bg-blue-100 dark:bg-blue-900/30 text-blue-600 rounded-2xl flex items-center justify-center mb-6">
@@ -177,7 +180,10 @@ function Overview() {
                     </div>
                 </div>
 
-                <div className="group relative overflow-hidden bg-white dark:bg-gray-800 rounded-3xl p-8 shadow-sm hover:shadow-xl transition-all duration-300 border border-gray-100 dark:border-gray-700">
+                <div
+                    onClick={() => onNavigate('specialties')}
+                    className="group relative overflow-hidden bg-white dark:bg-gray-800 rounded-3xl p-8 shadow-sm hover:shadow-xl transition-all duration-300 border border-gray-100 dark:border-gray-700 cursor-pointer"
+                >
                     <div className="absolute top-0 right-0 -mt-4 -mr-4 w-32 h-32 bg-purple-500/10 rounded-full blur-2xl group-hover:bg-purple-500/20 transition-colors"></div>
                     <div className="relative z-10">
                         <div className="w-12 h-12 bg-purple-100 dark:bg-purple-900/30 text-purple-600 rounded-2xl flex items-center justify-center mb-6">
@@ -191,7 +197,10 @@ function Overview() {
                     </div>
                 </div>
 
-                <div className="group relative overflow-hidden bg-white dark:bg-gray-800 rounded-3xl p-8 shadow-sm hover:shadow-xl transition-all duration-300 border border-gray-100 dark:border-gray-700">
+                <div
+                    onClick={() => onNavigate('users')}
+                    className="group relative overflow-hidden bg-white dark:bg-gray-800 rounded-3xl p-8 shadow-sm hover:shadow-xl transition-all duration-300 border border-gray-100 dark:border-gray-700 cursor-pointer"
+                >
                     <div className="absolute top-0 right-0 -mt-4 -mr-4 w-32 h-32 bg-emerald-500/10 rounded-full blur-2xl group-hover:bg-emerald-500/20 transition-colors"></div>
                     <div className="relative z-10">
                         <div className="w-12 h-12 bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 rounded-2xl flex items-center justify-center mb-6">

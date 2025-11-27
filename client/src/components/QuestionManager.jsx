@@ -126,14 +126,14 @@ export default function QuestionManager({ categoryId }) {
                             <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
                                 <button
                                     onClick={() => handleEdit(q)}
-                                    className="p-2 text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-lg transition-all"
+                                    className="p-2 text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-lg transition-all cursor-pointer"
                                     title="Modifier"
                                 >
                                     <Edit size={18} />
                                 </button>
                                 <button
                                     onClick={() => handleDelete(q.id)}
-                                    className="p-2 text-gray-400 hover:text-red-600 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-all"
+                                    className="p-2 text-gray-400 hover:text-red-600 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-all cursor-pointer"
                                     title="Supprimer"
                                 >
                                     <Trash2 size={18} />
