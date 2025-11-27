@@ -58,15 +58,16 @@ export default function LandingPage() {
                         <div className="flex items-center gap-4">
                             <button
                                 onClick={toggleTheme}
-                                className="p-2 rounded-full text-gray-500 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-800 transition-colors"
+                                className="p-2 rounded-full text-gray-500 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-800 transition-all active:scale-95"
+                                aria-label="Toggle Theme"
                             >
                                 {theme === 'dark' ? <Sun size={20} /> : <Moon size={20} />}
                             </button>
                             {user ? (
                                 <Link to="/dashboard">
-                                    <Button className="bg-blue-600 hover:bg-blue-700 text-white shadow-lg shadow-blue-500/30 rounded-xl px-6">
-                                        <LayoutDashboard className="mr-2 h-4 w-4" />
-                                        Tableau de Bord
+                                    <Button className="bg-blue-600 hover:bg-blue-700 text-white shadow-lg shadow-blue-500/30 rounded-xl px-3 sm:px-6">
+                                        <LayoutDashboard className="h-5 w-5 sm:mr-2 sm:h-4 sm:w-4" />
+                                        <span className="hidden sm:inline">Tableau de Bord</span>
                                     </Button>
                                 </Link>
                             ) : (
