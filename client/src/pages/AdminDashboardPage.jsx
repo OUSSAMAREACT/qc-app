@@ -12,6 +12,7 @@ import CategoryDetailView from '../components/admin/CategoryDetailView';
 import WeeklyExamManager from '../components/admin/WeeklyExamManager';
 import UserManager from '../components/admin/UserManager';
 import SettingsManager from '../components/admin/SettingsManager';
+import ImportQuestionsPage from './ImportQuestionsPage';
 
 export default function AdminDashboardPage() {
     const { user, logout } = useAuth();
@@ -51,6 +52,8 @@ export default function AdminDashboardPage() {
                 return <UserManager />;
             case 'settings':
                 return <SettingsManager />;
+            case 'import':
+                return <ImportQuestionsPage />;
             default:
                 return <Overview onNavigate={setCurrentView} user={user} />;
         }
@@ -135,6 +138,12 @@ export default function AdminDashboardPage() {
                                 label="Paramètres"
                                 isActive={currentView === 'settings'}
                                 onClick={() => { setCurrentView('settings'); setSelectedCategory(null); setIsSidebarOpen(false); }}
+                            />
+                            <SidebarItem
+                                icon={<Upload size={20} />}
+                                label="Importer CSV"
+                                isActive={currentView === 'import'}
+                                onClick={() => { setCurrentView('import'); setSelectedCategory(null); setIsSidebarOpen(false); }}
                             />
                         </>
                     )}
