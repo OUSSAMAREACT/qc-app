@@ -116,3 +116,24 @@ export const deleteQuestion = async (req, res) => {
         res.status(500).json({ message: "Erreur lors de la suppression." });
     }
 };
+
+export const getQuestionById = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const question = await prisma.question.findUnique({
+            where: { id: parseInt(id) },
+            include: {
+                choices: true,
+                category: true,
+            },
+        });
+
+        if (!question) {
+            return res.status(404).json({ message: "Question non trouvée." });
+        }
+
+        res.json(question);
+    } catch (error) {
+        res.status(500).json({ message: "Erreur lors de la récupération de la question." });
+    }
+};
