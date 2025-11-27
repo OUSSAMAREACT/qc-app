@@ -4,7 +4,7 @@ import { Input } from './ui/Input';
 import { Trash2, Plus, CheckCircle, Circle } from 'lucide-react';
 import axios from 'axios';
 
-export default function QuestionForm({ initialData, onSuccess, onCancel }) {
+export default function QuestionForm({ initialData, categoryId, onSuccess, onCancel }) {
     const [formData, setFormData] = useState({
         text: '',
         categoryId: '',
