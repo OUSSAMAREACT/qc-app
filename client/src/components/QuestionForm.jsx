@@ -29,15 +29,18 @@ export default function QuestionForm({ initialData, onSuccess, onCancel }) {
                 explanation: initialData.explanation || '',
                 choices: initialData.choices.map(c => ({ text: c.text, isCorrect: c.isCorrect }))
             });
+        } else if (categoryId) {
+            // Pre-select category if passed via props
+            setFormData(prev => ({ ...prev, categoryId: categoryId }));
         }
-    }, [initialData]);
+    }, [initialData, categoryId]);
 
     const fetchCategories = async () => {
         try {
             const res = await axios.get('/categories');
             setCategories(res.data);
-            // Set default category if creating new and categories exist
-            if (!initialData && res.data.length > 0) {
+            // Set default category if creating new, categories exist, AND no category is already selected
+            if (!initialData && !categoryId && res.data.length > 0) {
                 setFormData(prev => ({ ...prev, categoryId: res.data[0].id }));
             }
         } catch (error) {
