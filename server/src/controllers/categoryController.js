@@ -10,11 +10,13 @@ export const getCategories = async (req, res) => {
         }
 
         const where = {};
-        if (user.role !== 'ADMIN') {
+        if (user.role !== 'ADMIN' && user.role !== 'SUPER_ADMIN') {
             where.OR = [
                 { specialtyId: null }, // Common modules
                 { specialtyId: user.specialtyId } // User's specialty
             ];
+            // Exclude "Banque de Questions" for non-admins
+            where.name = { not: "Banque de Questions" };
         }
 
         const categories = await prisma.category.findMany({
