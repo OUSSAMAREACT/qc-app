@@ -105,6 +105,15 @@ export default function ResultPage() {
         );
     }
 
+    // Fallback loading state if result is null (e.g. waiting for fetchQuestion)
+    if (!result) {
+        return (
+            <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900">
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+            </div>
+        );
+    }
+
     const { score, totalQuestions, percentage, details } = result;
     const category = location.state?.category;
 
