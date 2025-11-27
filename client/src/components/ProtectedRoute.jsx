@@ -23,7 +23,7 @@ export default function ProtectedRoute({ children, requireAdmin }) {
         return <Navigate to="/dashboard" />;
     }
 
-    if (requireAdmin && user.role !== 'ADMIN') {
+    if (requireAdmin && user.role !== 'ADMIN' && user.role !== 'SUPER_ADMIN') {
         return <Navigate to="/dashboard" />;
     }
 
