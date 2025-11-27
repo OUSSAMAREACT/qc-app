@@ -121,14 +121,14 @@ export default function LandingPage() {
                             </motion.span>
 
                             <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight mb-8 leading-tight">
-                                Maîtrisez votre <br className="hidden md:block" />
+                                Réussissez votre <br className="hidden md:block" />
                                 <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 dark:from-blue-400 dark:via-indigo-400 dark:to-purple-400 animate-gradient-x">
-                                    Avenir Professionnel
+                                    Concours & Carrière
                                 </span>
                             </h1>
 
                             <p className="mt-6 text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto mb-8 leading-relaxed font-medium">
-                                Une plateforme d'excellence conçue pour les candidats ambitieux. QCMs ciblés, examens blancs et analyses de performance avancées.
+                                La plateforme de référence pour l'Echelle 11, Master ISPITS, ISSS et ENSP. Cours, résumés et QCMs pour exceller.
                             </p>
 
                             <CountdownTimer />
@@ -171,32 +171,96 @@ export default function LandingPage() {
                     </div>
                 </section>
 
-                {/* Features Section */}
+                {/* Modules Section */}
                 <section className="py-24 bg-white dark:bg-gray-800/50 relative">
                     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                         <div className="text-center mb-20">
-                            <h2 className="text-3xl md:text-4xl font-bold mb-6">Tout ce dont vous avez besoin</h2>
+                            <h2 className="text-3xl md:text-4xl font-bold mb-6">Un Programme Complet</h2>
                             <p className="text-gray-600 dark:text-gray-400 max-w-2xl mx-auto text-lg">
-                                Une suite d'outils pédagogiques modernes pour maximiser vos chances de réussite.
+                                Préparez-vous pour l'Echelle 11, le Master ISPITS, ISSS et l'ENSP avec nos modules spécialisés.
                             </p>
                         </div>
 
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
                             <FeatureCard
-                                icon={<Target className="h-8 w-8 text-blue-500" />}
-                                title="Entraînement Ciblé"
-                                description="Choisissez vos modules et spécialités. Entraînez-vous sur des séries de questions spécifiques adaptées à votre niveau."
+                                icon={<BookOpen className="h-8 w-8 text-blue-500" />}
+                                title="Management & Qualité"
+                                description="Maîtrisez les outils de gestion (AMDEC, PRISMA), la certification HAS et les indicateurs de performance hospitalière."
                             />
                             <FeatureCard
-                                icon={<Trophy className="h-8 w-8 text-yellow-500" />}
-                                title="Compétition Saine"
-                                description="Participez aux examens hebdomadaires, grimpez dans le classement national et décrochez des badges prestigieux."
+                                icon={<Target className="h-8 w-8 text-red-500" />}
+                                title="Santé Publique"
+                                description="Comprenez le système de santé (Loi cadre 06-22), l'épidémiologie et les programmes sanitaires nationaux."
                             />
                             <FeatureCard
                                 icon={<Users className="h-8 w-8 text-green-500" />}
-                                title="Communauté Active"
-                                description="Rejoignez une communauté de candidats motivés. Comparez vos résultats et progressez ensemble vers la réussite."
+                                title="Soins Infirmiers"
+                                description="Approfondissez le raisonnement clinique, la démarche de soins, l'éthique et la gestion des médicaments."
                             />
+                            <FeatureCard
+                                icon={<Trophy className="h-8 w-8 text-yellow-500" />}
+                                title="Législation & Droit"
+                                description="Tout sur la protection sociale, la responsabilité médicale et les décrets régissant la profession."
+                            />
+                        </div>
+                    </div>
+                </section>
+
+                {/* Why Choose Us Section */}
+                <section className="py-24 bg-gray-50 dark:bg-gray-900">
+                    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+                            <div>
+                                <h2 className="text-3xl md:text-4xl font-bold mb-6">Pourquoi choisir QCMEchelle11 ?</h2>
+                                <div className="space-y-6">
+                                    <div className="flex gap-4">
+                                        <div className="flex-shrink-0 w-12 h-12 rounded-xl bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center text-blue-600">
+                                            <Target size={24} />
+                                        </div>
+                                        <div>
+                                            <h3 className="text-xl font-bold mb-2">Contenu Actualisé 2024</h3>
+                                            <p className="text-gray-600 dark:text-gray-400">Nos cours et QCM sont mis à jour régulièrement pour refléter les dernières réformes (GST, Loi 06-22).</p>
+                                        </div>
+                                    </div>
+                                    <div className="flex gap-4">
+                                        <div className="flex-shrink-0 w-12 h-12 rounded-xl bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center text-purple-600">
+                                            <BookOpen size={24} />
+                                        </div>
+                                        <div>
+                                            <h3 className="text-xl font-bold mb-2">Ressources Exclusives</h3>
+                                            <p className="text-gray-600 dark:text-gray-400">Accédez à des résumés synthétiques : Santé en chiffres, Comptes nationaux, et Guides de bonnes pratiques.</p>
+                                        </div>
+                                    </div>
+                                    <div className="flex gap-4">
+                                        <div className="flex-shrink-0 w-12 h-12 rounded-xl bg-green-100 dark:bg-green-900/30 flex items-center justify-center text-green-600">
+                                            <Trophy size={24} />
+                                        </div>
+                                        <div>
+                                            <h3 className="text-xl font-bold mb-2">Méthode Éprouvée</h3>
+                                            <p className="text-gray-600 dark:text-gray-400">Combinez apprentissage théorique et pratique intensive avec nos examens blancs hebdomadaires.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="relative">
+                                <div className="absolute inset-0 bg-gradient-to-br from-blue-600 to-purple-600 rounded-3xl transform rotate-3 opacity-20 blur-lg"></div>
+                                <div className="relative bg-white dark:bg-gray-800 rounded-3xl p-8 shadow-xl border border-gray-100 dark:border-gray-700">
+                                    <div className="space-y-4">
+                                        <div className="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-700/50 rounded-xl">
+                                            <span className="font-medium">Taux de réussite</span>
+                                            <span className="text-green-500 font-bold">+85%</span>
+                                        </div>
+                                        <div className="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-700/50 rounded-xl">
+                                            <span className="font-medium">Utilisateurs Actifs</span>
+                                            <span className="text-blue-500 font-bold">5,000+</span>
+                                        </div>
+                                        <div className="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-700/50 rounded-xl">
+                                            <span className="font-medium">Questions Disponibles</span>
+                                            <span className="text-purple-500 font-bold">2,500+</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </section>
