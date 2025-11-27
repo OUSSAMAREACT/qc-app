@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Send, MessageCircle, User } from 'lucide-react';
+import { X, Send, MessageCircle, User, Trash2 } from 'lucide-react';
 import axios from 'axios';
 import { Button } from './ui/Button';
 import { useAuth } from '../context/AuthContext';
@@ -55,6 +55,18 @@ export default function CommentsSheet({ isOpen, onClose, questionId, questionTex
             console.error("Failed to post comment", error);
         } finally {
             setSubmitting(false);
+        }
+    };
+
+    const handleDelete = async (commentId) => {
+        if (!confirm("Voulez-vous vraiment supprimer ce commentaire ?")) return;
+
+        try {
+            await axios.delete(`/comments/${commentId}`);
+            setComments(comments.filter(c => c.id !== commentId));
+        } catch (error) {
+            console.error("Failed to delete comment", error);
+            alert("Erreur lors de la suppression.");
         }
     };
 
@@ -137,11 +149,22 @@ export default function CommentsSheet({ isOpen, onClose, questionId, questionTex
                                                     {new Date(comment.createdAt).toLocaleDateString()}
                                                 </span>
                                             </div>
-                                            <div className={`p-3 rounded-2xl text-sm ${comment.user.id === user.id
+                                            <div className={`p-3 rounded-2xl text-sm group relative ${comment.user.id === user.id
                                                 ? 'bg-blue-600 text-white rounded-tr-none'
                                                 : 'bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200 rounded-tl-none'
                                                 }`}>
                                                 {comment.text}
+
+                                                {/* Delete Button */}
+                                                {(user.role === 'ADMIN' || user.role === 'SUPER_ADMIN' || user.id === comment.user.id) && (
+                                                    <button
+                                                        onClick={() => handleDelete(comment.id)}
+                                                        className={`absolute -top-2 ${comment.user.id === user.id ? '-left-2' : '-right-2'} p-1 rounded-full bg-red-100 text-red-600 opacity-0 group-hover:opacity-100 transition-opacity shadow-sm`}
+                                                        title="Supprimer"
+                                                    >
+                                                        <Trash2 size={12} />
+                                                    </button>
+                                                )}
                                             </div>
                                         </div>
                                     </div>
