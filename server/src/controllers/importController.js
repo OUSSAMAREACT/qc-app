@@ -25,8 +25,6 @@ export const importQuestionsFromCSV = async (req, res) => {
         });
 
         // 2. Find "Najib" (or highest scorer)
-        // We look for a column that might contain the name, e.g., "Nom ou pseudonyme"
-        // And "Score" column.
         let referenceStudent = results.find(r =>
             Object.values(r).some(val => val && val.toString().toLowerCase().includes('najib'))
         );
@@ -48,11 +46,10 @@ export const importQuestionsFromCSV = async (req, res) => {
         console.log(`Using reference student: ${referenceStudent['Nom ou pseudonyme'] || 'Unknown'} (Score: ${referenceStudent['Score']})`);
 
         // 3. Extract Questions (Headers)
-        // We need to filter out non-question headers like "Timestamp", "Score", "Email Address", etc.
         const headers = Object.keys(results[0]);
         const ignoreHeaders = ['Timestamp', 'Score', 'Email Address', 'Nom ou pseudonyme', 'Commentaires', 'Total score'];
 
-        const questionHeaders = headers.filter(h => !ignoreHeaders.includes(h) && h.length > 5); // Simple heuristic: questions are usually long
+        const questionHeaders = headers.filter(h => !ignoreHeaders.includes(h) && h.length > 5);
 
         const questionsToImport = [];
 
@@ -60,17 +57,37 @@ export const importQuestionsFromCSV = async (req, res) => {
         for (const questionText of questionHeaders) {
             const correctAnswerText = normalize(referenceStudent[questionText]);
 
-            // Collect all unique answers for this question to build choices
-            const allAnswers = new Set();
+            // Collect all unique answers and count frequencies
+            const answerCounts = {};
             results.forEach(row => {
                 const ans = normalize(row[questionText]);
-                if (ans) allAnswers.add(ans);
+                if (ans) {
+                    answerCounts[ans] = (answerCounts[ans] || 0) + 1;
+                }
             });
 
-            // Ensure correct answer is in the choices
-            if (correctAnswerText) allAnswers.add(correctAnswerText);
+            // Filter choices: Top 4 most frequent + Correct Answer
+            let uniqueAnswers = Object.keys(answerCounts);
+            let finalChoices = [];
 
-            const choices = Array.from(allAnswers).map(choiceText => ({
+            if (uniqueAnswers.length <= 5) {
+                finalChoices = uniqueAnswers;
+            } else {
+                // Sort by frequency (descending)
+                const sortedAnswers = uniqueAnswers.sort((a, b) => answerCounts[b] - answerCounts[a]);
+
+                // Take top 4
+                finalChoices = sortedAnswers.slice(0, 4);
+
+                // Ensure correct answer is included
+                if (correctAnswerText && !finalChoices.includes(correctAnswerText)) {
+                    // If correct answer is not in top 4, add it as a 5th choice
+                    finalChoices.push(correctAnswerText);
+                }
+            }
+
+            // Map to choice objects
+            const choices = finalChoices.map(choiceText => ({
                 text: choiceText,
                 isCorrect: choiceText === correctAnswerText
             }));
@@ -78,15 +95,14 @@ export const importQuestionsFromCSV = async (req, res) => {
             questionsToImport.push({
                 text: questionText,
                 choices: choices,
-                category: "Imported" // Default category
+                category: "Banque de Questions" // Updated category name
             });
         }
 
         // 5. Preview Mode vs Commit Mode
-        // If query param ?commit=true is NOT present, return preview
         if (req.query.commit !== 'true') {
             // Clean up file
-            fs.unlinkSync(filePath);
+            if (fs.existsSync(filePath)) fs.unlinkSync(filePath);
             return res.json({
                 message: "Analysis complete",
                 referenceStudent: referenceStudent['Nom ou pseudonyme'],
@@ -97,10 +113,10 @@ export const importQuestionsFromCSV = async (req, res) => {
         }
 
         // 6. Commit to Database
-        // Create "Imported" category if not exists
-        let category = await prisma.category.findFirst({ where: { name: "Imported" } });
+        // Create "Banque de Questions" category if not exists
+        let category = await prisma.category.findFirst({ where: { name: "Banque de Questions" } });
         if (!category) {
-            category = await prisma.category.create({ data: { name: "Imported" } });
+            category = await prisma.category.create({ data: { name: "Banque de Questions" } });
         }
 
         let importedCount = 0;
