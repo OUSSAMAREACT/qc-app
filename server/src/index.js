@@ -13,6 +13,7 @@ import userRoutes from './routes/userRoutes.js';
 import systemSettingsRoutes from './routes/systemSettingsRoutes.js';
 import debugRoutes from './routes/debugRoutes.js';
 import commentRoutes from './routes/commentRoutes.js';
+import notificationRoutes from './routes/notificationRoutes.js';
 
 dotenv.config();
 
@@ -60,6 +61,7 @@ app.use('/api/users', userRoutes);
 app.use('/api/settings', systemSettingsRoutes);
 app.use('/api/debug', debugRoutes);
 app.use('/api/comments', commentRoutes);
+app.use('/api/notifications', notificationRoutes);
 
 app.get('/', (req, res) => {
     res.send('Quiz API is running');

@@ -41,6 +41,48 @@ export const addComment = async (req, res) => {
             }
         });
 
+        // --- Notification Logic ---
+        // 1. Find all Admins
+        const admins = await prisma.user.findMany({
+            where: {
+                role: { in: ['ADMIN', 'SUPER_ADMIN'] },
+                id: { not: userId } // Don't notify self if admin
+            },
+            select: { id: true }
+        });
+
+        // 2. Find all participants (users who commented on this question)
+        const participants = await prisma.comment.findMany({
+            where: {
+                questionId: parseInt(questionId),
+                userId: { not: userId } // Don't notify self
+            },
+            distinct: ['userId'],
+            select: { userId: true }
+        });
+
+        // Combine unique recipients
+        const recipientIds = new Set([
+            ...admins.map(a => a.id),
+            ...participants.map(p => p.userId)
+        ]);
+
+        // Create notifications
+        const notificationsData = Array.from(recipientIds).map(recipientId => ({
+            userId: recipientId,
+            type: 'COMMENT',
+            message: `Nouveau commentaire de ${req.user.name || 'Utilisateur'} sur une question.`,
+            link: `/result?questionId=${questionId}`, // We might need a better way to link directly, but this is a start
+            read: false
+        }));
+
+        if (notificationsData.length > 0) {
+            await prisma.notification.createMany({
+                data: notificationsData
+            });
+        }
+        // --------------------------
+
         res.json(comment);
     } catch (error) {
         console.error("Add comment error:", error);

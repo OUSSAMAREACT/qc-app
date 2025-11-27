@@ -7,6 +7,7 @@ import {
     LayoutDashboard, BookOpen, Trophy, History
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import NotificationBell from './NotificationBell';
 
 export default function Navbar() {
     const { user, logout } = useAuth();
@@ -95,6 +96,8 @@ export default function Navbar() {
                         >
                             {theme === 'dark' ? <Sun size={20} /> : <Moon size={20} />}
                         </button>
+
+                        <NotificationBell />
 
                         <div className="relative">
                             <button
