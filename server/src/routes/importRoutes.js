@@ -1,11 +1,12 @@
-const express = require('express');
+import express from 'express';
+import multer from 'multer';
+import { importQuestionsFromCSV } from '../controllers/importController.js';
+import { authenticateToken, requireSuperAdmin } from '../middleware/authMiddleware.js';
+
 const router = express.Router();
-const multer = require('multer');
 const upload = multer({ dest: 'uploads/' });
-const importController = require('../controllers/importController');
-const { authenticateToken, requireSuperAdmin } = require('../middleware/authMiddleware');
 
 // Protect route with Super Admin
-router.post('/csv', authenticateToken, requireSuperAdmin, upload.single('file'), importController.importQuestionsFromCSV);
+router.post('/csv', authenticateToken, requireSuperAdmin, upload.single('file'), importQuestionsFromCSV);
 
-module.exports = router;
+export default router;
