@@ -5,8 +5,7 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import { Button } from '../components/ui/Button';
 import { Card } from '../components/ui/Card';
 import { Modal } from '../components/ui/Modal';
-import { AlertTriangle, Clock, Volume2, MessageCircle } from 'lucide-react';
-import CommentsSheet from '../components/CommentsSheet';
+import { AlertTriangle, Clock, Volume2 } from 'lucide-react';
 
 // Simple beep sound (base64)
 const BEEP_SOUND = "data:audio/wav;base64,UklGRl9vT1BXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YU"; // Placeholder, will use a real one or AudioContext
@@ -18,7 +17,6 @@ export default function QuizPage() {
     const [loading, setLoading] = useState(true);
     const [submitting, setSubmitting] = useState(false);
     const [confirmModalOpen, setConfirmModalOpen] = useState(false);
-    const [commentsOpen, setCommentsOpen] = useState(false);
 
     // Timer state
     const [timeLeft, setTimeLeft] = useState(0); // in seconds
@@ -323,20 +321,13 @@ export default function QuizPage() {
                                         <Volume2 size={20} />
                                     </button>
                                     <button
-                                        onClick={() => setCommentsOpen(true)}
-                                        className="ml-2 inline-flex items-center justify-center p-2 rounded-full bg-purple-100 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400 hover:bg-purple-200 dark:hover:bg-purple-900/50 transition-colors"
-                                        title="Discussion & Commentaires"
+                                        onClick={() => handleSpeak(currentQuestion)}
+                                        className="ml-3 inline-flex items-center justify-center p-2 rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 hover:bg-blue-200 dark:hover:bg-blue-900/50 transition-colors"
+                                        title="Écouter la question"
                                     >
-                                        <MessageCircle size={20} />
+                                        <Volume2 size={20} />
                                     </button>
                                 </h2>
-
-                                <CommentsSheet
-                                    isOpen={commentsOpen}
-                                    onClose={() => setCommentsOpen(false)}
-                                    questionId={currentQuestion.id}
-                                    questionText={currentQuestion.text}
-                                />
 
                                 <div className="grid grid-cols-1 gap-3 md:gap-4 flex-1 content-start">
                                     {currentQuestion.choices.map((choice) => {

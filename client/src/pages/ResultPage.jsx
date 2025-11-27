@@ -5,13 +5,22 @@ import { Button } from '../components/ui/Button';
 import { Card } from '../components/ui/Card';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
-import { CheckCircle, XCircle, ArrowRight, RefreshCw, Download, Info } from 'lucide-react';
+import { CheckCircle, XCircle, ArrowRight, RefreshCw, Download, Info, MessageCircle } from 'lucide-react';
+import CommentsSheet from '../components/CommentsSheet';
+import { useState } from 'react';
 
 export default function ResultPage() {
     const location = useLocation();
     const navigate = useNavigate();
     const { user } = useAuth();
     const result = location.state?.result;
+    const [commentsOpen, setCommentsOpen] = useState(false);
+    const [selectedQuestion, setSelectedQuestion] = useState(null);
+
+    const openComments = (questionId, questionText) => {
+        setSelectedQuestion({ id: questionId, text: questionText });
+        setCommentsOpen(true);
+    };
 
     if (!result) {
         return (
@@ -172,7 +181,14 @@ export default function ResultPage() {
                                     <h3 className="text-lg font-medium text-gray-900 dark:text-white flex-1">
                                         {index + 1}. {detail.questionText || "Question sans texte"}
                                     </h3>
-                                    <div className="ml-4 flex-shrink-0">
+                                    <div className="ml-4 flex-shrink-0 flex items-center gap-2">
+                                        <button
+                                            onClick={() => openComments(detail.questionId, detail.questionText)}
+                                            className="p-2 rounded-full bg-purple-50 dark:bg-purple-900/20 text-purple-600 dark:text-purple-400 hover:bg-purple-100 dark:hover:bg-purple-900/40 transition-colors"
+                                            title="Discussion & Commentaires"
+                                        >
+                                            <MessageCircle size={18} />
+                                        </button>
                                         {isCorrect ? (
                                             <span className="bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 px-3 py-1 rounded-full text-sm font-bold flex items-center gap-1">
                                                 <CheckCircle size={16} /> 1/1
@@ -247,6 +263,13 @@ export default function ResultPage() {
                     })}
                 </div>
             </div>
+
+            <CommentsSheet
+                isOpen={commentsOpen}
+                onClose={() => setCommentsOpen(false)}
+                questionId={selectedQuestion?.id}
+                questionText={selectedQuestion?.text}
+            />
         </div>
     );
 }
