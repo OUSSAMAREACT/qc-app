@@ -320,13 +320,7 @@ export default function QuizPage() {
                                     >
                                         <Volume2 size={20} />
                                     </button>
-                                    <button
-                                        onClick={() => handleSpeak(currentQuestion)}
-                                        className="ml-3 inline-flex items-center justify-center p-2 rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 hover:bg-blue-200 dark:hover:bg-blue-900/50 transition-colors"
-                                        title="Écouter la question"
-                                    >
-                                        <Volume2 size={20} />
-                                    </button>
+
                                 </h2>
 
                                 <div className="grid grid-cols-1 gap-3 md:gap-4 flex-1 content-start">

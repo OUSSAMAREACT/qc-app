@@ -1,13 +1,13 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useLocation, useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { Button } from '../components/ui/Button';
 import { Card } from '../components/ui/Card';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
-import { CheckCircle, XCircle, ArrowRight, RefreshCw, Download, Info, MessageCircle } from 'lucide-react';
+import { CheckCircle, XCircle, ArrowRight, RefreshCw, Download, Info, MessageCircle, Trophy, Target, Calendar } from 'lucide-react';
 import CommentsSheet from '../components/CommentsSheet';
-import { useState } from 'react';
+import { motion } from 'framer-motion';
 
 export default function ResultPage() {
     const location = useLocation();
@@ -24,7 +24,7 @@ export default function ResultPage() {
 
     if (!result) {
         return (
-            <div className="min-h-screen flex flex-col items-center justify-center gap-4">
+            <div className="min-h-screen flex flex-col items-center justify-center gap-4 bg-gray-50 dark:bg-gray-900">
                 <p className="text-gray-500">Aucun résultat disponible.</p>
                 <Button onClick={() => navigate('/dashboard')}>Retour au tableau de bord</Button>
             </div>
@@ -33,6 +33,11 @@ export default function ResultPage() {
 
     const { score, totalQuestions, percentage, details } = result;
     const category = location.state?.category;
+
+    // Circular Progress Calculation
+    const radius = 60;
+    const circumference = 2 * Math.PI * radius;
+    const strokeDashoffset = circumference - (percentage / 100) * circumference;
 
     const generatePDF = () => {
         try {
@@ -133,135 +138,235 @@ export default function ResultPage() {
         }
     };
 
+    const containerVariants = {
+        hidden: { opacity: 0 },
+        visible: {
+            opacity: 1,
+            transition: {
+                staggerChildren: 0.1
+            }
+        }
+    };
+
+    const itemVariants = {
+        hidden: { y: 20, opacity: 0 },
+        visible: { y: 0, opacity: 1 }
+    };
+
     return (
-        <div className="min-h-screen bg-purple-50 dark:bg-gray-900 p-6 font-sans transition-colors duration-300">
-            <div className="max-w-3xl mx-auto space-y-6">
-                {/* Header Card */}
-                <Card className="border-t-8 border-t-blue-600 shadow-md text-center py-8">
-                    <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">Résultats du Quiz</h1>
-                    <p className="text-gray-500 dark:text-gray-400 mb-6">Voyez comment vous avez performé</p>
+        <div className="min-h-screen bg-gray-50 dark:bg-gray-900 p-4 md:p-8 font-sans transition-colors duration-300">
+            <div className="max-w-4xl mx-auto space-y-8">
 
-                    <div className="flex flex-col items-center justify-center mb-6">
-                        <div className="text-5xl font-bold text-gray-900 dark:text-white mb-2">
-                            {score} <span className="text-2xl text-gray-400 dark:text-gray-500 font-normal">/ {totalQuestions}</span>
+                {/* Header Section with Glassmorphism */}
+                <motion.div
+                    initial={{ y: -20, opacity: 0 }}
+                    animate={{ y: 0, opacity: 1 }}
+                    transition={{ duration: 0.5 }}
+                    className="relative overflow-hidden rounded-3xl bg-white/80 dark:bg-gray-800/80 backdrop-blur-xl border border-white/60 dark:border-gray-700 shadow-2xl p-8 md:p-12 text-center"
+                >
+                    {/* Decorative Blobs */}
+                    <div className="absolute top-0 left-0 w-64 h-64 bg-blue-500/10 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2 pointer-events-none"></div>
+                    <div className="absolute bottom-0 right-0 w-64 h-64 bg-purple-500/10 rounded-full blur-3xl translate-x-1/2 translate-y-1/2 pointer-events-none"></div>
+
+                    <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-8 md:gap-12">
+
+                        {/* Score Circle */}
+                        <div className="relative w-48 h-48 flex-shrink-0">
+                            <svg className="w-full h-full transform -rotate-90">
+                                <circle
+                                    cx="50%"
+                                    cy="50%"
+                                    r={radius}
+                                    stroke="currentColor"
+                                    strokeWidth="12"
+                                    fill="transparent"
+                                    className="text-gray-100 dark:text-gray-700"
+                                />
+                                <circle
+                                    cx="50%"
+                                    cy="50%"
+                                    r={radius}
+                                    stroke="currentColor"
+                                    strokeWidth="12"
+                                    fill="transparent"
+                                    strokeDasharray={circumference}
+                                    strokeDashoffset={strokeDashoffset}
+                                    strokeLinecap="round"
+                                    className={`transition-all duration-1000 ease-out ${percentage >= 50 ? 'text-emerald-500' : 'text-red-500'}`}
+                                />
+                            </svg>
+                            <div className="absolute inset-0 flex flex-col items-center justify-center">
+                                <span className={`text-4xl font-bold ${percentage >= 50 ? 'text-emerald-600 dark:text-emerald-400' : 'text-red-600 dark:text-red-400'}`}>
+                                    {percentage}%
+                                </span>
+                                <span className="text-sm text-gray-500 dark:text-gray-400 font-medium mt-1">Réussite</span>
+                            </div>
                         </div>
-                        <div className={`text-lg font-medium px-4 py-1 rounded-full ${percentage >= 50 ? 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400' : 'bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400'}`}>
-                            {percentage}% de réussite
+
+                        {/* Text Info */}
+                        <div className="flex-1 text-left space-y-4">
+                            <div>
+                                <h1 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-2">
+                                    {percentage >= 50 ? "Félicitations ! 🎉" : "Courage ! 💪"}
+                                </h1>
+                                <p className="text-gray-600 dark:text-gray-300 text-lg">
+                                    Vous avez obtenu <span className="font-bold text-gray-900 dark:text-white">{score}</span> sur <span className="font-bold text-gray-900 dark:text-white">{totalQuestions}</span> questions correctes.
+                                </p>
+                            </div>
+
+                            <div className="flex flex-wrap gap-3">
+                                <div className="flex items-center gap-2 px-4 py-2 rounded-xl bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300 text-sm font-medium">
+                                    <Target size={16} />
+                                    {category || "Général"}
+                                </div>
+                                <div className="flex items-center gap-2 px-4 py-2 rounded-xl bg-purple-50 dark:bg-purple-900/20 text-purple-700 dark:text-purple-300 text-sm font-medium">
+                                    <Calendar size={16} />
+                                    {new Date().toLocaleDateString('fr-FR')}
+                                </div>
+                            </div>
+
+                            <div className="flex flex-wrap gap-3 pt-4">
+                                <Link to="/dashboard">
+                                    <Button variant="secondary" className="dark:bg-gray-700 dark:text-gray-200 dark:hover:bg-gray-600 rounded-xl">
+                                        Tableau de bord
+                                    </Button>
+                                </Link>
+                                <Button
+                                    onClick={generatePDF}
+                                    className="bg-blue-600 hover:bg-blue-700 text-white shadow-lg shadow-blue-200 dark:shadow-blue-900/20 rounded-xl flex items-center gap-2"
+                                >
+                                    <Download size={18} /> PDF
+                                </Button>
+                                <Link to={category ? `/quiz?category=${encodeURIComponent(category)}` : '/quiz'}>
+                                    <Button className="bg-indigo-600 hover:bg-indigo-700 text-white shadow-lg shadow-indigo-200 dark:shadow-indigo-900/20 rounded-xl flex items-center gap-2">
+                                        <RefreshCw size={18} /> Refaire
+                                    </Button>
+                                </Link>
+                            </div>
                         </div>
                     </div>
+                </motion.div>
 
-                    <div className="flex flex-wrap gap-4 justify-center">
-                        <Link to="/dashboard">
-                            <Button variant="secondary" className="dark:bg-gray-700 dark:text-gray-200 dark:hover:bg-gray-600">Tableau de bord</Button>
-                        </Link>
+                {/* Detailed Review List */}
+                <motion.div
+                    variants={containerVariants}
+                    initial="hidden"
+                    animate="visible"
+                    className="space-y-4"
+                >
+                    <h2 className="text-xl font-bold text-gray-900 dark:text-white px-2">Détails des réponses</h2>
 
-                        <Button
-                            onClick={generatePDF}
-                            className="bg-blue-600 hover:bg-blue-700 text-white shadow-lg flex items-center gap-2"
-                        >
-                            <Download size={18} /> Télécharger PDF
-                        </Button>
-
-                        <Link to={category ? `/quiz?category=${encodeURIComponent(category)}` : '/quiz'}>
-                            <Button className="bg-indigo-600 hover:bg-indigo-700 text-white shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all flex items-center justify-center">
-                                <RefreshCw size={18} className="mr-2" /> Refaire ce Quiz
-                            </Button>
-                        </Link>
-                    </div>
-                </Card>
-
-                {/* Detailed Review */}
-                <div className="space-y-4">
                     {details && details.map((detail, index) => {
                         const isCorrect = detail.isCorrect;
                         return (
-                            <Card key={detail.questionId} className={`p-6 border-l-4 shadow-sm ${isCorrect ? 'border-l-green-500' : 'border-l-red-500'}`}>
-                                {/* Question Header */}
-                                <div className="flex justify-between items-start mb-4">
-                                    <h3 className="text-lg font-medium text-gray-900 dark:text-white flex-1">
-                                        {index + 1}. {detail.questionText || "Question sans texte"}
-                                    </h3>
-                                    <div className="ml-4 flex-shrink-0 flex items-center gap-2">
-                                        <button
-                                            onClick={() => openComments(detail.questionId, detail.questionText)}
-                                            className="p-2 rounded-full bg-purple-50 dark:bg-purple-900/20 text-purple-600 dark:text-purple-400 hover:bg-purple-100 dark:hover:bg-purple-900/40 transition-colors"
-                                            title="Discussion & Commentaires"
-                                        >
-                                            <MessageCircle size={18} />
-                                        </button>
-                                        {isCorrect ? (
-                                            <span className="bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 px-3 py-1 rounded-full text-sm font-bold flex items-center gap-1">
-                                                <CheckCircle size={16} /> 1/1
-                                            </span>
-                                        ) : (
-                                            <span className="bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400 px-3 py-1 rounded-full text-sm font-bold flex items-center gap-1">
-                                                <XCircle size={16} /> 0/1
-                                            </span>
+                            <motion.div variants={itemVariants} key={detail.questionId}>
+                                <Card className={`overflow-hidden border-0 shadow-lg transition-all duration-300 hover:shadow-xl ${isCorrect
+                                        ? 'shadow-emerald-100 dark:shadow-emerald-900/10'
+                                        : 'shadow-red-100 dark:shadow-red-900/10'
+                                    }`}>
+                                    {/* Status Bar */}
+                                    <div className={`h-1.5 w-full ${isCorrect ? 'bg-emerald-500' : 'bg-red-500'}`} />
+
+                                    <div className="p-6 md:p-8">
+                                        {/* Question Header */}
+                                        <div className="flex justify-between items-start gap-4 mb-6">
+                                            <div className="flex gap-4">
+                                                <span className={`flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm ${isCorrect
+                                                        ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400'
+                                                        : 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400'
+                                                    }`}>
+                                                    {index + 1}
+                                                </span>
+                                                <h3 className="text-lg font-semibold text-gray-900 dark:text-white leading-snug">
+                                                    {detail.questionText || "Question sans texte"}
+                                                </h3>
+                                            </div>
+
+                                            <div className="flex items-center gap-2">
+                                                <button
+                                                    onClick={() => openComments(detail.questionId, detail.questionText)}
+                                                    className="p-2.5 rounded-full bg-purple-50 dark:bg-purple-900/20 text-purple-600 dark:text-purple-400 hover:bg-purple-100 dark:hover:bg-purple-900/40 transition-colors"
+                                                    title="Discussion & Commentaires"
+                                                >
+                                                    <MessageCircle size={20} />
+                                                </button>
+                                                {isCorrect ? (
+                                                    <div className="hidden md:flex bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 px-3 py-1 rounded-full text-sm font-bold items-center gap-1.5">
+                                                        <CheckCircle size={16} /> Correct
+                                                    </div>
+                                                ) : (
+                                                    <div className="hidden md:flex bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400 px-3 py-1 rounded-full text-sm font-bold items-center gap-1.5">
+                                                        <XCircle size={16} /> Incorrect
+                                                    </div>
+                                                )}
+                                            </div>
+                                        </div>
+
+                                        {/* Choices */}
+                                        <div className="space-y-3 pl-0 md:pl-12">
+                                            {detail.choices && detail.choices.map((choice) => {
+                                                const isSelected = detail.userSelectedIds?.includes(choice.id);
+                                                const isChoiceCorrect = choice.isCorrect;
+
+                                                // Visual styles for the choice row
+                                                let rowClass = "relative flex items-center gap-4 p-4 rounded-xl border-2 transition-all duration-200";
+
+                                                if (isChoiceCorrect) {
+                                                    rowClass += " border-emerald-200 bg-emerald-50/50 dark:border-emerald-800 dark:bg-emerald-900/10";
+                                                } else if (isSelected && !isChoiceCorrect) {
+                                                    rowClass += " border-red-200 bg-red-50/50 dark:border-red-800 dark:bg-red-900/10";
+                                                } else {
+                                                    rowClass += " border-transparent bg-gray-50 dark:bg-gray-800/50";
+                                                }
+
+                                                return (
+                                                    <div key={choice.id} className={rowClass}>
+                                                        {/* Icon Indicator */}
+                                                        <div className="flex-shrink-0">
+                                                            {isChoiceCorrect ? (
+                                                                <CheckCircle size={20} className="text-emerald-600 dark:text-emerald-400" />
+                                                            ) : isSelected && !isChoiceCorrect ? (
+                                                                <XCircle size={20} className="text-red-600 dark:text-red-400" />
+                                                            ) : (
+                                                                <div className="w-5 h-5 rounded-full border-2 border-gray-300 dark:border-gray-600" />
+                                                            )}
+                                                        </div>
+
+                                                        <span className={`flex-1 text-sm md:text-base ${isChoiceCorrect ? 'font-medium text-emerald-900 dark:text-emerald-200' :
+                                                                isSelected ? 'font-medium text-red-900 dark:text-red-200' :
+                                                                    'text-gray-600 dark:text-gray-400'
+                                                            }`}>
+                                                            {choice.text}
+                                                        </span>
+
+                                                        {isSelected && (
+                                                            <span className="text-xs font-bold uppercase tracking-wider px-2 py-1 rounded bg-white/50 dark:bg-black/20 text-gray-500">
+                                                                Votre choix
+                                                            </span>
+                                                        )}
+                                                    </div>
+                                                );
+                                            })}
+                                        </div>
+
+                                        {/* Explanation Section */}
+                                        {detail.explanation && (
+                                            <div className="mt-6 ml-0 md:ml-12 bg-blue-50 dark:bg-blue-900/10 p-5 rounded-xl border border-blue-100 dark:border-blue-900/30 flex gap-4">
+                                                <Info size={24} className="text-blue-600 dark:text-blue-400 flex-shrink-0" />
+                                                <div className="space-y-1">
+                                                    <h4 className="font-bold text-blue-900 dark:text-blue-300 text-sm uppercase tracking-wide">Explication</h4>
+                                                    <p className="text-blue-800 dark:text-blue-200 text-sm leading-relaxed">
+                                                        {detail.explanation}
+                                                    </p>
+                                                </div>
+                                            </div>
                                         )}
                                     </div>
-                                </div>
-
-                                {/* Choices */}
-                                <div className="space-y-3">
-                                    {detail.choices && detail.choices.map((choice) => {
-                                        const isSelected = detail.userSelectedIds?.includes(choice.id);
-                                        const isChoiceCorrect = choice.isCorrect;
-
-                                        // Visual styles for the choice row
-                                        let rowClass = "flex items-center gap-3 p-3 rounded-md border transition-colors";
-                                        if (isSelected) {
-                                            rowClass += " bg-blue-50 dark:bg-blue-900/20 border-blue-200 dark:border-blue-800";
-                                        } else {
-                                            rowClass += " border-transparent hover:bg-gray-50 dark:hover:bg-gray-700";
-                                        }
-
-                                        return (
-                                            <div key={choice.id} className={rowClass}>
-                                                {/* Fake Radio/Checkbox */}
-                                                <div className={`w-5 h-5 rounded-full border flex items-center justify-center flex-shrink-0 ${isSelected ? 'border-blue-600 dark:border-blue-400' : 'border-gray-400 dark:border-gray-500'}`}>
-                                                    {isSelected && <div className="w-3 h-3 bg-blue-600 dark:bg-blue-400 rounded-full" />}
-                                                </div>
-
-                                                <span className={`text-gray-800 dark:text-gray-200 flex-1 ${isSelected ? 'font-medium' : ''}`}>
-                                                    {choice.text}
-                                                </span>
-
-                                                {/* Icons for specific choices */}
-                                                {isChoiceCorrect && isSelected && <CheckCircle size={20} className="text-green-600 dark:text-green-400" />}
-                                                {!isChoiceCorrect && isSelected && <XCircle size={20} className="text-red-600 dark:text-red-400" />}
-                                            </div>
-                                        );
-                                    })}
-                                </div>
-
-                                {/* Feedback Section for Incorrect Answers */}
-                                {!isCorrect && (
-                                    <div className="mt-6 bg-green-50 dark:bg-green-900/20 p-4 rounded-md border border-green-100 dark:border-green-900/30">
-                                        <h4 className="text-sm font-bold text-green-800 dark:text-green-400 mb-2">Bonne réponse :</h4>
-                                        <div className="text-green-700 dark:text-green-300 text-sm font-medium">
-                                            {detail.choices?.filter(c => c.isCorrect).map(c => c.text).join(', ') || "Réponse non disponible"}
-                                        </div>
-                                    </div>
-                                )}
-
-                                {/* Explanation Section */}
-                                {detail.explanation && (
-                                    <div className="mt-4 bg-blue-50 dark:bg-blue-900/20 p-4 rounded-md border border-blue-100 dark:border-blue-900/30">
-                                        <div className="flex items-start gap-2">
-                                            <Info size={20} className="text-blue-600 dark:text-blue-400 flex-shrink-0 mt-0.5" />
-                                            <div>
-                                                <h4 className="text-sm font-bold text-blue-800 dark:text-blue-400 mb-1">Explication :</h4>
-                                                <p className="text-blue-700 dark:text-blue-300 text-sm">
-                                                    {detail.explanation}
-                                                </p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                )}
-                            </Card>
+                                </Card>
+                            </motion.div>
                         );
                     })}
-                </div>
+                </motion.div>
             </div>
 
             <CommentsSheet
