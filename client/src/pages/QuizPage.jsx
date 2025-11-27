@@ -5,7 +5,7 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import { Button } from '../components/ui/Button';
 import { Card } from '../components/ui/Card';
 import { Modal } from '../components/ui/Modal';
-import { AlertTriangle, Clock } from 'lucide-react';
+import { AlertTriangle, Clock, Volume2 } from 'lucide-react';
 
 // Simple beep sound (base64)
 const BEEP_SOUND = "data:audio/wav;base64,UklGRl9vT1BXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YU"; // Placeholder, will use a real one or AudioContext
@@ -106,6 +106,21 @@ export default function QuizPage() {
                 return { ...prev, [questionId]: [...currentSelected, choiceId] };
             }
         });
+    };
+
+    const handleSpeak = (question) => {
+        if ('speechSynthesis' in window) {
+            window.speechSynthesis.cancel(); // Stop any previous speech
+
+            const textToRead = `${question.text}. Options: ${question.choices.map(c => c.text).join('. ')}`;
+            const utterance = new SpeechSynthesisUtterance(textToRead);
+            utterance.lang = 'fr-FR'; // French
+            utterance.rate = 1.0; // Normal speed
+
+            window.speechSynthesis.speak(utterance);
+        } else {
+            alert("Votre navigateur ne supporte pas la lecture audio.");
+        }
     };
 
     const handleFinishClick = () => {
@@ -266,6 +281,13 @@ export default function QuizPage() {
                             <div className="p-6 md:p-10 flex flex-col flex-1 relative z-10">
                                 <h2 className="text-xl md:text-3xl font-heading font-bold mb-8 md:mb-10 text-gray-800 dark:text-gray-100 leading-tight">
                                     {currentQuestion.text}
+                                    <button
+                                        onClick={() => handleSpeak(currentQuestion)}
+                                        className="ml-3 inline-flex items-center justify-center p-2 rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 hover:bg-blue-200 dark:hover:bg-blue-900/50 transition-colors"
+                                        title="Écouter la question"
+                                    >
+                                        <Volume2 size={20} />
+                                    </button>
                                 </h2>
 
                                 <div className="grid grid-cols-1 gap-3 md:gap-4 flex-1 content-start">

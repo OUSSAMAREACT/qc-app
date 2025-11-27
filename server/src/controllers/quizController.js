@@ -35,10 +35,12 @@ export const startQuiz = async (req, res) => {
         // Shuffle and slice
         const shuffled = questions.sort(() => 0.5 - Math.random()).slice(0, parseInt(limit));
 
-        // Remove isCorrect from choices
+        // Remove isCorrect from choices and shuffle them
         const sanitized = shuffled.map(q => ({
             ...q,
-            choices: q.choices.map(c => ({ id: c.id, text: c.text, questionId: c.questionId })),
+            choices: q.choices
+                .sort(() => 0.5 - Math.random()) // Shuffle choices
+                .map(c => ({ id: c.id, text: c.text, questionId: c.questionId })),
         }));
 
         res.json(sanitized);
