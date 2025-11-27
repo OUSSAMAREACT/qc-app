@@ -15,6 +15,7 @@ import WeeklyExamPage from './pages/WeeklyExamPage';
 import LeaderboardPage from './pages/LeaderboardPage';
 import ModuleCatalogPage from './pages/ModuleCatalogPage';
 import LandingPage from './pages/LandingPage';
+import AboutPage from './pages/AboutPage';
 import PaymentPage from './pages/PaymentPage';
 import ProtectedRoute from './components/ProtectedRoute';
 import OnboardingWizard from './components/OnboardingWizard';
@@ -47,6 +48,7 @@ function App() {
             <Routes>
               {/* Public Landing Page */}
               <Route path="/" element={<LandingPage />} />
+              <Route path="/about" element={<AboutPage />} />
 
               <Route path="/login" element={<LoginPage />} />
               <Route path="/register" element={<RegisterPage />} />

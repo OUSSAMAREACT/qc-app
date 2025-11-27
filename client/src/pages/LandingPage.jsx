@@ -302,6 +302,11 @@ export default function LandingPage() {
                     <p className="mb-6 text-sm">
                         La plateforme n°1 pour la préparation aux examens professionnels.
                     </p>
+                    <div className="flex items-center justify-center gap-6 mb-6">
+                        <Link to="/about" className="text-gray-500 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
+                            À propos de l'offre
+                        </Link>
+                    </div>
                     <p className="text-sm opacity-70">© {new Date().getFullYear()} QCMEchelle11. Tous droits réservés.</p>
                 </div>
             </footer>
