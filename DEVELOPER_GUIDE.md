@@ -46,6 +46,27 @@ cd client
 npm run dev
 ```
 
+## ☁️ Deployment & Infrastructure (Coolify)
+
+The project is deployed using **Coolify** (Self-hosted PaaS).
+
+### 1. Deployment Workflow
+- **Trigger:** Automatic deployment on push to the `main` branch.
+- **Build Pack:** Nixpacks (Node.js).
+
+### 2. Configuration in Coolify
+- **Project Settings:**
+  - **Base Directory:** `/` (Root)
+  - **Build Command:** `npm install && cd client && npm install && npm run build` (or split into two services if configured separately).
+  - **Start Command:** `cd server && npx prisma migrate deploy && node src/index.js`
+- **Environment Variables:**
+  - Must be configured in the Coolify UI > Environment Variables.
+  - Required: `DATABASE_URL`, `JWT_SECRET`, `SMTP_HOST`, `SMTP_USER`, `SMTP_PASS`, `CLIENT_URL`.
+
+### 3. Persistence
+- **Database:** If using a managed database service within Coolify (PostgreSQL/MySQL), ensure it is linked.
+- **SQLite:** If using SQLite, the `/server/prisma` directory must be mounted as a persistent volume to avoid data loss on redeployment.
+
 ## 🏗 Architecture & Key Features
 
 ### Authentication & Roles
