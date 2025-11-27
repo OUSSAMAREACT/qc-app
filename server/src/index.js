@@ -6,6 +6,20 @@ import questionRoutes from './routes/questions.js';
 import quizRoutes from './routes/quiz.js';
 import categoryRoutes from './routes/categories.js';
 import specialtyRoutes from './routes/specialtyRoutes.js';
+import weeklyExamRoutes from './routes/weeklyExamRoutes.js';
+import gamificationRoutes from './routes/gamificationRoutes.js';
+import onboardingRoutes from './routes/onboardingRoutes.js';
+import userRoutes from './routes/userRoutes.js';
+import systemSettingsRoutes from './routes/systemSettingsRoutes.js';
+import debugRoutes from './routes/debugRoutes.js';
+import commentRoutes from './routes/commentRoutes.js';
+import notificationRoutes from './routes/notificationRoutes.js';
+import importRoutes from './routes/importRoutes.js';
+
+dotenv.config();
+
+const app = express();
+
 // Use process.env.PORT for Render/Vercel, fallback to 5002 for local dev
 const PORT = process.env.PORT || 5002;
 
@@ -17,6 +31,39 @@ const allowedOrigins = [
     "https://www.qcmechelle11.com",
     "https://api.qcmechelle11.com"
 ];
+
+app.use(cors({
+    origin: function (origin, callback) {
+        // Allow requests with no origin (like mobile apps or curl requests)
+        if (!origin) return callback(null, true);
+        if (allowedOrigins.indexOf(origin) === -1) {
+            const msg = 'The CORS policy for this site does not allow access from the specified Origin.';
+            return callback(new Error(msg), false);
+        }
+        return callback(null, true);
+    },
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization']
+}));
+
+app.use(express.json());
+
+// Routes
+app.use('/api/auth', authRoutes);
+app.use('/api/questions', questionRoutes);
+app.use('/api/quiz', quizRoutes);
+app.use('/api/categories', categoryRoutes);
+app.use('/api/specialties', specialtyRoutes);
+app.use('/api/weekly-exams', weeklyExamRoutes);
+app.use('/api/gamification', gamificationRoutes);
+app.use('/api/onboarding', onboardingRoutes);
+app.use('/api/users', userRoutes);
+app.use('/api/settings', systemSettingsRoutes);
+app.use('/api/debug', debugRoutes);
+app.use('/api/comments', commentRoutes);
+app.use('/api/notifications', notificationRoutes);
+app.use('/api/import', importRoutes);
 
 app.get('/', (req, res) => {
     res.send('Quiz API is running');
