@@ -10,7 +10,7 @@ export const getComments = async (req, res) => {
                     select: { id: true, name: true, role: true }
                 }
             },
-            orderBy: { createdAt: 'desc' }
+            orderBy: { createdAt: 'asc' }
         });
         res.json(comments);
     } catch (error) {

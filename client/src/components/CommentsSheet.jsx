@@ -70,6 +70,22 @@ export default function CommentsSheet({ isOpen, onClose, questionId, questionTex
         }
     };
 
+    const formatTimeAgo = (dateString) => {
+        const date = new Date(dateString);
+        const now = new Date();
+        const diffInSeconds = Math.floor((now - date) / 1000);
+
+        if (diffInSeconds < 60) return "À l'instant";
+        const diffInMinutes = Math.floor(diffInSeconds / 60);
+        if (diffInMinutes < 60) return `Il y a ${diffInMinutes} min`;
+        const diffInHours = Math.floor(diffInMinutes / 60);
+        if (diffInHours < 24) return `Il y a ${diffInHours} h`;
+        const diffInDays = Math.floor(diffInHours / 24);
+        if (diffInDays < 7) return `Il y a ${diffInDays} j`;
+
+        return date.toLocaleDateString();
+    };
+
     return (
         <AnimatePresence>
             {isOpen && (
@@ -146,7 +162,7 @@ export default function CommentsSheet({ isOpen, onClose, questionId, questionTex
                                                     </span>
                                                 )}
                                                 <span className="text-[10px] text-gray-400">
-                                                    {new Date(comment.createdAt).toLocaleDateString()}
+                                                    {formatTimeAgo(comment.createdAt)}
                                                 </span>
                                             </div>
                                             <div className={`p-3 rounded-2xl text-sm group relative ${comment.user.id === user.id
