@@ -1,6 +1,6 @@
 import express from 'express';
 import { getSettings, updateSetting } from '../controllers/systemSettingsController.js';
-import { authenticateToken, authorizeAdmin } from '../middleware/authMiddleware.js';
+import { authenticateToken, requireAdmin } from '../middleware/authMiddleware.js';
 
 const router = express.Router();
 
@@ -8,6 +8,6 @@ const router = express.Router();
 router.get('/', getSettings);
 
 // Admin only route to update settings
-router.post('/', authenticateToken, authorizeAdmin, updateSetting);
+router.post('/', authenticateToken, requireAdmin, updateSetting);
 
 export default router;
