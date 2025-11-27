@@ -54,6 +54,22 @@ app.use(express.json());
 app.use('/api/auth', authRoutes);
 app.use('/api/questions', questionRoutes);
 app.use('/api/quiz', quizRoutes);
+app.use('/api/categories', categoryRoutes);
+app.use('/api/specialties', specialtyRoutes);
+app.use('/api/weekly-exams', weeklyExamRoutes);
+app.use('/api/gamification', gamificationRoutes);
+app.use('/api/onboarding', onboardingRoutes);
+app.use('/api/users', userRoutes);
+app.use('/api/settings', systemSettingsRoutes);
+app.use('/api/debug', debugRoutes);
+
+app.get('/', (req, res) => {
+    res.send('Quiz API is running');
+});
+
+if (process.env.NODE_ENV !== 'production' || !process.env.VERCEL) {
+    app.listen(PORT, '0.0.0.0', () => {
+        console.log(`Server running on port ${PORT}`);
     });
 }
 
