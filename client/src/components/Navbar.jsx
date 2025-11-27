@@ -37,7 +37,7 @@ export default function Navbar() {
         { path: '/history', label: 'Historique', icon: History },
     ];
 
-    if (user?.role === 'ADMIN') {
+    if (user?.role === 'ADMIN' || user?.role === 'SUPER_ADMIN') {
         navLinks.push({ path: '/admin', label: 'Admin', icon: Trophy });
     }
 
