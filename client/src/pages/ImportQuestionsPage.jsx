@@ -63,15 +63,15 @@ const ImportQuestionsPage = () => {
 
     return (
         <div className="p-6 max-w-6xl mx-auto">
-            <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-8">Importer des Questions (CSV)</h1>
+            <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-8">Importer des Questions (CSV / JSON)</h1>
 
             <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8 mb-8 border border-gray-100 dark:border-gray-700">
                 <div className="flex flex-col items-center justify-center border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-xl p-12 transition-colors hover:border-primary-500 dark:hover:border-primary-400 bg-gray-50 dark:bg-gray-800/50">
                     <Upload className="w-16 h-16 text-gray-400 mb-4" />
-                    <p className="text-lg text-gray-600 dark:text-gray-300 mb-4">Glissez votre fichier CSV ici ou cliquez pour sélectionner</p>
+                    <p className="text-lg text-gray-600 dark:text-gray-300 mb-4">Glissez votre fichier CSV ou JSON ici</p>
                     <input
                         type="file"
-                        accept=".csv"
+                        accept=".csv,.json"
                         onChange={handleFileChange}
                         className="block w-full text-sm text-gray-500
                         file:mr-4 file:py-2 file:px-4
@@ -120,7 +120,10 @@ const ImportQuestionsPage = () => {
                         <div>
                             <h2 className="text-xl font-bold text-gray-900 dark:text-white">Aperçu de l'importation</h2>
                             <p className="text-gray-500 dark:text-gray-400 mt-1">
-                                Référence: <span className="font-semibold text-primary-600">{analysis.referenceStudent}</span> (Score: {analysis.score})
+                                Source: <span className="font-semibold text-primary-600">{analysis.source || 'CSV'}</span>
+                                {analysis.referenceStudent && (
+                                    <span> | Référence: <span className="font-semibold">{analysis.referenceStudent}</span> (Score: {analysis.score})</span>
+                                )}
                             </p>
                             <p className="text-gray-500 dark:text-gray-400">
                                 Questions détectées: <span className="font-semibold">{analysis.questionsFound}</span>
