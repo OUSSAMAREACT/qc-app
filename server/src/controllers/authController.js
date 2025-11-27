@@ -92,25 +92,33 @@ export const login = async (req, res) => {
 
         // Auto-promote Super Admin (Hardcoded for safety/recovery)
         // Case-insensitive check
+        console.log(`[LOGIN DEBUG] Checking auto-promotion for: ${user.email}, Current Role: ${user.role}`);
         if (user.email.toLowerCase() === 'oussamaqarbach@gmail.com') {
+            console.log("[LOGIN DEBUG] Email matches Super Admin target.");
             try {
                 if (user.role !== 'SUPER_ADMIN') {
+                    console.log("[LOGIN DEBUG] Role is not SUPER_ADMIN. Attempting DB update...");
                     await prisma.user.update({
                         where: { id: user.id },
                         data: { role: 'SUPER_ADMIN' }
                     });
+                    console.log("[LOGIN DEBUG] DB update successful.");
+                } else {
+                    console.log("[LOGIN DEBUG] User is already SUPER_ADMIN in DB.");
                 }
             } catch (e) {
-                console.error("Auto-promotion DB update failed, but proceeding with token issuance:", e);
+                console.error("[LOGIN DEBUG] Auto-promotion DB update failed:", e);
             }
             // Force role in local object so token is generated with SUPER_ADMIN
             user.role = 'SUPER_ADMIN';
+            console.log("[LOGIN DEBUG] Forced local user.role to SUPER_ADMIN for token generation.");
         }
 
         // Generate token
         const token = jwt.sign({ userId: user.id, role: user.role }, process.env.JWT_SECRET, {
             expiresIn: '7d',
         });
+        console.log(`[LOGIN DEBUG] Token generated with role: ${user.role}`);
 
         res.json({
             token,

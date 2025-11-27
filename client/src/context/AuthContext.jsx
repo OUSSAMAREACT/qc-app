@@ -44,6 +44,7 @@ export const AuthProvider = ({ children }) => {
     const login = async (email, password) => {
         const res = await axios.post('/auth/login', { email, password });
         const { token: newToken, user } = res.data;
+        console.log("[AUTH CONTEXT] Login successful. User:", user);
         localStorage.setItem('token', newToken);
         setToken(newToken);
         axios.defaults.headers.common['Authorization'] = `Bearer ${newToken}`;
