@@ -89,134 +89,136 @@ export default function LandingPage() {
                 </div>
             </nav>
 
-            {/* Hero Section */}
-            <section className="pt-32 pb-20 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
-                {/* Background Blobs - Animated */}
-                <div className="absolute inset-0 -z-10 overflow-hidden pointer-events-none">
-                    <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[1000px] bg-blue-400/20 dark:bg-blue-900/20 rounded-full blur-3xl opacity-50 animate-pulse mix-blend-multiply dark:mix-blend-screen" />
-                    <div className="absolute bottom-0 right-0 w-[800px] h-[800px] bg-indigo-400/20 dark:bg-indigo-900/20 rounded-full blur-3xl opacity-30 mix-blend-multiply dark:mix-blend-screen animate-blob" />
-                    <div className="absolute top-1/4 left-0 w-[600px] h-[600px] bg-purple-400/20 dark:bg-purple-900/20 rounded-full blur-3xl opacity-30 mix-blend-multiply dark:mix-blend-screen animate-blob animation-delay-2000" />
-                </div>
+            <main>
+                {/* Hero Section */}
+                <section className="pt-32 pb-20 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
+                    {/* Background Blobs - Animated */}
+                    <div className="absolute inset-0 -z-10 overflow-hidden pointer-events-none">
+                        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[1000px] bg-blue-400/20 dark:bg-blue-900/20 rounded-full blur-3xl opacity-50 animate-pulse mix-blend-multiply dark:mix-blend-screen" />
+                        <div className="absolute bottom-0 right-0 w-[800px] h-[800px] bg-indigo-400/20 dark:bg-indigo-900/20 rounded-full blur-3xl opacity-30 mix-blend-multiply dark:mix-blend-screen animate-blob" />
+                        <div className="absolute top-1/4 left-0 w-[600px] h-[600px] bg-purple-400/20 dark:bg-purple-900/20 rounded-full blur-3xl opacity-30 mix-blend-multiply dark:mix-blend-screen animate-blob animation-delay-2000" />
+                    </div>
 
-                <div className="max-w-7xl mx-auto text-center relative z-10">
-                    <div className="animate-fade-in-up">
-                        <motion.span
-                            initial={{ opacity: 0, scale: 0.9 }}
-                            animate={{ opacity: 1, scale: 1 }}
-                            transition={{ delay: 0.2 }}
-                            className="inline-flex items-center py-1.5 px-4 rounded-full bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-300 text-sm font-bold mb-8 border border-blue-100 dark:border-blue-800/50 shadow-sm backdrop-blur-sm"
+                    <div className="max-w-7xl mx-auto text-center relative z-10">
+                        <div className="animate-fade-in-up">
+                            <motion.span
+                                initial={{ opacity: 0, scale: 0.9 }}
+                                animate={{ opacity: 1, scale: 1 }}
+                                transition={{ delay: 0.2 }}
+                                className="inline-flex items-center py-1.5 px-4 rounded-full bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-300 text-sm font-bold mb-8 border border-blue-100 dark:border-blue-800/50 shadow-sm backdrop-blur-sm"
+                            >
+                                <span className="flex h-2 w-2 rounded-full bg-blue-600 mr-2 animate-pulse"></span>
+                                La référence pour l'examen Echelle 11
+                            </motion.span>
+
+                            <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight mb-8 leading-tight">
+                                Maîtrisez votre <br className="hidden md:block" />
+                                <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 dark:from-blue-400 dark:via-indigo-400 dark:to-purple-400 animate-gradient-x">
+                                    Avenir Professionnel
+                                </span>
+                            </h1>
+
+                            <p className="mt-6 text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto mb-12 leading-relaxed font-medium">
+                                Une plateforme d'excellence conçue pour les candidats ambitieux. QCMs ciblés, examens blancs et analyses de performance avancées.
+                            </p>
+
+                            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+                                {user ? (
+                                    <Link to="/dashboard" className="w-full sm:w-auto">
+                                        <Button size="lg" className="w-full sm:w-auto text-lg px-8 py-4 bg-blue-600 hover:bg-blue-700 text-white shadow-xl shadow-blue-500/30 rounded-2xl transition-transform hover:scale-105 active:scale-95">
+                                            Accéder à mon Espace <ArrowRight className="ml-2 h-5 w-5" />
+                                        </Button>
+                                    </Link>
+                                ) : (
+                                    <>
+                                        <Link to="/register" className="w-full sm:w-auto">
+                                            <Button size="lg" className="w-full sm:w-auto text-lg px-8 py-4 bg-blue-600 hover:bg-blue-700 text-white shadow-xl shadow-blue-500/30 rounded-2xl transition-transform hover:scale-105 active:scale-95">
+                                                Commencer Gratuitement <ArrowRight className="ml-2 h-5 w-5" />
+                                            </Button>
+                                        </Link>
+                                        <Link to="/login" className="w-full sm:w-auto">
+                                            <Button variant="secondary" size="lg" className="w-full sm:w-auto text-lg px-8 py-4 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-2xl transition-transform hover:scale-105 active:scale-95">
+                                                <LogIn className="mr-2 h-5 w-5" /> Se connecter
+                                            </Button>
+                                        </Link>
+                                    </>
+                                )}
+                            </div>
+                        </div>
+
+                        {/* Stats Preview - Glassmorphism */}
+                        <motion.div
+                            initial={{ opacity: 0, y: 40 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.7, delay: 0.2 }}
+                            className="mt-24 grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto"
                         >
-                            <span className="flex h-2 w-2 rounded-full bg-blue-600 mr-2 animate-pulse"></span>
-                            La référence pour l'examen Echelle 11
-                        </motion.span>
+                            <StatCard number={questionCount} label="Questions QCM" color="text-blue-600 dark:text-blue-400" />
+                            <StatCard number="Hebdo" label="Examens Blancs" color="text-indigo-600 dark:text-indigo-400" />
+                            <StatCard number="100%" label="Suivi de Progression" color="text-purple-600 dark:text-purple-400" />
+                        </motion.div>
+                    </div>
+                </section>
 
-                        <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight mb-8 leading-tight">
-                            Maîtrisez votre <br className="hidden md:block" />
-                            <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 dark:from-blue-400 dark:via-indigo-400 dark:to-purple-400 animate-gradient-x">
-                                Avenir Professionnel
-                            </span>
-                        </h1>
+                {/* Features Section */}
+                <section className="py-24 bg-white dark:bg-gray-800/50 relative">
+                    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                        <div className="text-center mb-20">
+                            <h2 className="text-3xl md:text-4xl font-bold mb-6">Tout ce dont vous avez besoin</h2>
+                            <p className="text-gray-600 dark:text-gray-400 max-w-2xl mx-auto text-lg">
+                                Une suite d'outils pédagogiques modernes pour maximiser vos chances de réussite.
+                            </p>
+                        </div>
 
-                        <p className="mt-6 text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto mb-12 leading-relaxed font-medium">
-                            Une plateforme d'excellence conçue pour les candidats ambitieux. QCMs ciblés, examens blancs et analyses de performance avancées.
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                            <FeatureCard
+                                icon={<Target className="h-8 w-8 text-blue-500" />}
+                                title="Entraînement Ciblé"
+                                description="Choisissez vos modules et spécialités. Entraînez-vous sur des séries de questions spécifiques adaptées à votre niveau."
+                            />
+                            <FeatureCard
+                                icon={<Trophy className="h-8 w-8 text-yellow-500" />}
+                                title="Compétition Saine"
+                                description="Participez aux examens hebdomadaires, grimpez dans le classement national et décrochez des badges prestigieux."
+                            />
+                            <FeatureCard
+                                icon={<Users className="h-8 w-8 text-green-500" />}
+                                title="Communauté Active"
+                                description="Rejoignez une communauté de candidats motivés. Comparez vos résultats et progressez ensemble vers la réussite."
+                            />
+                        </div>
+                    </div>
+                </section>
+
+                {/* CTA Section */}
+                <section className="py-24 px-4">
+                    <div className="max-w-5xl mx-auto bg-gradient-to-br from-blue-600 to-indigo-700 rounded-[2.5rem] p-12 md:p-20 text-center text-white shadow-2xl shadow-blue-900/20 relative overflow-hidden group">
+                        <div className="absolute top-0 right-0 w-96 h-96 bg-white/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 group-hover:bg-white/20 transition-colors duration-500" />
+                        <div className="absolute bottom-0 left-0 w-96 h-96 bg-black/10 rounded-full blur-3xl translate-y-1/2 -translate-x-1/2 group-hover:bg-black/20 transition-colors duration-500" />
+
+                        <h2 className="text-3xl md:text-5xl font-bold mb-8 relative z-10 leading-tight">Prêt à réussir votre examen ?</h2>
+                        <p className="text-blue-100 mb-12 max-w-2xl mx-auto text-xl relative z-10 font-light">
+                            Rejoignez dès maintenant la plateforme de référence et donnez un nouvel élan à votre carrière.
                         </p>
 
-                        <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+                        <div className="relative z-10">
                             {user ? (
-                                <Link to="/dashboard" className="w-full sm:w-auto">
-                                    <Button size="lg" className="w-full sm:w-auto text-lg px-8 py-4 bg-blue-600 hover:bg-blue-700 text-white shadow-xl shadow-blue-500/30 rounded-2xl transition-transform hover:scale-105 active:scale-95">
-                                        Accéder à mon Espace <ArrowRight className="ml-2 h-5 w-5" />
+                                <Link to="/dashboard">
+                                    <Button size="lg" className="bg-white text-blue-600 hover:bg-blue-50 border-none text-lg px-10 py-5 h-auto rounded-2xl shadow-xl transition-transform hover:scale-105">
+                                        Retourner au Tableau de Bord
                                     </Button>
                                 </Link>
                             ) : (
-                                <>
-                                    <Link to="/register" className="w-full sm:w-auto">
-                                        <Button size="lg" className="w-full sm:w-auto text-lg px-8 py-4 bg-blue-600 hover:bg-blue-700 text-white shadow-xl shadow-blue-500/30 rounded-2xl transition-transform hover:scale-105 active:scale-95">
-                                            Commencer Gratuitement <ArrowRight className="ml-2 h-5 w-5" />
-                                        </Button>
-                                    </Link>
-                                    <Link to="/login" className="w-full sm:w-auto">
-                                        <Button variant="secondary" size="lg" className="w-full sm:w-auto text-lg px-8 py-4 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-2xl transition-transform hover:scale-105 active:scale-95">
-                                            <LogIn className="mr-2 h-5 w-5" /> Se connecter
-                                        </Button>
-                                    </Link>
-                                </>
+                                <Link to="/register">
+                                    <Button size="lg" className="bg-white text-blue-600 hover:bg-blue-50 border-none text-lg px-10 py-5 h-auto rounded-2xl shadow-xl transition-transform hover:scale-105">
+                                        Créer mon compte gratuitement
+                                    </Button>
+                                </Link>
                             )}
                         </div>
                     </div>
-
-                    {/* Stats Preview - Glassmorphism */}
-                    <motion.div
-                        initial={{ opacity: 0, y: 40 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.7, delay: 0.2 }}
-                        className="mt-24 grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto"
-                    >
-                        <StatCard number={questionCount} label="Questions QCM" color="text-blue-600 dark:text-blue-400" />
-                        <StatCard number="Hebdo" label="Examens Blancs" color="text-indigo-600 dark:text-indigo-400" />
-                        <StatCard number="100%" label="Suivi de Progression" color="text-purple-600 dark:text-purple-400" />
-                    </motion.div>
-                </div>
-            </section>
-
-            {/* Features Section */}
-            <section className="py-24 bg-white dark:bg-gray-800/50 relative">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <div className="text-center mb-20">
-                        <h2 className="text-3xl md:text-4xl font-bold mb-6">Tout ce dont vous avez besoin</h2>
-                        <p className="text-gray-600 dark:text-gray-400 max-w-2xl mx-auto text-lg">
-                            Une suite d'outils pédagogiques modernes pour maximiser vos chances de réussite.
-                        </p>
-                    </div>
-
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                        <FeatureCard
-                            icon={<Target className="h-8 w-8 text-blue-500" />}
-                            title="Entraînement Ciblé"
-                            description="Choisissez vos modules et spécialités. Entraînez-vous sur des séries de questions spécifiques adaptées à votre niveau."
-                        />
-                        <FeatureCard
-                            icon={<Trophy className="h-8 w-8 text-yellow-500" />}
-                            title="Compétition Saine"
-                            description="Participez aux examens hebdomadaires, grimpez dans le classement national et décrochez des badges prestigieux."
-                        />
-                        <FeatureCard
-                            icon={<Users className="h-8 w-8 text-green-500" />}
-                            title="Communauté Active"
-                            description="Rejoignez une communauté de candidats motivés. Comparez vos résultats et progressez ensemble vers la réussite."
-                        />
-                    </div>
-                </div>
-            </section>
-
-            {/* CTA Section */}
-            <section className="py-24 px-4">
-                <div className="max-w-5xl mx-auto bg-gradient-to-br from-blue-600 to-indigo-700 rounded-[2.5rem] p-12 md:p-20 text-center text-white shadow-2xl shadow-blue-900/20 relative overflow-hidden group">
-                    <div className="absolute top-0 right-0 w-96 h-96 bg-white/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 group-hover:bg-white/20 transition-colors duration-500" />
-                    <div className="absolute bottom-0 left-0 w-96 h-96 bg-black/10 rounded-full blur-3xl translate-y-1/2 -translate-x-1/2 group-hover:bg-black/20 transition-colors duration-500" />
-
-                    <h2 className="text-3xl md:text-5xl font-bold mb-8 relative z-10 leading-tight">Prêt à réussir votre examen ?</h2>
-                    <p className="text-blue-100 mb-12 max-w-2xl mx-auto text-xl relative z-10 font-light">
-                        Rejoignez dès maintenant la plateforme de référence et donnez un nouvel élan à votre carrière.
-                    </p>
-
-                    <div className="relative z-10">
-                        {user ? (
-                            <Link to="/dashboard">
-                                <Button size="lg" className="bg-white text-blue-600 hover:bg-blue-50 border-none text-lg px-10 py-5 h-auto rounded-2xl shadow-xl transition-transform hover:scale-105">
-                                    Retourner au Tableau de Bord
-                                </Button>
-                            </Link>
-                        ) : (
-                            <Link to="/register">
-                                <Button size="lg" className="bg-white text-blue-600 hover:bg-blue-50 border-none text-lg px-10 py-5 h-auto rounded-2xl shadow-xl transition-transform hover:scale-105">
-                                    Créer mon compte gratuitement
-                                </Button>
-                            </Link>
-                        )}
-                    </div>
-                </div>
-            </section>
+                </section>
+            </main>
 
             {/* Footer */}
             <footer className="bg-gray-50 dark:bg-gray-900 py-12 border-t border-gray-200 dark:border-gray-800">
