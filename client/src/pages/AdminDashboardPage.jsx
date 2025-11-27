@@ -117,14 +117,8 @@ export default function AdminDashboardPage() {
                         onClick={() => { setCurrentView('specialties'); setSelectedCategory(null); setIsSidebarOpen(false); }}
                     />
                     <SidebarItem
-                        icon={<Award size={20} />}
-                        label="Partie Commune"
-                        isActive={currentView === 'weekly-exams'}
-                        onClick={() => { setCurrentView('weekly-exams'); setSelectedCategory(null); setIsSidebarOpen(false); }}
-                    />
-                    <SidebarItem
-                        icon={<Award size={20} />}
-                        label="Partie Commune"
+                        icon={<Trophy size={20} />}
+                        label="Examens Hebdomadaires"
                         isActive={currentView === 'weekly-exams'}
                         onClick={() => { setCurrentView('weekly-exams'); setSelectedCategory(null); setIsSidebarOpen(false); }}
                     />
