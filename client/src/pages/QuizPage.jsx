@@ -29,8 +29,16 @@ export default function QuizPage() {
 
     useEffect(() => {
         fetchQuiz();
-        return () => clearInterval(timerRef.current);
+        return () => {
+            clearInterval(timerRef.current);
+            window.speechSynthesis.cancel(); // Stop speech on unmount
+        };
     }, [categoryParam]);
+
+    // Stop speech when moving to next/prev question
+    useEffect(() => {
+        window.speechSynthesis.cancel();
+    }, [currentIndex]);
 
     useEffect(() => {
         if (timeLeft > 0) {
