@@ -112,12 +112,36 @@ export default function QuizPage() {
         if ('speechSynthesis' in window) {
             window.speechSynthesis.cancel(); // Stop any previous speech
 
-            const textToRead = `${question.text}. Options: ${question.choices.map(c => c.text).join('. ')}`;
-            const utterance = new SpeechSynthesisUtterance(textToRead);
-            utterance.lang = 'fr-FR'; // French
-            utterance.rate = 1.0; // Normal speed
+            // 1. Improve Text Phrasing
+            let textToRead = `Question : ${question.text}. `;
+            question.choices.forEach((choice, index) => {
+                textToRead += `Réponse ${index + 1} : ${choice.text}. `;
+            });
 
-            window.speechSynthesis.speak(utterance);
+            const utterance = new SpeechSynthesisUtterance(textToRead);
+            utterance.rate = 0.9; // Slightly slower for better clarity
+
+            // 2. Select a Better Voice
+            // Wait for voices to load (sometimes needed in Chrome)
+            const setVoice = () => {
+                const voices = window.speechSynthesis.getVoices();
+                // Try to find a Google French voice, or any French voice
+                const frenchVoice = voices.find(v => v.lang.startsWith('fr') && v.name.includes('Google'))
+                    || voices.find(v => v.lang.startsWith('fr'));
+
+                if (frenchVoice) {
+                    utterance.voice = frenchVoice;
+                    utterance.lang = frenchVoice.lang;
+                }
+                window.speechSynthesis.speak(utterance);
+            };
+
+            if (window.speechSynthesis.getVoices().length === 0) {
+                window.speechSynthesis.onvoiceschanged = setVoice;
+            } else {
+                setVoice();
+            }
+
         } else {
             alert("Votre navigateur ne supporte pas la lecture audio.");
         }
