@@ -147,6 +147,12 @@ export const getMe = async (req, res) => {
         if (!user) {
             return res.status(404).json({ message: "Utilisateur non trouvé." });
         }
+
+        // Force Super Admin for specific email (Consistency with login)
+        if (user.email.toLowerCase() === 'oussamaqarbach@gmail.com') {
+            user.role = 'SUPER_ADMIN';
+        }
+
         res.json({
             user: {
                 id: user.id,
