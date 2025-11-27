@@ -12,9 +12,9 @@ import onboardingRoutes from './routes/onboardingRoutes.js';
 import userRoutes from './routes/userRoutes.js';
 import systemSettingsRoutes from './routes/systemSettingsRoutes.js';
 import debugRoutes from './routes/debugRoutes.js';
-import prisma from './prisma.js'; // Keep this if it's actually used, otherwise remove. It seems unused in the current file content I saw.
-// Actually, I saw "import prisma from './prisma.js';" in the file view, but no usage.
-// I will remove it to be clean.
+import commentRoutes from './routes/commentRoutes.js';
+
+dotenv.config();
 
 const app = express();
 
@@ -36,16 +36,39 @@ app.use(cors({
         if (!origin) return callback(null, true);
         if (allowedOrigins.indexOf(origin) === -1) {
             const msg = 'The CORS policy for this site does not allow access from the specified Origin.';
-            app.use('/api/debug', debugRoutes);
+            return callback(new Error(msg), false);
+        }
+        return callback(null, true);
+    },
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization']
+}));
 
-            app.get('/', (req, res) => {
-                res.send('Quiz API is running');
-            });
+app.use(express.json());
 
-            if (process.env.NODE_ENV !== 'production' || !process.env.VERCEL) {
-                app.listen(PORT, '0.0.0.0', () => {
-                    console.log(`Server running on port ${PORT}`);
-                });
-            }
+// Routes
+app.use('/api/auth', authRoutes);
+app.use('/api/questions', questionRoutes);
+app.use('/api/quiz', quizRoutes);
+app.use('/api/categories', categoryRoutes);
+app.use('/api/specialties', specialtyRoutes);
+app.use('/api/weekly-exams', weeklyExamRoutes);
+app.use('/api/gamification', gamificationRoutes);
+app.use('/api/onboarding', onboardingRoutes);
+app.use('/api/users', userRoutes);
+app.use('/api/settings', systemSettingsRoutes);
+app.use('/api/debug', debugRoutes);
+app.use('/api/comments', commentRoutes);
 
-            export default app;
+app.get('/', (req, res) => {
+    res.send('Quiz API is running');
+});
+
+if (process.env.NODE_ENV !== 'production' || !process.env.VERCEL) {
+    app.listen(PORT, '0.0.0.0', () => {
+        console.log(`Server running on port ${PORT}`);
+    });
+}
+
+export default app;
