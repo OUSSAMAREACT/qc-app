@@ -12,10 +12,13 @@ import onboardingRoutes from './routes/onboardingRoutes.js';
 import userRoutes from './routes/userRoutes.js';
 import systemSettingsRoutes from './routes/systemSettingsRoutes.js';
 import debugRoutes from './routes/debugRoutes.js';
+import { PrismaClient } from '@prisma/client';
 
 dotenv.config();
 
 const app = express();
+const prisma = new PrismaClient();
+
 // Use process.env.PORT for Render/Vercel, fallback to 5002 for local dev
 const PORT = process.env.PORT || 5002;
 
@@ -42,6 +45,8 @@ app.use('/api/onboarding', onboardingRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/settings', systemSettingsRoutes);
 app.use('/api/debug', debugRoutes);
+
+
 
 app.get('/', (req, res) => {
     res.send('Quiz API is running');

@@ -5,7 +5,7 @@ import { Calendar, Save, Loader } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 
 export default function SettingsManager() {
-    const { token } = useAuth();
+    const { token, user } = useAuth();
     const [examDate, setExamDate] = useState('');
     const [loading, setLoading] = useState(true);
     const [saving, setSaving] = useState(false);
@@ -101,13 +101,19 @@ export default function SettingsManager() {
                     </div>
                 )}
 
-                <Button
-                    onClick={handleSave}
-                    disabled={saving}
-                    className="w-full bg-blue-600 hover:bg-blue-700 text-white"
-                >
-                    {saving ? <Loader className="animate-spin h-5 w-5" /> : <><Save className="h-5 w-5 mr-2" /> Enregistrer</>}
-                </Button>
+                {user?.role === 'SUPER_ADMIN' ? (
+                    <Button
+                        onClick={handleSave}
+                        disabled={saving}
+                        className="w-full bg-blue-600 hover:bg-blue-700 text-white"
+                    >
+                        {saving ? <Loader className="animate-spin h-5 w-5" /> : <><Save className="h-5 w-5 mr-2" /> Enregistrer</>}
+                    </Button>
+                ) : (
+                    <div className="p-3 bg-yellow-100 text-yellow-800 rounded-lg text-sm text-center">
+                        Seul le Super Admin peut modifier ces paramètres.
+                    </div>
+                )}
             </div>
         </Card>
     );

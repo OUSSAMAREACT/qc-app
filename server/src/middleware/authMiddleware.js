@@ -18,8 +18,15 @@ export const authenticateToken = (req, res, next) => {
 };
 
 export const requireAdmin = (req, res, next) => {
-    if (req.user.role !== 'ADMIN') {
+    if (req.user.role !== 'ADMIN' && req.user.role !== 'SUPER_ADMIN') {
         return res.status(403).json({ message: "Accès réservé aux administrateurs." });
+    }
+    next();
+};
+
+export const requireSuperAdmin = (req, res, next) => {
+    if (req.user.role !== 'SUPER_ADMIN') {
+        return res.status(403).json({ message: "Accès réservé aux super administrateurs." });
     }
     next();
 };

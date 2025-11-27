@@ -5,7 +5,10 @@ import { Button } from '../ui/Button';
 import { Card } from '../ui/Card';
 import { motion, AnimatePresence } from 'framer-motion';
 
+import { useAuth } from '../../context/AuthContext';
+
 export default function UserManager() {
+    const { user: currentUser } = useAuth();
     const [users, setUsers] = useState([]);
     const [loading, setLoading] = useState(true);
     const [searchTerm, setSearchTerm] = useState('');
@@ -197,49 +200,53 @@ export default function UserManager() {
                                         </td>
                                         <td className="p-4 text-right">
                                             <div className="flex justify-end gap-2">
-                                                <button
-                                                    onClick={async () => {
-                                                        if (confirm(`Voulez-vous vraiment changer le rôle de ${user.name} ?`)) {
-                                                            try {
-                                                                const newRole = user.role === 'ADMIN' ? 'STUDENT' : 'ADMIN';
-                                                                await axios.put(`/users/${user.id}`, { role: newRole });
-                                                                setUsers(users.map(u => u.id === user.id ? { ...u, role: newRole } : u));
-                                                            } catch (e) {
-                                                                alert("Erreur lors du changement de rôle");
-                                                            }
-                                                        }
-                                                    }}
-                                                    className={`p-2 rounded-lg transition-colors ${user.role === 'ADMIN'
-                                                        ? 'text-purple-600 hover:bg-purple-50 dark:hover:bg-purple-900/20'
-                                                        : 'text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/20'
-                                                        }`}
-                                                    title={user.role === 'ADMIN' ? "Rétrograder en Étudiant" : "Promouvoir Admin"}
-                                                >
-                                                    <Shield size={18} />
-                                                </button>
-                                                {user.status === 'PENDING' && (
-                                                    <button
-                                                        onClick={() => handleActivate(user)}
-                                                        className="p-2 text-green-600 hover:bg-green-50 dark:hover:bg-green-900/20 rounded-lg transition-colors"
-                                                        title="Activer"
-                                                    >
-                                                        <Check size={18} />
-                                                    </button>
+                                                {currentUser?.role === 'SUPER_ADMIN' && (
+                                                    <>
+                                                        <button
+                                                            onClick={async () => {
+                                                                if (confirm(`Voulez-vous vraiment changer le rôle de ${user.name} ?`)) {
+                                                                    try {
+                                                                        const newRole = user.role === 'ADMIN' ? 'STUDENT' : 'ADMIN';
+                                                                        await axios.put(`/users/${user.id}`, { role: newRole });
+                                                                        setUsers(users.map(u => u.id === user.id ? { ...u, role: newRole } : u));
+                                                                    } catch (e) {
+                                                                        alert("Erreur lors du changement de rôle");
+                                                                    }
+                                                                }
+                                                            }}
+                                                            className={`p-2 rounded-lg transition-colors ${user.role === 'ADMIN'
+                                                                ? 'text-purple-600 hover:bg-purple-50 dark:hover:bg-purple-900/20'
+                                                                : 'text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/20'
+                                                                }`}
+                                                            title={user.role === 'ADMIN' ? "Rétrograder en Étudiant" : "Promouvoir Admin"}
+                                                        >
+                                                            <Shield size={18} />
+                                                        </button>
+                                                        {user.status === 'PENDING' && (
+                                                            <button
+                                                                onClick={() => handleActivate(user)}
+                                                                className="p-2 text-green-600 hover:bg-green-50 dark:hover:bg-green-900/20 rounded-lg transition-colors"
+                                                                title="Activer"
+                                                            >
+                                                                <Check size={18} />
+                                                            </button>
+                                                        )}
+                                                        <button
+                                                            onClick={() => handleEditClick(user)}
+                                                            className="p-2 text-gray-500 hover:text-primary-600 hover:bg-primary-50 dark:hover:bg-primary-900/20 rounded-lg transition-colors"
+                                                            title="Modifier"
+                                                        >
+                                                            <Edit2 size={18} />
+                                                        </button>
+                                                        <button
+                                                            onClick={() => handleDeleteClick(user)}
+                                                            className="p-2 text-gray-500 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors"
+                                                            title="Supprimer"
+                                                        >
+                                                            <Trash2 size={18} />
+                                                        </button>
+                                                    </>
                                                 )}
-                                                <button
-                                                    onClick={() => handleEditClick(user)}
-                                                    className="p-2 text-gray-500 hover:text-primary-600 hover:bg-primary-50 dark:hover:bg-primary-900/20 rounded-lg transition-colors"
-                                                    title="Modifier"
-                                                >
-                                                    <Edit2 size={18} />
-                                                </button>
-                                                <button
-                                                    onClick={() => handleDeleteClick(user)}
-                                                    className="p-2 text-gray-500 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors"
-                                                    title="Supprimer"
-                                                >
-                                                    <Trash2 size={18} />
-                                                </button>
                                             </div>
                                         </td>
                                     </tr>

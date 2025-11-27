@@ -14,7 +14,7 @@ import UserManager from '../components/admin/UserManager';
 import SettingsManager from '../components/admin/SettingsManager';
 
 export default function AdminDashboardPage() {
-    const { logout } = useAuth();
+    const { user, logout } = useAuth();
     const { theme, toggleTheme } = useTheme();
     const [currentView, setCurrentView] = useState('overview');
     const [selectedCategory, setSelectedCategory] = useState(null);
@@ -40,7 +40,7 @@ export default function AdminDashboardPage() {
 
         switch (currentView) {
             case 'overview':
-                return <Overview onNavigate={setCurrentView} />;
+                return <Overview onNavigate={setCurrentView} user={user} />;
             case 'common':
                 return <CommonModulesView onSelectCategory={handleCategorySelect} />;
             case 'specialties':
@@ -52,7 +52,7 @@ export default function AdminDashboardPage() {
             case 'settings':
                 return <SettingsManager />;
             default:
-                return <Overview onNavigate={setCurrentView} />;
+                return <Overview onNavigate={setCurrentView} user={user} />;
         }
     };
 
@@ -123,17 +123,27 @@ export default function AdminDashboardPage() {
                         onClick={() => { setCurrentView('weekly-exams'); setSelectedCategory(null); setIsSidebarOpen(false); }}
                     />
                     <SidebarItem
-                        icon={<Users size={20} />}
-                        label="Utilisateurs"
-                        isActive={currentView === 'users'}
-                        onClick={() => { setCurrentView('users'); setSelectedCategory(null); setIsSidebarOpen(false); }}
+                        icon={<Award size={20} />}
+                        label="Partie Commune"
+                        isActive={currentView === 'weekly-exams'}
+                        onClick={() => { setCurrentView('weekly-exams'); setSelectedCategory(null); setIsSidebarOpen(false); }}
                     />
-                    <SidebarItem
-                        icon={<Settings size={20} />}
-                        label="Paramètres"
-                        isActive={currentView === 'settings'}
-                        onClick={() => { setCurrentView('settings'); setSelectedCategory(null); setIsSidebarOpen(false); }}
-                    />
+                    {user?.role === 'SUPER_ADMIN' && (
+                        <>
+                            <SidebarItem
+                                icon={<Users size={20} />}
+                                label="Utilisateurs"
+                                isActive={currentView === 'users'}
+                                onClick={() => { setCurrentView('users'); setSelectedCategory(null); setIsSidebarOpen(false); }}
+                            />
+                            <SidebarItem
+                                icon={<Settings size={20} />}
+                                label="Paramètres"
+                                isActive={currentView === 'settings'}
+                                onClick={() => { setCurrentView('settings'); setSelectedCategory(null); setIsSidebarOpen(false); }}
+                            />
+                        </>
+                    )}
                 </nav>
 
                 <div className="p-4 border-t border-gray-100 dark:border-gray-700 space-y-2">
@@ -180,7 +190,7 @@ function SidebarItem({ icon, label, isActive, onClick }) {
     );
 }
 
-function Overview({ onNavigate }) {
+function Overview({ onNavigate, user }) {
     return (
         <div className="space-y-8">
             <div>
@@ -223,39 +233,43 @@ function Overview({ onNavigate }) {
                     </div>
                 </div>
 
-                <div
-                    onClick={() => onNavigate('users')}
-                    className="group relative overflow-hidden bg-white dark:bg-gray-800 rounded-3xl p-8 shadow-sm hover:shadow-xl transition-all duration-300 border border-gray-100 dark:border-gray-700 cursor-pointer"
-                >
-                    <div className="absolute top-0 right-0 -mt-4 -mr-4 w-32 h-32 bg-emerald-500/10 rounded-full blur-2xl group-hover:bg-emerald-500/20 transition-colors"></div>
-                    <div className="relative z-10">
-                        <div className="w-12 h-12 bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 rounded-2xl flex items-center justify-center mb-6">
-                            <Users size={24} />
+                {user?.role === 'SUPER_ADMIN' && (
+                    <>
+                        <div
+                            onClick={() => onNavigate('users')}
+                            className="group relative overflow-hidden bg-white dark:bg-gray-800 rounded-3xl p-8 shadow-sm hover:shadow-xl transition-all duration-300 border border-gray-100 dark:border-gray-700 cursor-pointer"
+                        >
+                            <div className="absolute top-0 right-0 -mt-4 -mr-4 w-32 h-32 bg-emerald-500/10 rounded-full blur-2xl group-hover:bg-emerald-500/20 transition-colors"></div>
+                            <div className="relative z-10">
+                                <div className="w-12 h-12 bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 rounded-2xl flex items-center justify-center mb-6">
+                                    <Users size={24} />
+                                </div>
+                                <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">Utilisateurs</h3>
+                                <p className="text-gray-500 dark:text-gray-400 mb-6">Suivez la progression des étudiants et gérez les accès.</p>
+                                <div className="flex items-center text-emerald-600 font-medium">
+                                    Gérer <ArrowRight size={16} className="ml-2 group-hover:translate-x-1 transition-transform" />
+                                </div>
+                            </div>
                         </div>
-                        <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">Utilisateurs</h3>
-                        <p className="text-gray-500 dark:text-gray-400 mb-6">Suivez la progression des étudiants et gérez les accès.</p>
-                        <div className="flex items-center text-emerald-600 font-medium">
-                            Gérer <ArrowRight size={16} className="ml-2 group-hover:translate-x-1 transition-transform" />
-                        </div>
-                    </div>
-                </div>
 
-                <div
-                    onClick={() => onNavigate('settings')}
-                    className="group relative overflow-hidden bg-white dark:bg-gray-800 rounded-3xl p-8 shadow-sm hover:shadow-xl transition-all duration-300 border border-gray-100 dark:border-gray-700 cursor-pointer"
-                >
-                    <div className="absolute top-0 right-0 -mt-4 -mr-4 w-32 h-32 bg-gray-500/10 rounded-full blur-2xl group-hover:bg-gray-500/20 transition-colors"></div>
-                    <div className="relative z-10">
-                        <div className="w-12 h-12 bg-gray-100 dark:bg-gray-900/30 text-gray-600 rounded-2xl flex items-center justify-center mb-6">
-                            <Settings size={24} />
+                        <div
+                            onClick={() => onNavigate('settings')}
+                            className="group relative overflow-hidden bg-white dark:bg-gray-800 rounded-3xl p-8 shadow-sm hover:shadow-xl transition-all duration-300 border border-gray-100 dark:border-gray-700 cursor-pointer"
+                        >
+                            <div className="absolute top-0 right-0 -mt-4 -mr-4 w-32 h-32 bg-gray-500/10 rounded-full blur-2xl group-hover:bg-gray-500/20 transition-colors"></div>
+                            <div className="relative z-10">
+                                <div className="w-12 h-12 bg-gray-100 dark:bg-gray-900/30 text-gray-600 rounded-2xl flex items-center justify-center mb-6">
+                                    <Settings size={24} />
+                                </div>
+                                <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">Paramètres</h3>
+                                <p className="text-gray-500 dark:text-gray-400 mb-6">Configurez la date de l'examen et autres options.</p>
+                                <div className="flex items-center text-gray-600 font-medium">
+                                    Gérer <ArrowRight size={16} className="ml-2 group-hover:translate-x-1 transition-transform" />
+                                </div>
+                            </div>
                         </div>
-                        <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">Paramètres</h3>
-                        <p className="text-gray-500 dark:text-gray-400 mb-6">Configurez la date de l'examen et autres options.</p>
-                        <div className="flex items-center text-gray-600 font-medium">
-                            Gérer <ArrowRight size={16} className="ml-2 group-hover:translate-x-1 transition-transform" />
-                        </div>
-                    </div>
-                </div>
+                    </>
+                )}
             </div>
         </div>
     );

