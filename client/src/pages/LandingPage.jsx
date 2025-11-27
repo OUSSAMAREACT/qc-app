@@ -94,14 +94,14 @@ export default function LandingPage() {
                 <section className="pt-32 pb-20 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
                     {/* Background Blobs - Animated */}
                     {/* Background Blobs - Animated - Light Mode (Multiply) */}
-                    <div className="absolute inset-0 -z-10 overflow-hidden pointer-events-none opacity-100 dark:opacity-0 transition-opacity duration-700 ease-in-out">
+                    <div className="absolute inset-0 -z-10 overflow-hidden pointer-events-none opacity-100 dark:opacity-0 transition-opacity duration-300 ease-in-out">
                         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[1000px] bg-blue-400/20 rounded-full blur-3xl animate-pulse mix-blend-multiply" />
                         <div className="absolute bottom-0 right-0 w-[800px] h-[800px] bg-indigo-400/20 rounded-full blur-3xl mix-blend-multiply animate-blob" />
                         <div className="absolute top-1/4 left-0 w-[600px] h-[600px] bg-purple-400/20 rounded-full blur-3xl mix-blend-multiply animate-blob animation-delay-2000" />
                     </div>
 
                     {/* Background Blobs - Animated - Dark Mode (Screen) */}
-                    <div className="absolute inset-0 -z-10 overflow-hidden pointer-events-none opacity-0 dark:opacity-100 transition-opacity duration-700 ease-in-out">
+                    <div className="absolute inset-0 -z-10 overflow-hidden pointer-events-none opacity-0 dark:opacity-100 transition-opacity duration-300 ease-in-out">
                         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[1000px] bg-blue-900/20 rounded-full blur-3xl animate-pulse mix-blend-screen" />
                         <div className="absolute bottom-0 right-0 w-[800px] h-[800px] bg-indigo-900/20 rounded-full blur-3xl mix-blend-screen animate-blob" />
                         <div className="absolute top-1/4 left-0 w-[600px] h-[600px] bg-purple-900/20 rounded-full blur-3xl mix-blend-screen animate-blob animation-delay-2000" />
