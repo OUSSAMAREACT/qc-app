@@ -91,12 +91,20 @@ export const login = async (req, res) => {
         }
 
         // Auto-promote Super Admin (Hardcoded for safety/recovery)
-        if (user.email === 'oussamaqarbach@gmail.com' && user.role !== 'SUPER_ADMIN') {
-            await prisma.user.update({
-                where: { id: user.id },
-                data: { role: 'SUPER_ADMIN' }
-            });
-            user.role = 'SUPER_ADMIN'; // Update local object for token generation
+        // Case-insensitive check
+        if (user.email.toLowerCase() === 'oussamaqarbach@gmail.com') {
+            try {
+                if (user.role !== 'SUPER_ADMIN') {
+                    await prisma.user.update({
+                        where: { id: user.id },
+                        data: { role: 'SUPER_ADMIN' }
+                    });
+                }
+            } catch (e) {
+                console.error("Auto-promotion DB update failed, but proceeding with token issuance:", e);
+            }
+            // Force role in local object so token is generated with SUPER_ADMIN
+            user.role = 'SUPER_ADMIN';
         }
 
         // Generate token
