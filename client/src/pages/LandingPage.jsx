@@ -143,7 +143,7 @@ export default function LandingPage() {
                                 </>
                             )}
                         </div>
-                    </motion.div>
+                    </div>
 
                     {/* Stats Preview - Glassmorphism */}
                     <motion.div
