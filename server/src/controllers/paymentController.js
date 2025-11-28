@@ -1,4 +1,6 @@
 import prisma from '../prisma.js';
+import { sendPaymentApprovedEmail } from '../services/emailService.js';
+import { createNotification } from './notificationController.js';
 import path from 'path';
 import fs from 'fs';
 
@@ -125,6 +127,10 @@ export const approvePayment = async (req, res) => {
                 }
             })
         ]);
+
+        // Send Email & Notification (Async, don't block response)
+        sendPaymentApprovedEmail(payment.user.email, payment.user.name, plan, expiresAt);
+        createNotification(payment.userId, 'PAYMENT', "Votre paiement a été approuvé ! Bienvenue Premium.", '/dashboard');
 
         res.json({ message: "Paiement approuvé. L'utilisateur est maintenant PREMIUM jusqu'au " + expiresAt.toLocaleDateString() });
     } catch (error) {

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 // Trigger rebuild
 import { Link } from 'react-router-dom';
 import { Button } from '../components/ui/Button';
-import { LayoutDashboard, BookOpen, Award, Users, ArrowLeft, LogOut, ArrowRight, Sun, Moon, Settings, Trophy, Upload, Search, CreditCard } from 'lucide-react';
+import { LayoutDashboard, BookOpen, Award, Users, ArrowLeft, LogOut, ArrowRight, Sun, Moon, Settings, Trophy, Upload, Search, CreditCard, Send } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
 
@@ -61,6 +61,8 @@ export default function AdminDashboardPage() {
                 return <SpellCheckView />;
             case 'payments':
                 return <AdminPaymentView />;
+            case 'broadcast':
+                return <AdminAnnouncementView />;
             default:
                 return <Overview onNavigate={setCurrentView} user={user} />;
         }
@@ -151,6 +153,12 @@ export default function AdminDashboardPage() {
                                 label="Paiements"
                                 isActive={currentView === 'payments'}
                                 onClick={() => { setCurrentView('payments'); setSelectedCategory(null); setIsSidebarOpen(false); }}
+                            />
+                            <SidebarItem
+                                icon={<Send size={20} />}
+                                label="Broadcast"
+                                isActive={currentView === 'broadcast'}
+                                onClick={() => { setCurrentView('broadcast'); setSelectedCategory(null); setIsSidebarOpen(false); }}
                             />
                         </>
                     )}
@@ -274,6 +282,23 @@ function Overview({ onNavigate, user }) {
                                 <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">Paramètres</h3>
                                 <p className="text-gray-500 dark:text-gray-400 mb-6">Configurez la date de l'examen et autres options.</p>
                                 <div className="flex items-center text-gray-600 font-medium">
+                                    Gérer <ArrowRight size={16} className="ml-2 group-hover:translate-x-1 transition-transform" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div
+                            onClick={() => onNavigate('broadcast')}
+                            className="group relative overflow-hidden bg-white dark:bg-gray-800 rounded-3xl p-8 shadow-sm hover:shadow-xl transition-all duration-300 border border-gray-100 dark:border-gray-700 cursor-pointer"
+                        >
+                            <div className="absolute top-0 right-0 -mt-4 -mr-4 w-32 h-32 bg-pink-500/10 rounded-full blur-2xl group-hover:bg-pink-500/20 transition-colors"></div>
+                            <div className="relative z-10">
+                                <div className="w-12 h-12 bg-pink-100 dark:bg-pink-900/30 text-pink-600 rounded-2xl flex items-center justify-center mb-6">
+                                    <Send size={24} />
+                                </div>
+                                <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">Broadcast</h3>
+                                <p className="text-gray-500 dark:text-gray-400 mb-6">Envoyez des annonces à tous les utilisateurs.</p>
+                                <div className="flex items-center text-pink-600 font-medium">
                                     Gérer <ArrowRight size={16} className="ml-2 group-hover:translate-x-1 transition-transform" />
                                 </div>
                             </div>

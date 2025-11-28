@@ -14,7 +14,7 @@ const transporter = nodemailer.createTransport({
 export const sendConfirmationEmail = async (email, name) => {
     try {
         const info = await transporter.sendMail({
-            from: '"QC App" <' + process.env.EMAIL_USER + '>', // sender address
+            from: '"QC App" <' + (process.env.EMAIL_FROM || process.env.EMAIL_USER) + '>', // sender address
             to: email, // list of receivers
             subject: "Confirmation d'inscription", // Subject line
             html: `
@@ -45,7 +45,7 @@ export const sendPasswordResetEmail = async (email, resetToken) => {
         const resetLink = `${frontendUrl}/reset-password?token=${resetToken}`;
 
         const info = await transporter.sendMail({
-            from: '"QC App" <' + process.env.EMAIL_USER + '>',
+            from: '"QC App" <' + (process.env.EMAIL_FROM || process.env.EMAIL_USER) + '>',
             to: email,
             subject: "Réinitialisation de mot de passe",
             html: `
@@ -67,5 +67,81 @@ export const sendPasswordResetEmail = async (email, resetToken) => {
     } catch (error) {
         console.error("Error sending password reset email:", error);
         throw error;
+    }
+};
+
+export const sendPaymentApprovedEmail = async (email, name, planType, expiresAt) => {
+    try {
+        const info = await transporter.sendMail({
+            from: '"QC App" <' + (process.env.EMAIL_FROM || process.env.EMAIL_USER) + '>',
+            to: email,
+            subject: "Paiement Approuvé - Bienvenue Premium !",
+            html: `
+                <div style="font-family: Arial, sans-serif; color: #333;">
+                    <h2>Félicitations ${name} !</h2>
+                    <p>Votre paiement pour le plan <strong>${planType}</strong> a été validé avec succès.</p>
+                    <p>Vous avez désormais accès à tout le contenu Premium jusqu'au <strong>${new Date(expiresAt).toLocaleDateString()}</strong>.</p>
+                    <br>
+                    <a href="${process.env.FRONTEND_URL || 'http://localhost:5173'}/dashboard" style="background-color: #4CAF50; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;">Accéder à mon Dashboard</a>
+                    <br><br>
+                    <p>Bon courage pour vos révisions !</p>
+                    <p>L'équipe QC App</p>
+                </div>
+            `,
+        });
+        console.log("Payment approved email sent: %s", info.messageId);
+        return info;
+    } catch (error) {
+        console.error("Error sending payment approved email:", error);
+        return null;
+    }
+};
+
+export const sendReplyNotificationEmail = async (email, replierName, questionId) => {
+    try {
+        const link = `${process.env.FRONTEND_URL || 'http://localhost:5173'}/result?questionId=${questionId}`;
+        const info = await transporter.sendMail({
+            from: '"QC App" <' + (process.env.EMAIL_FROM || process.env.EMAIL_USER) + '>',
+            to: email,
+            subject: "Nouvelle réponse à une discussion",
+            html: `
+                <div style="font-family: Arial, sans-serif; color: #333;">
+                    <h3>Nouvelle réponse !</h3>
+                    <p><strong>${replierName}</strong> a répondu à une discussion que vous suivez.</p>
+                    <br>
+                    <a href="${link}" style="background-color: #2196F3; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;">Voir la réponse</a>
+                    <br><br>
+                    <p>L'équipe QC App</p>
+                </div>
+            `,
+        });
+        console.log("Reply notification email sent: %s", info.messageId);
+        return info;
+    } catch (error) {
+        console.error("Error sending reply notification email:", error);
+        return null;
+    }
+};
+
+export const sendAnnouncementEmail = async (email, subject, message) => {
+    try {
+        const info = await transporter.sendMail({
+            from: '"QC App" <' + (process.env.EMAIL_FROM || process.env.EMAIL_USER) + '>',
+            to: email,
+            subject: subject,
+            html: `
+                <div style="font-family: Arial, sans-serif; color: #333;">
+                    ${message}
+                    <br><br>
+                    <hr>
+                    <p style="font-size: 12px; color: #777;">Vous recevez cet email car vous êtes inscrit sur QC App.</p>
+                </div>
+            `,
+        });
+        console.log("Announcement email sent: %s", info.messageId);
+        return info;
+    } catch (error) {
+        console.error("Error sending announcement email:", error);
+        return null;
     }
 };

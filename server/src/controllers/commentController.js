@@ -1,4 +1,5 @@
 import prisma from '../prisma.js';
+import { sendReplyNotificationEmail } from '../services/emailService.js';
 
 export const getComments = async (req, res) => {
     try {
@@ -86,6 +87,17 @@ export const addComment = async (req, res) => {
         if (notificationsData.length > 0) {
             await prisma.notification.createMany({
                 data: notificationsData
+            });
+
+            // Send Email Notifications (Async)
+            // We need to fetch emails for these users
+            const recipients = await prisma.user.findMany({
+                where: { id: { in: Array.from(recipientIds) } },
+                select: { email: true }
+            });
+
+            recipients.forEach(recipient => {
+                sendReplyNotificationEmail(recipient.email, userName, questionId);
             });
         }
         // --------------------------

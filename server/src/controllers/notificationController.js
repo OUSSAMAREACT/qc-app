@@ -38,3 +38,62 @@ export const markAsRead = async (req, res) => {
         res.status(500).json({ message: "Erreur lors de la mise à jour de la notification." });
     }
 };
+
+// Internal Helper
+export const createNotification = async (userId, type, message, link) => {
+    try {
+        await prisma.notification.create({
+            data: {
+                userId,
+                type,
+                message,
+                link,
+                read: false
+            }
+        });
+    } catch (error) {
+        console.error("Create notification error:", error);
+    }
+};
+
+// Admin Broadcast
+import { sendAnnouncementEmail } from '../services/emailService.js';
+
+export const sendAnnouncement = async (req, res) => {
+    try {
+        const { subject, message, type } = req.body; // type: 'EMAIL', 'IN_APP', 'BOTH'
+
+        // Get all users
+        const users = await prisma.user.findMany({
+            where: { status: 'ACTIVE' }, // Only active users
+            select: { id: true, email: true }
+        });
+
+        if (type === 'IN_APP' || type === 'BOTH') {
+            const notifications = users.map(user => ({
+                userId: user.id,
+                type: 'ANNOUNCEMENT',
+                message: subject, // Use subject as short message
+                link: '/dashboard', // Generic link
+                read: false
+            }));
+
+            // Bulk create notifications
+            await prisma.notification.createMany({
+                data: notifications
+            });
+        }
+
+        if (type === 'EMAIL' || type === 'BOTH') {
+            // Send emails in background (don't await loop)
+            users.forEach(user => {
+                sendAnnouncementEmail(user.email, subject, message);
+            });
+        }
+
+        res.json({ message: `Annonce envoyée à ${users.length} utilisateurs.` });
+    } catch (error) {
+        console.error("Send announcement error:", error);
+        res.status(500).json({ message: "Erreur lors de l'envoi de l'annonce." });
+    }
+};
