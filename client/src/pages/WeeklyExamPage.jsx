@@ -268,12 +268,12 @@ export default function WeeklyExamPage() {
                         }}
                         className="w-full"
                     >
-                        <Card className="p-6 md:p-8 shadow-xl border-0 bg-white dark:bg-gray-800/80 backdrop-blur-sm ring-1 ring-gray-100 dark:ring-gray-700/50">
-                            <div className="mb-6">
-                                <span className="inline-block px-3 py-1 rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 text-xs font-semibold tracking-wide uppercase mb-3">
+                        <Card className="p-4 md:p-8 shadow-xl border-0 bg-white dark:bg-gray-800/80 backdrop-blur-sm ring-1 ring-gray-100 dark:ring-gray-700/50">
+                            <div className="mb-4">
+                                <span className="inline-block px-3 py-1 rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 text-xs font-semibold tracking-wide uppercase mb-2">
                                     Question {currentQuestionIndex + 1}
                                 </span>
-                                <h2 className="text-xl md:text-2xl font-bold text-gray-900 dark:text-white leading-relaxed">
+                                <h2 className="text-lg md:text-2xl font-bold text-gray-900 dark:text-white leading-relaxed">
                                     {currentQuestion.text}
                                 </h2>
 
@@ -288,7 +288,7 @@ export default function WeeklyExamPage() {
                                             whileHover={{ scale: 1.01 }}
                                             whileTap={{ scale: 0.99 }}
                                             onClick={() => handleOptionSelect(currentQuestion.id, choice.id)}
-                                            className={`relative p-4 md:p-5 rounded-xl border-2 cursor-pointer transition-all duration-200 group ${isSelected
+                                            className={`relative p-3 md:p-5 rounded-xl border-2 cursor-pointer transition-all duration-200 group ${isSelected
                                                 ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/20 shadow-md shadow-blue-500/10'
                                                 : 'border-gray-100 dark:border-gray-700 hover:border-blue-200 dark:hover:border-blue-800 hover:bg-gray-50 dark:hover:bg-gray-700/50'
                                                 }`}
@@ -313,7 +313,7 @@ export default function WeeklyExamPage() {
                 </AnimatePresence>
 
                 {/* Navigation Buttons */}
-                <div className="flex justify-between items-center mt-8">
+                <div className="flex justify-between items-center mt-6">
                     <Button
                         variant="outline"
                         onClick={handlePrev}

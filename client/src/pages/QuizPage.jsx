@@ -271,7 +271,7 @@ export default function QuizPage() {
                 </div>
             </div>
 
-            <div className="w-full max-w-4xl space-y-6 md:space-y-8 mt-8 md:mt-12 z-10">
+            <div className="w-full max-w-4xl space-y-4 md:space-y-8 mt-4 md:mt-12 z-10">
                 {/* Header Info */}
                 <div className="flex flex-col md:flex-row justify-between items-start md:items-end px-2 gap-4 md:gap-0">
                     <div className="flex flex-col">
@@ -310,8 +310,8 @@ export default function QuizPage() {
                             <div className="absolute -top-20 -right-20 w-64 h-64 bg-blue-50 dark:bg-blue-900/20 rounded-full blur-3xl opacity-50 pointer-events-none"></div>
                             <div className="absolute -bottom-20 -left-20 w-64 h-64 bg-indigo-50 dark:bg-indigo-900/20 rounded-full blur-3xl opacity-50 pointer-events-none"></div>
 
-                            <div className="p-6 md:p-10 flex flex-col flex-1 relative z-10">
-                                <h2 className="text-xl md:text-3xl font-heading font-bold mb-8 md:mb-10 text-gray-800 dark:text-gray-100 leading-tight">
+                            <div className="p-4 md:p-10 flex flex-col flex-1 relative z-10">
+                                <h2 className="text-lg md:text-3xl font-heading font-bold mb-4 md:mb-10 text-gray-800 dark:text-gray-100 leading-tight">
                                     {currentQuestion.text}
                                     <button
                                         onClick={() => handleSpeak(currentQuestion)}
@@ -332,7 +332,7 @@ export default function QuizPage() {
                                                 whileTap={{ scale: 0.99 }}
                                                 key={choice.id}
                                                 onClick={() => handleToggleChoice(currentQuestion.id, choice.id)}
-                                                className={`group relative p-4 md:p-5 rounded-2xl border-2 cursor-pointer transition-all duration-200 flex items-center gap-4 md:gap-5 ${isSelected
+                                                className={`group relative p-3 md:p-5 rounded-2xl border-2 cursor-pointer transition-all duration-200 flex items-center gap-3 md:gap-5 ${isSelected
                                                     ? 'border-primary-500 bg-primary-50/50 dark:bg-primary-900/30 shadow-lg shadow-primary-100 dark:shadow-primary-900/20'
                                                     : 'border-gray-100 dark:border-gray-700 bg-white/50 dark:bg-gray-800/50 hover:border-primary-200 dark:hover:border-primary-700 hover:bg-white dark:hover:bg-gray-800'
                                                     }`}
@@ -356,7 +356,7 @@ export default function QuizPage() {
                                     })}
                                 </div>
 
-                                <div className="mt-8 md:mt-10 flex flex-col-reverse md:flex-row justify-between items-center gap-4 md:gap-0 pt-6 border-t border-gray-100/50 dark:border-gray-700/50">
+                                <div className="mt-6 md:mt-10 flex flex-col-reverse md:flex-row justify-between items-center gap-3 md:gap-0 pt-4 md:pt-6 border-t border-gray-100/50 dark:border-gray-700/50">
                                     <Button
                                         variant="ghost"
                                         onClick={() => setCurrentIndex(prev => Math.max(0, prev - 1))}

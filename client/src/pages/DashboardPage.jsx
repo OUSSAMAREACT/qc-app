@@ -113,13 +113,13 @@ export default function DashboardPage() {
             {/* Hero Section */}
             <motion.div
                 variants={itemVariants}
-                className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-primary-600 via-primary-700 to-primary-900 text-white p-8 md:p-12 shadow-2xl shadow-primary-900/20"
+                className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-primary-600 via-primary-700 to-primary-900 text-white p-6 md:p-12 shadow-2xl shadow-primary-900/20"
             >
                 {/* Abstract Pattern Overlay */}
                 <div className="absolute inset-0 opacity-10 bg-[radial-gradient(circle_at_top_right,_var(--tw-gradient-stops))] from-white via-transparent to-transparent" />
 
                 <div className="relative z-10">
-                    <h1 className="text-3xl md:text-5xl font-heading font-bold mb-4 tracking-tight">
+                    <h1 className="text-2xl md:text-5xl font-heading font-bold mb-4 tracking-tight">
                         {greeting}, <span className="text-primary-100">{user?.name?.split(' ')[0]}</span> !
                     </h1>
                     <p className="text-primary-100/90 text-lg md:text-xl max-w-2xl mb-8 font-medium leading-relaxed">

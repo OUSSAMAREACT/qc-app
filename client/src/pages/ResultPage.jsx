@@ -245,7 +245,7 @@ export default function ResultPage() {
                     initial={{ y: -20, opacity: 0 }}
                     animate={{ y: 0, opacity: 1 }}
                     transition={{ duration: 0.5 }}
-                    className="relative overflow-hidden rounded-3xl bg-white/80 dark:bg-gray-800/80 backdrop-blur-xl border border-white/60 dark:border-gray-700 shadow-2xl p-8 md:p-12 text-center"
+                    className="relative overflow-hidden rounded-3xl bg-white/80 dark:bg-gray-800/80 backdrop-blur-xl border border-white/60 dark:border-gray-700 shadow-2xl p-6 md:p-12 text-center"
                 >
                     {/* Decorative Blobs */}
                     <div className="absolute top-0 left-0 w-64 h-64 bg-blue-500/10 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2 pointer-events-none"></div>
@@ -350,7 +350,7 @@ export default function ResultPage() {
                                     {/* Status Bar */}
                                     <div className={`h-1.5 w-full ${isCorrect ? 'bg-emerald-500' : 'bg-red-500'}`} />
 
-                                    <div className="p-6 md:p-8">
+                                    <div className="p-4 md:p-8">
                                         {/* Question Header */}
                                         <div className="flex justify-between items-start gap-4 mb-6">
                                             <div className="flex gap-4">
@@ -392,7 +392,7 @@ export default function ResultPage() {
                                                 const isChoiceCorrect = choice.isCorrect;
 
                                                 // Visual styles for the choice row
-                                                let rowClass = "relative flex items-center gap-4 p-4 rounded-xl border-2 transition-all duration-200";
+                                                let rowClass = "relative flex items-center gap-4 p-3 rounded-xl border-2 transition-all duration-200";
 
                                                 if (isChoiceCorrect) {
                                                     rowClass += " border-emerald-200 bg-emerald-50/50 dark:border-emerald-800 dark:bg-emerald-900/10";

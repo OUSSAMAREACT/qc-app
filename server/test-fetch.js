@@ -1,5 +1,5 @@
-const key = "AIzaSyAjrNsQRv7ZXntMsIA__JqBM3oNZsJshvg";
-const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${key}`;
+const key = "AIzaSyAMZzszrUCxuUSBo1I7VraT_wSDuMllHMM";
+const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.0-pro:generateContent?key=${key}`;
 
 async function test() {
     console.log("Testing URL:", url);

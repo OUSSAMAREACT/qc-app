@@ -1,6 +1,6 @@
 import { GoogleGenerativeAI } from '@google/generative-ai';
 
-const key = "AIzaSyAjrNsQRv7ZXntMsIA__JqBM3oNZsJshvg";
+const key = "AIzaSyAMZzszrUCxuUSBo1I7VraT_wSDuMllHMM";
 const genAI = new GoogleGenerativeAI(key);
 
 async function testModel(modelName) {
@@ -13,7 +13,7 @@ async function testModel(modelName) {
         console.log(`Success! Response: ${response.text()}`);
         return true;
     } catch (error) {
-        console.error(`Failed: ${error.message.substring(0, 100)}`);
+        console.error(`Failed: ${error.message}`);
         if (error.response) {
             console.error(`Status: ${error.response.status}`);
         }
@@ -23,17 +23,7 @@ async function testModel(modelName) {
 
 async function runDiagnostics() {
     console.log("Starting diagnostics...");
-
-    const modelsToTest = [
-        "gemini-1.5-flash",
-        "gemini-pro",
-        "gemini-1.0-pro",
-        "models/gemini-1.5-flash"
-    ];
-
-    for (const m of modelsToTest) {
-        await testModel(m);
-    }
+    await testModel("models/gemini-1.5-flash");
 }
 
 runDiagnostics();
