@@ -143,18 +143,6 @@ export default function AdminDashboardPage() {
                                 isActive={currentView === 'settings'}
                                 onClick={() => { setCurrentView('settings'); setSelectedCategory(null); setIsSidebarOpen(false); }}
                             />
-                            <SidebarItem
-                                icon={<Upload size={20} />}
-                                label="Importer CSV"
-                                isActive={currentView === 'import'}
-                                onClick={() => { setCurrentView('import'); setSelectedCategory(null); setIsSidebarOpen(false); }}
-                            />
-                            <SidebarItem
-                                icon={<Search size={20} />}
-                                label="Vérification Ortho"
-                                isActive={currentView === 'spell-check'}
-                                onClick={() => { setCurrentView('spell-check'); setSelectedCategory(null); setIsSidebarOpen(false); }}
-                            />
                         </>
                     )}
                 </nav>

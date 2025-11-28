@@ -1,11 +1,57 @@
 import React, { useState, useEffect } from 'react';
 import { Card } from '../ui/Card';
 import { Button } from '../ui/Button';
-import { Calendar, Save, Loader } from 'lucide-react';
+import { Calendar, Save, Loader, Upload, Search, Settings } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
+import ImportQuestionsPage from '../../pages/ImportQuestionsPage';
+import SpellCheckView from './SpellCheckView';
 
 export default function SettingsManager() {
     const { token, user } = useAuth();
+    const [activeTab, setActiveTab] = useState('general');
+
+    const tabs = [
+        { id: 'general', label: 'Général', icon: Settings },
+        { id: 'import', label: 'Importation', icon: Upload },
+        { id: 'spell-check', label: 'Vérification Ortho', icon: Search },
+    ];
+
+    return (
+        <div className="space-y-6">
+            {/* Tabs */}
+            <div className="flex space-x-1 bg-gray-100 dark:bg-gray-800 p-1 rounded-xl">
+                {tabs.map((tab) => {
+                    const Icon = tab.icon;
+                    return (
+                        <button
+                            key={tab.id}
+                            onClick={() => setActiveTab(tab.id)}
+                            className={`
+                                flex-1 flex items-center justify-center gap-2 px-4 py-2.5 text-sm font-medium rounded-lg transition-all
+                                ${activeTab === tab.id
+                                    ? 'bg-white dark:bg-gray-700 text-blue-600 dark:text-blue-400 shadow-sm'
+                                    : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700/50'
+                                }
+                            `}
+                        >
+                            <Icon size={18} />
+                            {tab.label}
+                        </button>
+                    );
+                })}
+            </div>
+
+            {/* Content */}
+            <div className="mt-6">
+                {activeTab === 'general' && <GeneralSettings token={token} user={user} />}
+                {activeTab === 'import' && <ImportQuestionsPage />}
+                {activeTab === 'spell-check' && <SpellCheckView />}
+            </div>
+        </div>
+    );
+}
+
+function GeneralSettings({ token, user }) {
     const [examDate, setExamDate] = useState('');
     const [loading, setLoading] = useState(true);
     const [saving, setSaving] = useState(false);
@@ -25,7 +71,6 @@ export default function SettingsManager() {
             if (response.ok) {
                 const data = await response.json();
                 if (data.examDate) {
-                    // Format for input type="datetime-local"
                     const date = new Date(data.examDate);
                     const formatted = date.toISOString().slice(0, 16);
                     setExamDate(formatted);
