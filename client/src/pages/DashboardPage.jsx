@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import {
-    Flame, Star, BookOpen, ChevronRight, Lock, Crown
+    Flame, Star, BookOpen, ChevronRight, Lock, Crown,
+    Play, Trophy, Clock, Target, ArrowRight
 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import GamificationWidget from '../components/GamificationWidget';
