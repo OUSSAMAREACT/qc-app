@@ -32,7 +32,7 @@ export default function PaymentPage() {
             price: '500 DH',
             icon: Calendar,
             color: 'purple',
-            features: ['Accès complet pendant 90 jours', 'Idéal pour Préparer pour un temps']
+            features: ['Accès complet pendant 90 jours', 'Idéal pour une préparation ciblée']
         },
         {
             id: '1_YEAR',
