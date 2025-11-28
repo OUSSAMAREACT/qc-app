@@ -66,8 +66,8 @@
 ### Admin View Optimization
 - [x] **CommonModulesView:** Convert to Responsive Grid & Cards
 - [x] **SpecialtyView:** Convert to Responsive Grid & Cards
-- [ ] **CategoryDetailView:** Improve Question Management UI
-- [ ] **WeeklyExamManager:** Improve Exam Creation Flow
+- [x] **CategoryDetailView:** Improve Question Management UI
+- [x] **WeeklyExamManager:** Improve Exam Creation Flow
 
 ### Other
 - [ ] **Optimize Mobile Question UI:** Further refinements if needed
