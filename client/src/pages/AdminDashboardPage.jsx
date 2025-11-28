@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 // Trigger rebuild
 import { Link } from 'react-router-dom';
 import { Button } from '../components/ui/Button';
-import { LayoutDashboard, BookOpen, Award, Users, ArrowLeft, LogOut, ArrowRight, Sun, Moon, Settings, Trophy, Upload } from 'lucide-react';
+import { LayoutDashboard, BookOpen, Award, Users, ArrowLeft, LogOut, ArrowRight, Sun, Moon, Settings, Trophy, Upload, Search } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
 
@@ -148,6 +148,12 @@ export default function AdminDashboardPage() {
                                 label="Importer CSV"
                                 isActive={currentView === 'import'}
                                 onClick={() => { setCurrentView('import'); setSelectedCategory(null); setIsSidebarOpen(false); }}
+                            />
+                            <SidebarItem
+                                icon={<Search size={20} />}
+                                label="Vérification Ortho"
+                                isActive={currentView === 'spell-check'}
+                                onClick={() => { setCurrentView('spell-check'); setSelectedCategory(null); setIsSidebarOpen(false); }}
                             />
                         </>
                     )}
