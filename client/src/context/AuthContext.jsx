@@ -70,7 +70,15 @@ export const AuthProvider = ({ children }) => {
         setUser(null);
     };
 
-    const value = { user, token, login, register, logout, loading, refreshUser: fetchCurrentUser };
+    const forgotPassword = async (email) => {
+        await axios.post('/auth/forgot-password', { email });
+    };
+
+    const resetPassword = async (token, newPassword) => {
+        await axios.post('/auth/reset-password', { token, newPassword });
+    };
+
+    const value = { user, token, login, register, logout, forgotPassword, resetPassword, loading, refreshUser: fetchCurrentUser };
 
     if (loading) {
         return (

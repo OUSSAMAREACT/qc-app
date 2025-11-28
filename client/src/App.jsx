@@ -5,6 +5,8 @@ import { AuthProvider } from './context/AuthContext';
 import { ThemeProvider } from './context/ThemeContext';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
+import ForgotPasswordPage from './pages/ForgotPasswordPage';
+import ResetPasswordPage from './pages/ResetPasswordPage';
 import DashboardPage from './pages/DashboardPage';
 import QuizPage from './pages/QuizPage';
 import ResultPage from './pages/ResultPage';
@@ -32,12 +34,6 @@ const RequireActive = ({ children }) => {
 
   if (loading) return null; // Or a spinner
 
-  // If user is pending and NOT admin, redirect to payment
-  // REMOVED: Freemium model allows ACTIVE status by default
-  // if (user && user.status === 'PENDING' && user.role !== 'ADMIN') {
-  //   return <Navigate to="/payment" />;
-  // }
-
   return children;
 };
 
@@ -61,6 +57,16 @@ function App() {
               <Route path="/register" element={
                 <PublicRoute>
                   <RegisterPage />
+                </PublicRoute>
+              } />
+              <Route path="/forgot-password" element={
+                <PublicRoute>
+                  <ForgotPasswordPage />
+                </PublicRoute>
+              } />
+              <Route path="/reset-password" element={
+                <PublicRoute>
+                  <ResetPasswordPage />
                 </PublicRoute>
               } />
 
