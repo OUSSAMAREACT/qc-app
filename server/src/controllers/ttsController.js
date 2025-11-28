@@ -86,6 +86,11 @@ export const generateSpeech = async (req, res) => {
 
     } catch (error) {
         console.error("TTS Error:", error);
-        res.status(500).json({ message: "Error generating speech", error: error.message });
+        // Return the specific error message to help debugging
+        res.status(500).json({
+            message: "Error generating speech",
+            details: error.message,
+            code: error.status || 500
+        });
     }
 };
