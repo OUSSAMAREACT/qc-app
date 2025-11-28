@@ -16,6 +16,7 @@ import commentRoutes from './routes/commentRoutes.js';
 import notificationRoutes from './routes/notificationRoutes.js';
 import importRoutes from './routes/importRoutes.js';
 import spellCheckRoutes from './routes/spellCheckRoutes.js';
+import ttsRoutes from './routes/ttsRoutes.js';
 
 dotenv.config();
 
@@ -66,6 +67,7 @@ app.use('/api/comments', commentRoutes);
 app.use('/api/notifications', notificationRoutes);
 app.use('/api/import', importRoutes);
 app.use('/api/spell-check', spellCheckRoutes);
+app.use('/api/tts', ttsRoutes);
 
 app.get('/', (req, res) => {
     res.send('Quiz API is running');

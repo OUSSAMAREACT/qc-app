@@ -22,6 +22,10 @@ export default function QuizPage() {
     const [timeLeft, setTimeLeft] = useState(0); // in seconds
     const [totalTime, setTotalTime] = useState(0);
     const timerRef = useRef(null);
+    const audioRef = useRef(null);
+    const [audioCache, setAudioCache] = useState({});
+    const [isAudioLoading, setIsAudioLoading] = useState(false);
+    const [playingQuestionId, setPlayingQuestionId] = useState(null);
 
     const navigate = useNavigate();
     const [searchParams] = useSearchParams();
@@ -37,6 +41,11 @@ export default function QuizPage() {
 
     // Stop speech when moving to next/prev question
     useEffect(() => {
+        if (audioRef.current) {
+            audioRef.current.pause();
+            audioRef.current.currentTime = 0;
+        }
+        setPlayingQuestionId(null);
         window.speechSynthesis.cancel();
     }, [currentIndex]);
 
@@ -116,42 +125,54 @@ export default function QuizPage() {
         });
     };
 
-    const handleSpeak = (question) => {
-        if ('speechSynthesis' in window) {
-            window.speechSynthesis.cancel(); // Stop any previous speech
+    const handleSpeak = async (question) => {
+        // Stop current audio if playing
+        if (audioRef.current) {
+            audioRef.current.pause();
+            audioRef.current.currentTime = 0;
+        }
 
-            // 1. Improve Text Phrasing
-            let textToRead = `Question : ${question.text}. `;
-            question.choices.forEach((choice, index) => {
-                textToRead += `Réponse ${index + 1} : ${choice.text}. `;
-            });
+        if (playingQuestionId === question.id) {
+            setPlayingQuestionId(null);
+            return; // Toggle off
+        }
 
-            const utterance = new SpeechSynthesisUtterance(textToRead);
-            utterance.rate = 0.9; // Slightly slower for better clarity
+        setIsAudioLoading(true);
+        setPlayingQuestionId(question.id);
 
-            // 2. Select a Better Voice
-            // Wait for voices to load (sometimes needed in Chrome)
-            const setVoice = () => {
-                const voices = window.speechSynthesis.getVoices();
-                // Try to find a Google French voice, or any French voice
-                const frenchVoice = voices.find(v => v.lang.startsWith('fr') && v.name.includes('Google'))
-                    || voices.find(v => v.lang.startsWith('fr'));
-
-                if (frenchVoice) {
-                    utterance.voice = frenchVoice;
-                    utterance.lang = frenchVoice.lang;
-                }
-                window.speechSynthesis.speak(utterance);
-            };
-
-            if (window.speechSynthesis.getVoices().length === 0) {
-                window.speechSynthesis.onvoiceschanged = setVoice;
-            } else {
-                setVoice();
+        try {
+            // Check cache
+            if (audioCache[question.id]) {
+                const audio = new Audio(audioCache[question.id]);
+                audioRef.current = audio;
+                audio.play();
+                audio.onended = () => setPlayingQuestionId(null);
+                setIsAudioLoading(false);
+                return;
             }
 
-        } else {
-            alert("Votre navigateur ne supporte pas la lecture audio.");
+            // Format text for Multi-Speaker (Speaker 1 = Question, Speaker 2 = Answers)
+            let textToRead = `Speaker 1: Question. ${question.text}.\n`;
+            question.choices.forEach((choice, index) => {
+                textToRead += `Speaker 2: Réponse ${index + 1}. ${choice.text}.\n`;
+            });
+
+            const res = await axios.post('/api/tts/speak', { text: textToRead }, { responseType: 'blob' });
+
+            const audioUrl = URL.createObjectURL(res.data);
+            setAudioCache(prev => ({ ...prev, [question.id]: audioUrl }));
+
+            const audio = new Audio(audioUrl);
+            audioRef.current = audio;
+            audio.play();
+            audio.onended = () => setPlayingQuestionId(null);
+
+        } catch (error) {
+            console.error("TTS Error:", error);
+            alert("Erreur lors de la génération audio.");
+            setPlayingQuestionId(null);
+        } finally {
+            setIsAudioLoading(false);
         }
     };
 
@@ -315,10 +336,18 @@ export default function QuizPage() {
                                     {currentQuestion.text}
                                     <button
                                         onClick={() => handleSpeak(currentQuestion)}
-                                        className="ml-3 inline-flex items-center justify-center p-2 rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 hover:bg-blue-200 dark:hover:bg-blue-900/50 transition-colors"
-                                        title="Écouter la question"
+                                        className={`ml-3 inline-flex items-center justify-center p-2 rounded-full transition-colors ${playingQuestionId === currentQuestion.id
+                                                ? 'bg-blue-500 text-white animate-pulse'
+                                                : 'bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 hover:bg-blue-200 dark:hover:bg-blue-900/50'
+                                            }`}
+                                        title="Écouter la question (IA)"
+                                        disabled={isAudioLoading && playingQuestionId !== currentQuestion.id}
                                     >
-                                        <Volume2 size={20} />
+                                        {isAudioLoading && playingQuestionId === currentQuestion.id ? (
+                                            <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                                        ) : (
+                                            <Volume2 size={20} />
+                                        )}
                                     </button>
 
                                 </h2>
