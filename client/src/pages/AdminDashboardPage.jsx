@@ -13,7 +13,7 @@ import WeeklyExamManager from '../components/admin/WeeklyExamManager';
 import UserManager from '../components/admin/UserManager';
 import SettingsManager from '../components/admin/SettingsManager';
 import ImportQuestionsPage from './ImportQuestionsPage';
-import QuestionManager from '../components/admin/QuestionManager';
+import QuestionManager from '../components/QuestionManager';
 
 export default function AdminDashboardPage() {
     const { user, logout } = useAuth();
