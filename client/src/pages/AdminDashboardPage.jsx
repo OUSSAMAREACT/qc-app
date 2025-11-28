@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+// Trigger rebuild
 import { Link } from 'react-router-dom';
 import { Button } from '../components/ui/Button';
 import { LayoutDashboard, BookOpen, Award, Users, ArrowLeft, LogOut, ArrowRight, Sun, Moon, Settings, Trophy, Upload } from 'lucide-react';
