@@ -13,6 +13,7 @@ import WeeklyExamManager from '../components/admin/WeeklyExamManager';
 import UserManager from '../components/admin/UserManager';
 import SettingsManager from '../components/admin/SettingsManager';
 import ImportQuestionsPage from './ImportQuestionsPage';
+import QuestionManager from '../components/admin/QuestionManager';
 
 export default function AdminDashboardPage() {
     const { user, logout } = useAuth();
@@ -54,6 +55,18 @@ export default function AdminDashboardPage() {
                 return <SettingsManager />;
             case 'import':
                 return <ImportQuestionsPage />;
+            case 'all-questions':
+                return (
+                    <div className="space-y-6">
+                        <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 p-6">
+                            <div className="mb-6 pb-6 border-b border-gray-100 dark:border-gray-700">
+                                <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-1">Toutes les Questions</h3>
+                                <p className="text-sm text-gray-500 dark:text-gray-400">Gérez l'ensemble des questions de la base de données.</p>
+                            </div>
+                            <QuestionManager />
+                        </div>
+                    </div>
+                );
             default:
                 return <Overview onNavigate={setCurrentView} user={user} />;
         }
@@ -106,6 +119,12 @@ export default function AdminDashboardPage() {
                         label="Vue d'ensemble"
                         isActive={currentView === 'overview' && !selectedCategory}
                         onClick={() => { setCurrentView('overview'); setSelectedCategory(null); setIsSidebarOpen(false); }}
+                    />
+                    <SidebarItem
+                        icon={<BookOpen size={20} />}
+                        label="Toutes les Questions"
+                        isActive={currentView === 'all-questions'}
+                        onClick={() => { setCurrentView('all-questions'); setSelectedCategory(null); setIsSidebarOpen(false); }}
                     />
                     <SidebarItem
                         icon={<BookOpen size={20} />}

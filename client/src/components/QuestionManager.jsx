@@ -210,6 +210,11 @@ export default function QuestionManager({ categoryId }) {
                                             }`}>
                                             {q.difficulty}
                                         </span>
+                                        {!categoryId && q.category && (
+                                            <span className="px-2.5 py-0.5 text-xs rounded-full font-medium border bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-400 border-blue-100 dark:border-blue-900/30">
+                                                {q.category.name}
+                                            </span>
+                                        )}
                                     </div>
                                     <h3 className="font-medium text-gray-900 dark:text-white text-lg group-hover:text-blue-700 dark:group-hover:text-blue-400 transition-colors">{q.text}</h3>
                                     <p className="text-sm text-gray-500 dark:text-gray-400 mt-2 flex items-center gap-2">
