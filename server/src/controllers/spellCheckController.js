@@ -8,10 +8,23 @@ const ai = new GoogleGenAI({ apiKey: "AIzaSyCqbwwv6bOktU70j57vkLjsYEDAHa0bs-Y" }
 
 export const scanQuestions = async (req, res) => {
     try {
-        // Fetch all questions
+        // Pagination parameters
+        const take = req.query.take ? parseInt(req.query.take) : undefined;
+        const skip = req.query.skip ? parseInt(req.query.skip) : undefined;
+
+        console.log(`Spell check request: skip=${skip}, take=${take}`);
+
         const questions = await prisma.question.findMany({
-            orderBy: { id: 'asc' }
+            orderBy: { id: 'asc' },
+            take: take,
+            skip: skip
         });
+
+        if (questions.length === 0) {
+            return res.json([]);
+        }
+
+        console.log(`Processing ${questions.length} questions...`);
 
         // Fetch ignored words
         const ignoredWords = await prisma.ignoredWord.findMany();
@@ -21,6 +34,7 @@ export const scanQuestions = async (req, res) => {
         const batchSize = 15; // Process in batches to avoid limits
 
         for (let i = 0; i < questions.length; i += batchSize) {
+            console.log(`Processing batch ${i / batchSize + 1}/${Math.ceil(questions.length / batchSize)}...`);
             const batch = questions.slice(i, i + batchSize);
 
             // Prepare batch text
@@ -119,5 +133,15 @@ export const ignoreWord = async (req, res) => {
         } else {
             res.status(500).json({ message: "Failed to ignore word" });
         }
+    }
+};
+
+export const getQuestionCount = async (req, res) => {
+    try {
+        const count = await prisma.question.count();
+        res.json({ count });
+    } catch (error) {
+        console.error("Failed to get question count", error);
+        res.status(500).json({ message: "Failed to get count" });
     }
 };

@@ -9,6 +9,7 @@ router.use(authenticateToken);
 router.use(requireSuperAdmin);
 
 router.get('/scan', spellCheckController.scanQuestions);
+router.get('/count', spellCheckController.getQuestionCount);
 router.post('/ignore', spellCheckController.ignoreWord);
 
 export default router;
