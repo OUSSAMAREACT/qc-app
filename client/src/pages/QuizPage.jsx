@@ -222,6 +222,11 @@ export default function QuizPage() {
             audioRef.current = audio;
 
             audio.oncanplaythrough = () => {
+                // CRITICAL: Check if user moved away while buffering
+                if (activeQuestionIdRef.current !== question.id) {
+                    return;
+                }
+
                 audio.play().catch(e => {
                     console.error("Audio play failed:", e);
                     alert("Impossible de lire l'audio. Format non supporté ?");
@@ -230,12 +235,17 @@ export default function QuizPage() {
             };
 
             audio.onerror = (e) => {
+                if (activeQuestionIdRef.current !== question.id) return;
                 console.error("Audio load error:", e);
                 alert(`Erreur de chargement audio. Type: ${res.data.type}, Taille: ${res.data.size} bytes`);
                 setPlayingQuestionId(null);
             };
 
-            audio.onended = () => setPlayingQuestionId(null);
+            audio.onended = () => {
+                if (activeQuestionIdRef.current === question.id) {
+                    setPlayingQuestionId(null);
+                }
+            };
 
         } catch (error) {
             console.error("TTS Error:", error);
