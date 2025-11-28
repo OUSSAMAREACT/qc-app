@@ -25,8 +25,6 @@ export default function QuizPage() {
     const audioRef = useRef(null);
     const [audioCache, setAudioCache] = useState({});
     const [isAudioLoading, setIsAudioLoading] = useState(false);
-    const [audioCache, setAudioCache] = useState({});
-    const [isAudioLoading, setIsAudioLoading] = useState(false);
     const [playingQuestionId, setPlayingQuestionId] = useState(null);
     const activeQuestionIdRef = useRef(null); // Track active question for race conditions
 
@@ -48,13 +46,8 @@ export default function QuizPage() {
             audioRef.current.pause();
             audioRef.current.currentTime = 0;
         }
-        if (audioRef.current) {
-            audioRef.current.pause();
-            audioRef.current.currentTime = 0;
-        }
         setPlayingQuestionId(null);
         activeQuestionIdRef.current = null; // Cancel any pending audio
-        window.speechSynthesis.cancel();
         window.speechSynthesis.cancel();
 
         // Prefetch next question audio
