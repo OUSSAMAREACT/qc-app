@@ -17,6 +17,7 @@ import ModuleCatalogPage from './pages/ModuleCatalogPage';
 import LandingPage from './pages/LandingPage';
 import AboutPage from './pages/AboutPage';
 import PaymentPage from './pages/PaymentPage';
+import ProfileSetupPage from './pages/ProfileSetupPage';
 import PublicRoute from './components/PublicRoute';
 
 import ProtectedRoute from './components/ProtectedRoute';
@@ -32,9 +33,10 @@ const RequireActive = ({ children }) => {
   if (loading) return null; // Or a spinner
 
   // If user is pending and NOT admin, redirect to payment
-  if (user && user.status === 'PENDING' && user.role !== 'ADMIN') {
-    return <Navigate to="/payment" />;
-  }
+  // REMOVED: Freemium model allows ACTIVE status by default
+  // if (user && user.status === 'PENDING' && user.role !== 'ADMIN') {
+  //   return <Navigate to="/payment" />;
+  // }
 
   return children;
 };
@@ -66,6 +68,12 @@ function App() {
               <Route path="/payment" element={
                 <ProtectedRoute>
                   <PaymentPage />
+                </ProtectedRoute>
+              } />
+
+              <Route path="/profile-setup" element={
+                <ProtectedRoute>
+                  <ProfileSetupPage />
                 </ProtectedRoute>
               } />
 

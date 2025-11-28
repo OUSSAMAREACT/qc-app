@@ -34,7 +34,8 @@ export const getCategories = async (req, res) => {
         const formattedCategories = categories.map(cat => ({
             ...cat,
             specialty: cat.specialty?.name || null,
-            specialtyId: cat.specialtyId
+            specialtyId: cat.specialtyId,
+            isFree: cat.isFree // Explicitly include isFree
         }));
 
         res.json(formattedCategories);

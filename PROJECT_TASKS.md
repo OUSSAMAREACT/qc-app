@@ -17,7 +17,12 @@
 - [x] **Implement Super Admin Role**
     - Protect routes (User Management, Settings)
     - Auto-promote specific email to Super Admin
+    - Auto-promote specific email to Super Admin
     - Hide admin features for normal admins
+- [x] **Onboarding & Freemium Access**
+    - [x] **Freemium Model:** New users are ACTIVE but restricted to Free modules
+    - [x] **Profile Setup:** Mandatory step (City, Hospital, Gender, Phone)
+    - [x] **Registration Hardening:** Strict email & password validation
 
 ### UI/UX Improvements
 - [x] **Premium UI/UX Upgrade**

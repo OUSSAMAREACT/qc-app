@@ -57,7 +57,7 @@ export default function RegisterPage() {
         setIsLoading(true);
         try {
             await register(name, email, password, specialty);
-            navigate('/payment');
+            navigate('/profile-setup');
         } catch (err) {
             setError(err.response?.data?.message || "Erreur d'inscription");
         } finally {

@@ -5,7 +5,6 @@ generator client {
 datasource db {
   provider  = "postgresql"
   url       = env("DATABASE_URL")
-  directUrl = env("DIRECT_URL")
 }
 
 model Specialty {
@@ -33,6 +32,12 @@ model User {
   badges      Badge[]
   progress    ExamProgress[]
   
+  // Profile Fields
+  city        String?
+  hospital    String?
+  gender      String?      // "MALE", "FEMALE"
+  phoneNumber String?
+
   // Gamification
   currentStreak Int      @default(0)
   longestStreak Int      @default(0)
@@ -67,6 +72,7 @@ model Category {
   name        String     @unique
   createdAt   DateTime   @default(now())
   specialtyId Int?
+  isFree      Boolean    @default(false)
   specialty   Specialty? @relation(fields: [specialtyId], references: [id])
   questions   Question[]
 }

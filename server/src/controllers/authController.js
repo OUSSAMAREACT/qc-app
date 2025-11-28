@@ -20,6 +20,17 @@ export const register = async (req, res) => {
             return res.status(400).json({ message: "Le nom ne doit contenir que des lettres, des espaces et des tirets." });
         }
 
+        // Validate email format
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email)) {
+            return res.status(400).json({ message: "Format d'email invalide." });
+        }
+
+        // Validate password strength
+        if (password.length < 8) {
+            return res.status(400).json({ message: "Le mot de passe doit contenir au moins 8 caractères." });
+        }
+
         // Hash password
         const hashedPassword = await bcrypt.hash(password, 10);
 
@@ -30,6 +41,7 @@ export const register = async (req, res) => {
                 password: hashedPassword,
                 name,
                 role: "STUDENT",
+                status: "ACTIVE", // Auto-activate for Freemium access
                 specialtyId: specialtyId ? parseInt(specialtyId) : null,
             },
             include: { specialty: true }
@@ -204,12 +216,14 @@ export const updateProfile = async (req, res) => {
         if (req.body.specialtyId) {
             if (user.specialtyId === null) {
                 updates.specialtyId = parseInt(req.body.specialtyId);
-            } else {
-                // If user tries to change it but already has one, we can either ignore or throw error.
-                // Let's ignore it to be safe, or return a message if strict.
-                // For now, we'll just ignore it if they already have one, effectively making it immutable.
             }
         }
+
+        // Profile fields
+        if (req.body.city) updates.city = req.body.city;
+        if (req.body.hospital) updates.hospital = req.body.hospital;
+        if (req.body.gender) updates.gender = req.body.gender;
+        if (req.body.phoneNumber) updates.phoneNumber = req.body.phoneNumber;
 
         const updatedUser = await prisma.user.update({
             where: { id: userId },

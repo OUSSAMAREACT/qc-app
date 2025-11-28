@@ -3,9 +3,40 @@ import prisma from '../prisma.js';
 export const getQuestions = async (req, res) => {
     try {
         const { categoryId, difficulty } = req.query;
+        const userId = req.user?.userId; // Assuming auth middleware populates this
+
+        // Access Control Logic
+        if (userId) {
+            const user = await prisma.user.findUnique({ where: { id: userId } });
+
+            // If user is a basic STUDENT (Freemium), enforce restrictions
+            if (user && user.role === 'STUDENT') {
+                if (categoryId) {
+                    // Check if the requested category is free
+                    const category = await prisma.category.findUnique({ where: { id: parseInt(categoryId) } });
+                    if (category && !category.isFree) {
+                        return res.status(403).json({ message: "Accès réservé aux membres Premium." });
+                    }
+                } else {
+                    // If no specific category requested, only return questions from free categories
+                    // This might be used for "Random Quiz" across all available modules
+                    // We need to filter where category.isFree = true
+                    // However, prisma where clause needs to be adjusted.
+                }
+            }
+        }
+
         const where = {};
         if (categoryId) where.categoryId = parseInt(categoryId);
         if (difficulty) where.difficulty = difficulty;
+
+        // Apply Freemium filter for students if no specific category was checked above (or if we want to be double safe)
+        // Actually, let's do it cleanly:
+        if (req.user?.role === 'STUDENT') {
+            // If fetching by specific category, we already checked it above (or will check it).
+            // If fetching general list, enforce isFree.
+            where.category = { isFree: true };
+        }
 
         const questions = await prisma.question.findMany({
             where,
@@ -16,6 +47,7 @@ export const getQuestions = async (req, res) => {
         });
         res.json(questions);
     } catch (error) {
+        console.error("Get questions error:", error);
         res.status(500).json({ message: "Erreur lors de la récupération des questions." });
     }
 };
