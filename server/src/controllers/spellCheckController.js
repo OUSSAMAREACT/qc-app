@@ -1,27 +1,14 @@
 import { PrismaClient } from '@prisma/client';
-import nspell from 'nspell';
-import frDictionary from 'dictionary-fr';
+import { GoogleGenerativeAI } from '@google/generative-ai';
 
 const prisma = new PrismaClient();
-let spellChecker = null;
 
-// Initialize spell checker
-const initSpellChecker = () => {
-    try {
-        spellChecker = nspell(frDictionary);
-    } catch (err) {
-        console.error('Failed to load dictionary', err);
-    }
-};
-
-initSpellChecker();
+// Initialize Gemini
+const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
 export const scanQuestions = async (req, res) => {
     try {
-        if (!spellChecker) {
-            return res.status(503).json({ message: "Dictionary not loaded yet" });
-        }
-
         // Fetch all questions with choices
         const questions = await prisma.question.findMany({
             include: { choices: true }
@@ -32,29 +19,65 @@ export const scanQuestions = async (req, res) => {
         const ignoredSet = new Set(ignoredWords.map(iw => iw.word.toLowerCase()));
 
         const results = [];
+        const BATCH_SIZE = 20;
 
-        for (const q of questions) {
-            const text = q.text;
-            // Simple tokenization: split by spaces and punctuation
-            const words = text.split(/[\s,.;:!?()"'«»]+/);
-            const typos = [];
+        // Process in batches
+        for (let i = 0; i < questions.length; i += BATCH_SIZE) {
+            const batch = questions.slice(i, i + BATCH_SIZE);
 
-            for (const word of words) {
-                const cleanWord = word.trim();
-                if (cleanWord.length > 1 && !/^\d+$/.test(cleanWord)) { // Ignore single chars and numbers
-                    if (!spellChecker.correct(cleanWord)) {
-                        if (!ignoredSet.has(cleanWord.toLowerCase())) {
-                            typos.push(cleanWord);
+            // Prepare prompt
+            const prompt = `
+                You are a proofreader for French medical exams. 
+                Analyze the following questions for spelling and grammar errors.
+                
+                Rules:
+                1. Ignore technical medical terms, drug names, and Latin terms.
+                2. Ignore proper nouns (author names).
+                3. Flag only REAL spelling or grammar mistakes.
+                4. Return a JSON array of objects.
+                5. Each object must have: "id" (number), "typos" (array of strings - the exact misspelled words), "correction" (string - the corrected sentence).
+                6. Only include questions that have errors.
+                7. Do not include questions with no errors.
+
+                Ignored words (do not flag these): ${Array.from(ignoredSet).join(', ')}
+
+                Questions to analyze:
+                ${JSON.stringify(batch.map(q => ({ id: q.id, text: q.text })))}
+            `;
+
+            try {
+                const result = await model.generateContent(prompt);
+                const response = result.response;
+                const text = response.text();
+
+                // Clean up markdown code blocks if present
+                const cleanText = text.replace(/```json/g, '').replace(/```/g, '').trim();
+
+                // Handle empty response or non-JSON
+                if (!cleanText || cleanText === '[]') continue;
+
+                const batchResults = JSON.parse(cleanText);
+
+                // Merge with original question data
+                batchResults.forEach(resItem => {
+                    const originalQuestion = batch.find(q => q.id === resItem.id);
+                    if (originalQuestion) {
+                        // Filter out ignored words again just in case AI missed the instruction
+                        const validTypos = resItem.typos.filter(t => !ignoredSet.has(t.toLowerCase()));
+
+                        if (validTypos.length > 0) {
+                            results.push({
+                                ...originalQuestion,
+                                typos: validTypos,
+                                suggestion: resItem.correction
+                            });
                         }
                     }
-                }
-            }
-
-            if (typos.length > 0) {
-                results.push({
-                    ...q, // Return full question object
-                    typos: [...new Set(typos)] // Unique typos per question
                 });
+
+            } catch (err) {
+                console.error(`Batch processing failed for index ${i}:`, err);
+                // Continue to next batch even if one fails
             }
         }
 
