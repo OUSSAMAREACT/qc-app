@@ -1,27 +1,13 @@
 import { PrismaClient } from '@prisma/client';
-import nspell from 'nspell';
-import frDictionary from 'dictionary-fr';
+import { GoogleGenAI } from "@google/genai";
 
 const prisma = new PrismaClient();
-let spellChecker = null;
 
-// Initialize spell checker
-const initSpellChecker = () => {
-    try {
-        spellChecker = nspell(frDictionary);
-    } catch (err) {
-        console.error('Failed to load dictionary', err);
-    }
-};
-
-initSpellChecker();
+// Initialize Gemini AI with the working key
+const ai = new GoogleGenAI({ apiKey: "AIzaSyCqbwwv6bOktU70j57vkLjsYEDAHa0bs-Y" });
 
 export const scanQuestions = async (req, res) => {
     try {
-        if (!spellChecker) {
-            return res.status(503).json({ message: "Dictionary not loaded yet" });
-        }
-
         // Fetch all questions
         const questions = await prisma.question.findMany({
             orderBy: { id: 'asc' }
@@ -32,57 +18,91 @@ export const scanQuestions = async (req, res) => {
         const ignoredSet = new Set(ignoredWords.map(iw => iw.word.toLowerCase()));
 
         const results = [];
+        const batchSize = 15; // Process in batches to avoid limits
 
-        for (const q of questions) {
-            const text = q.text;
-            // Tokenize: match words including accents
-            const words = text.match(/[a-zA-Z\u00C0-\u00FF]+(?:[''-][a-zA-Z\u00C0-\u00FF]+)*/g) || [];
+        for (let i = 0; i < questions.length; i += batchSize) {
+            const batch = questions.slice(i, i + batchSize);
 
-            const corrections = [];
+            // Prepare batch text
+            const questionsText = batch.map(q => `ID: ${q.id}\nText: ${q.text}`).join('\n\n');
 
-            for (const word of words) {
-                const cleanWord = word.trim();
-                // Ignore short words, numbers
-                if (cleanWord.length > 1 && !/\d/.test(cleanWord)) {
-                    if (!spellChecker.correct(cleanWord)) {
-                        if (!ignoredSet.has(cleanWord.toLowerCase())) {
-                            // Get suggestions
-                            const suggestions = spellChecker.suggest(cleanWord);
-                            const bestCorrection = suggestions.length > 0 ? suggestions[0] : null;
+            const prompt = `
+You are a professional proofreader for French medical exams. 
+Analyze the following questions for spelling and grammar errors.
 
-                            corrections.push({
-                                original: cleanWord,
-                                correction: bestCorrection || "?" // ? if no suggestion
+RULES:
+1. Identify REAL typos (e.g., "iniative" -> "initiative", "tachycardie" -> "tachycardie" is correct).
+2. IGNORE technical medical terms, drug names, and proper nouns unless they are clearly misspelled.
+3. IGNORE ignored words: ${Array.from(ignoredSet).join(', ')}.
+4. Return ONLY a JSON array.
+
+FORMAT:
+[
+    {
+        "id": 123,
+        "corrections": [
+            { "original": "iniative", "correction": "initiative" }
+        ],
+        "suggestion": "Corrected sentence or explanation"
+    }
+]
+
+If a question has no errors, DO NOT include it in the array.
+
+QUESTIONS TO ANALYZE:
+${questionsText}
+`;
+
+            try {
+                const response = await ai.models.generateContent({
+                    model: "gemini-2.5-pro",
+                    contents: prompt,
+                    config: {
+                        responseMimeType: "application/json"
+                    }
+                });
+
+                const responseText = response.text;
+                // Clean markdown if present
+                const jsonStr = responseText.replace(/```json\n?|\n?```/g, '').trim();
+
+                let batchResults = [];
+                try {
+                    batchResults = JSON.parse(jsonStr);
+                } catch (e) {
+                    console.error("Failed to parse Gemini JSON response:", responseText);
+                    continue;
+                }
+
+                if (Array.isArray(batchResults)) {
+                    for (const result of batchResults) {
+                        const originalQ = batch.find(q => q.id === result.id);
+                        if (originalQ) {
+                            results.push({
+                                ...originalQ,
+                                corrections: result.corrections || [],
+                                suggestion: result.suggestion
                             });
                         }
                     }
                 }
-            }
 
-            if (corrections.length > 0) {
-                // Deduplicate corrections
-                const uniqueCorrections = [];
-                const seen = new Set();
-                for (const c of corrections) {
-                    if (!seen.has(c.original)) {
-                        seen.add(c.original);
-                        uniqueCorrections.push(c);
-                    }
-                }
-
-                results.push({
-                    ...q,
-                    corrections: uniqueCorrections,
-                    suggestion: "Faute(s) détectée(s) par le dictionnaire."
-                });
+            } catch (err) {
+                console.error(`Error processing batch ${i}:`, err);
             }
         }
 
         res.json(results);
 
     } catch (error) {
-        console.error("Spell check scan failed", error);
-        res.status(500).json({ message: "Scan failed" });
+        console.error("AI Spell check scan failed", error);
+        let errorMessage = "Scan failed";
+        if (error.response) {
+            errorMessage = `AI Error: ${error.response.status} ${error.response.statusText || ''}`;
+        } else if (error.message) {
+            errorMessage = `AI Error: ${error.message}`;
+        }
+        res.status(500).json({ message: errorMessage });
     }
 };
 
