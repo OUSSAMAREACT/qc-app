@@ -6,15 +6,12 @@ const prisma = new PrismaClient();
 let spellChecker = null;
 
 // Initialize spell checker
-const initSpellChecker = (callback) => {
-    frDictionary((err, dict) => {
-        if (err) {
-            console.error('Failed to load dictionary', err);
-            return;
-        }
-        spellChecker = nspell(dict);
-        if (callback) callback();
-    });
+const initSpellChecker = () => {
+    try {
+        spellChecker = nspell(frDictionary);
+    } catch (err) {
+        console.error('Failed to load dictionary', err);
+    }
 };
 
 initSpellChecker();
