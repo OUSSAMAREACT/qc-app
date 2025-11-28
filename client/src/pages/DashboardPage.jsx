@@ -2,8 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import {
-    Play, Trophy, Clock, Target, ArrowRight,
-    Flame, Star, BookOpen, ChevronRight
+    Flame, Star, BookOpen, ChevronRight, Lock, Crown
 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import GamificationWidget from '../components/GamificationWidget';
@@ -143,6 +142,33 @@ export default function DashboardPage() {
                 <div className="absolute bottom-0 left-0 -mb-20 -ml-20 w-60 h-60 bg-primary-400/20 rounded-full blur-3xl"></div>
             </motion.div>
 
+            {/* Premium Upgrade Banner */}
+            {user?.role === 'STUDENT' && (
+                <motion.div
+                    variants={itemVariants}
+                    className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-yellow-400 to-orange-500 p-6 text-white shadow-lg"
+                >
+                    <div className="flex flex-col md:flex-row items-center justify-between gap-6 relative z-10">
+                        <div className="flex items-center gap-4">
+                            <div className="p-3 bg-white/20 rounded-full backdrop-blur-sm">
+                                <Crown size={32} />
+                            </div>
+                            <div>
+                                <h3 className="text-xl font-bold">Passez au Premium</h3>
+                                <p className="text-white/90">Débloquez tous les modules, examens et fonctionnalités exclusives.</p>
+                            </div>
+                        </div>
+                        <Link to="/payment">
+                            <button className="bg-white text-orange-600 hover:bg-orange-50 px-6 py-3 rounded-xl font-bold shadow-md transition-colors whitespace-nowrap">
+                                Devenir Premium
+                            </button>
+                        </Link>
+                    </div>
+                    {/* Decor */}
+                    <div className="absolute top-0 right-0 -mt-10 -mr-10 w-40 h-40 bg-white/10 rounded-full blur-2xl"></div>
+                </motion.div>
+            )}
+
             {/* Main Grid */}
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                 {/* Left Column: Stats & Gamification */}
@@ -245,14 +271,25 @@ export default function DashboardPage() {
                                                 </div>
 
                                                 <div className="mt-auto pt-4 border-t border-gray-100 dark:border-gray-700/50">
-                                                    <Link to={`/quiz?category=${encodeURIComponent(cat.name)}`}>
-                                                        <button className="w-full bg-gray-50 dark:bg-gray-800 hover:bg-gray-900 dark:hover:bg-gray-700 text-gray-900 dark:text-white hover:text-white py-3 rounded-xl font-bold transition-all flex items-center justify-between px-4 group/btn">
-                                                            <span>Commencer</span>
-                                                            <div className="w-8 h-8 rounded-full bg-white dark:bg-gray-700 group-hover/btn:bg-primary-500 group-hover/btn:text-white flex items-center justify-center transition-colors shadow-sm">
-                                                                <ArrowRight size={16} />
-                                                            </div>
-                                                        </button>
-                                                    </Link>
+                                                    {user?.role === 'STUDENT' && !cat.isFree ? (
+                                                        <Link to="/payment">
+                                                            <button className="w-full bg-gray-100 dark:bg-gray-800 text-gray-500 dark:text-gray-400 py-3 rounded-xl font-bold transition-all flex items-center justify-between px-4 group/btn hover:bg-gray-200 dark:hover:bg-gray-700">
+                                                                <span className="flex items-center gap-2"><Lock size={16} /> Premium</span>
+                                                                <div className="w-8 h-8 rounded-full bg-white dark:bg-gray-700 flex items-center justify-center transition-colors shadow-sm">
+                                                                    <Lock size={14} />
+                                                                </div>
+                                                            </button>
+                                                        </Link>
+                                                    ) : (
+                                                        <Link to={`/quiz?category=${encodeURIComponent(cat.name)}`}>
+                                                            <button className="w-full bg-gray-50 dark:bg-gray-800 hover:bg-gray-900 dark:hover:bg-gray-700 text-gray-900 dark:text-white hover:text-white py-3 rounded-xl font-bold transition-all flex items-center justify-between px-4 group/btn">
+                                                                <span>Commencer</span>
+                                                                <div className="w-8 h-8 rounded-full bg-white dark:bg-gray-700 group-hover/btn:bg-primary-500 group-hover/btn:text-white flex items-center justify-center transition-colors shadow-sm">
+                                                                    <ArrowRight size={16} />
+                                                                </div>
+                                                            </button>
+                                                        </Link>
+                                                    )}
                                                 </div>
                                             </div>
                                         </motion.div>
@@ -330,14 +367,25 @@ export default function DashboardPage() {
                                                     </div>
 
                                                     <div className="mt-auto pt-4 border-t border-gray-100 dark:border-gray-700/50">
-                                                        <Link to={`/quiz?category=${encodeURIComponent(cat.name)}`}>
-                                                            <button className="w-full bg-gray-50 dark:bg-gray-800 hover:bg-gray-900 dark:hover:bg-gray-700 text-gray-900 dark:text-white hover:text-white py-3 rounded-xl font-bold transition-all flex items-center justify-between px-4 group/btn">
-                                                                <span>Commencer</span>
-                                                                <div className="w-8 h-8 rounded-full bg-white dark:bg-gray-700 group-hover/btn:bg-yellow-500 group-hover/btn:text-white flex items-center justify-center transition-colors shadow-sm">
-                                                                    <ArrowRight size={16} />
-                                                                </div>
-                                                            </button>
-                                                        </Link>
+                                                        {user?.role === 'STUDENT' && !cat.isFree ? (
+                                                            <Link to="/payment">
+                                                                <button className="w-full bg-gray-100 dark:bg-gray-800 text-gray-500 dark:text-gray-400 py-3 rounded-xl font-bold transition-all flex items-center justify-between px-4 group/btn hover:bg-gray-200 dark:hover:bg-gray-700">
+                                                                    <span className="flex items-center gap-2"><Lock size={16} /> Premium</span>
+                                                                    <div className="w-8 h-8 rounded-full bg-white dark:bg-gray-700 flex items-center justify-center transition-colors shadow-sm">
+                                                                        <Lock size={14} />
+                                                                    </div>
+                                                                </button>
+                                                            </Link>
+                                                        ) : (
+                                                            <Link to={`/quiz?category=${encodeURIComponent(cat.name)}`}>
+                                                                <button className="w-full bg-gray-50 dark:bg-gray-800 hover:bg-gray-900 dark:hover:bg-gray-700 text-gray-900 dark:text-white hover:text-white py-3 rounded-xl font-bold transition-all flex items-center justify-between px-4 group/btn">
+                                                                    <span>Commencer</span>
+                                                                    <div className="w-8 h-8 rounded-full bg-white dark:bg-gray-700 group-hover/btn:bg-yellow-500 group-hover/btn:text-white flex items-center justify-center transition-colors shadow-sm">
+                                                                        <ArrowRight size={16} />
+                                                                    </div>
+                                                                </button>
+                                                            </Link>
+                                                        )}
                                                     </div>
                                                 </div>
                                             </motion.div>
