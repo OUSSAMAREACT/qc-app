@@ -14,6 +14,7 @@ import WeeklyExamManager from '../components/admin/WeeklyExamManager';
 import UserManager from '../components/admin/UserManager';
 import SettingsManager from '../components/admin/SettingsManager';
 import ImportQuestionsPage from './ImportQuestionsPage';
+import SpellCheckView from '../components/admin/SpellCheckView';
 
 export default function AdminDashboardPage() {
     const { user, logout } = useAuth();
@@ -55,6 +56,8 @@ export default function AdminDashboardPage() {
                 return <SettingsManager />;
             case 'import':
                 return <ImportQuestionsPage />;
+            case 'spell-check':
+                return <SpellCheckView />;
             default:
                 return <Overview onNavigate={setCurrentView} user={user} />;
         }
