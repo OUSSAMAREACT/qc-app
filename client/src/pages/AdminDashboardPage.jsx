@@ -16,6 +16,7 @@ import SettingsManager from '../components/admin/SettingsManager';
 import ImportQuestionsPage from './ImportQuestionsPage';
 import SpellCheckView from '../components/admin/SpellCheckView';
 import AdminPaymentView from '../components/admin/AdminPaymentView';
+import AdminAnnouncementView from '../components/admin/AdminAnnouncementView';
 
 export default function AdminDashboardPage() {
     const { user, logout } = useAuth();

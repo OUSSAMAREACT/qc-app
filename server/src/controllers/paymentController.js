@@ -1,5 +1,5 @@
 import prisma from '../prisma.js';
-import { sendPaymentApprovedEmail } from '../services/emailService.js';
+import { sendPaymentApprovedEmail, sendReceiptUploadedEmail } from '../services/emailService.js';
 import { createNotification } from './notificationController.js';
 import path from 'path';
 import fs from 'fs';
@@ -43,6 +43,16 @@ export const uploadReceipt = async (req, res) => {
                 status: 'PENDING'
             }
         });
+
+        // Notify Admin
+        // Ideally, fetch Super Admin email from DB or use an env var.
+        // For now, we'll send to the configured EMAIL_FROM or a specific ADMIN_EMAIL env var if it exists.
+        const adminEmail = process.env.ADMIN_EMAIL || process.env.EMAIL_FROM;
+        if (adminEmail) {
+            // Fetch user name for the email
+            const user = await prisma.user.findUnique({ where: { id: userId }, select: { name: true } });
+            sendReceiptUploadedEmail(adminEmail, user?.name || 'Étudiant', planType);
+        }
 
         res.status(201).json({ message: "Reçu envoyé avec succès. En attente de validation.", payment });
     } catch (error) {

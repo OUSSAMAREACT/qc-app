@@ -145,3 +145,28 @@ export const sendAnnouncementEmail = async (email, subject, message) => {
         return null;
     }
 };
+
+export const sendReceiptUploadedEmail = async (adminEmail, studentName, planType) => {
+    try {
+        const info = await transporter.sendMail({
+            from: '"QCMECHELLE11 System" <' + (process.env.EMAIL_FROM || process.env.EMAIL_USER) + '>',
+            to: adminEmail,
+            subject: "Nouveau reçu de paiement téléchargé",
+            html: `
+                <div style="font-family: Arial, sans-serif; color: #333;">
+                    <h3>Nouveau paiement en attente !</h3>
+                    <p>L'étudiant <strong>${studentName}</strong> a téléchargé un reçu pour le plan <strong>${planType}</strong>.</p>
+                    <br>
+                    <a href="${process.env.FRONTEND_URL || 'http://localhost:5173'}/admin" style="background-color: #2196F3; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;">Voir les paiements</a>
+                    <br><br>
+                    <p>Système QCMECHELLE11</p>
+                </div>
+            `,
+        });
+        console.log("Receipt notification email sent to admin: %s", info.messageId);
+        return info;
+    } catch (error) {
+        console.error("Error sending receipt notification email:", error);
+        return null;
+    }
+};
