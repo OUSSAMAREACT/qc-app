@@ -305,12 +305,12 @@ export default function QuizPage() {
                         transition={{ duration: 0.3, ease: "easeOut" }}
                         className="w-full"
                     >
-                        <Card className="min-h-[400px] md:min-h-[450px] flex flex-col bg-white/80 dark:bg-gray-800/80 backdrop-blur-xl border border-white/60 dark:border-gray-700 shadow-[0_20px_50px_-12px_rgba(0,0,0,0.1)] dark:shadow-[0_20px_50px_-12px_rgba(0,0,0,0.3)] rounded-3xl overflow-hidden relative transition-colors duration-300">
+                        <Card className="min-h-[400px] md:min-h-[450px] flex flex-col bg-white/80 dark:bg-gray-800/80 backdrop-blur-xl border border-white/60 dark:border-gray-700 shadow-[0_20px_50px_-12px_rgba(0,0,0,0.1)] dark:shadow-[0_20px_50px_-12px_rgba(0,0,0,0.3)] rounded-3xl overflow-hidden relative transition-colors duration-300 px-4 py-6 md:p-6">
                             {/* Decorative background blob */}
                             <div className="absolute -top-20 -right-20 w-64 h-64 bg-blue-50 dark:bg-blue-900/20 rounded-full blur-3xl opacity-50 pointer-events-none"></div>
                             <div className="absolute -bottom-20 -left-20 w-64 h-64 bg-indigo-50 dark:bg-indigo-900/20 rounded-full blur-3xl opacity-50 pointer-events-none"></div>
 
-                            <div className="p-4 md:p-10 flex flex-col flex-1 relative z-10">
+                            <div className="py-4 px-0 md:p-10 flex flex-col flex-1 relative z-10">
                                 <h2 className="text-lg md:text-3xl font-heading font-bold mb-4 md:mb-10 text-gray-800 dark:text-gray-100 leading-tight">
                                     {currentQuestion.text}
                                     <button
