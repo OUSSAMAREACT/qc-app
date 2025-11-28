@@ -39,7 +39,13 @@ RULES:
 
 FORMAT:
 [
-  { "id": 123, "typos": ["badword"], "suggestion": "Corrected sentence or explanation" }
+  { 
+    "id": 123, 
+    "corrections": [
+      { "original": "iniative", "correction": "initiative" }
+    ],
+    "suggestion": "Corrected sentence or explanation" 
+  }
 ]
 
 If a question has no errors, DO NOT include it in the array.
@@ -76,15 +82,14 @@ ${questionsText}
                         if (originalQ) {
                             results.push({
                                 ...originalQ,
-                                typos: result.typos || [],
+                                corrections: result.corrections || [],
                                 suggestion: result.suggestion
                             });
                         }
                     }
                 }
-
             } catch (err) {
-                console.error(`Error processing batch ${i}:`, err);
+                console.error(`Error processing batch ${i}: `, err);
                 // Continue to next batch instead of failing everything
             }
         }

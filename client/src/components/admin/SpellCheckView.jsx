@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { Button } from '../ui/Button';
-import { Search, Check, X, AlertTriangle, Edit2, EyeOff } from 'lucide-react';
+import { Search, Check, X, AlertTriangle, Edit2, EyeOff, Wand2, CheckCircle } from 'lucide-react';
 import QuestionForm from '../QuestionForm';
 
 export default function SpellCheckView() {
@@ -32,6 +32,40 @@ export default function SpellCheckView() {
         }
     };
 
+    const handleApplyCorrection = async (questionId, original, correction) => {
+        try {
+            const question = results.find(q => q.id === questionId);
+            if (!question) return;
+
+            // Replace the word in the text (case insensitive but preserving original case if possible, 
+            // but here we usually want the correction's case)
+            const newText = question.text.replace(new RegExp(original, 'gi'), correction);
+
+            await axios.put(`/questions/${questionId}`, {
+                ...question,
+                text: newText
+            });
+
+            // Update local state
+            setResults(prev => prev.map(q => {
+                if (q.id === questionId) {
+                    // Remove the applied correction from the list
+                    const newCorrections = q.corrections.filter(c => c.original !== original);
+                    return {
+                        ...q,
+                        text: newText,
+                        corrections: newCorrections
+                    };
+                }
+                return q;
+            }).filter(q => q.corrections && q.corrections.length > 0)); // Remove if no more corrections
+
+        } catch (error) {
+            console.error("Failed to apply correction", error);
+            alert("Erreur lors de la correction");
+        }
+    };
+
     const handleEditSuccess = () => {
         setEditingQuestion(null);
         handleScan(); // Refresh results
@@ -58,69 +92,97 @@ export default function SpellCheckView() {
             <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 p-6">
                 <div className="flex items-center justify-between mb-6">
                     <div>
-                        <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-1">Vérification Orthographique</h3>
-                        <p className="text-sm text-gray-500 dark:text-gray-400">Analysez la base de questions pour détecter les fautes de frappe.</p>
+                        <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-1">Correction Assistée par IA</h3>
+                        <p className="text-sm text-gray-500 dark:text-gray-400">Analysez la base de questions avec Gemini 3 Pro pour détecter et corriger les fautes.</p>
                     </div>
                     <Button onClick={handleScan} isLoading={scanning} icon={Search}>
-                        Lancer l'analyse
+                        {scanning ? 'Analyse en cours...' : "Lancer l'analyse IA"}
                     </Button>
                 </div>
 
                 {results && (
                     <div className="space-y-4">
-                        <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400 bg-gray-50 dark:bg-gray-900/50 p-3 rounded-lg">
-                            <AlertTriangle size={16} className="text-yellow-500" />
-                            <span>{results.length} questions avec des fautes potentielles trouvées.</span>
+                        <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400 bg-blue-50 dark:bg-blue-900/20 p-3 rounded-lg border border-blue-100 dark:border-blue-900/30">
+                            <Wand2 size={16} className="text-blue-500" />
+                            <span>{results.length} questions avec des suggestions de correction.</span>
                         </div>
 
                         {results.length === 0 && !scanning && (
                             <div className="text-center py-12 text-gray-500">
-                                <Check size={48} className="mx-auto mb-4 text-green-500" />
-                                <p>Aucune faute détectée !</p>
+                                <CheckCircle size={48} className="mx-auto mb-4 text-green-500" />
+                                <p>Aucune faute détectée par l'IA !</p>
                             </div>
                         )}
 
                         <div className="grid gap-4">
                             {results.map(item => (
-                                <div key={item.id} className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-4 hover:border-blue-500 transition-colors">
-                                    <div className="flex justify-between items-start gap-4">
-                                        <div className="flex-1">
-                                            <p className="text-gray-900 dark:text-white font-medium mb-3">
-                                                {item.text.split(/(\s+)/).map((part, i) => {
-                                                    const cleanPart = part.trim().replace(/[.,;:!?()]/g, '');
-                                                    const isTypo = item.typos.includes(cleanPart) && !ignoredWords.has(cleanPart.toLowerCase());
-                                                    return isTypo ? (
-                                                        <span key={i} className="bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400 px-1 rounded border-b-2 border-red-500">
-                                                            {part}
-                                                        </span>
-                                                    ) : part;
-                                                })}
-                                            </p>
+                                <div key={item.id} className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-6 hover:border-blue-500 transition-colors shadow-sm">
+                                    <div className="flex flex-col gap-4">
+                                        {/* Original Text with Highlights */}
+                                        <div className="text-gray-900 dark:text-white text-lg leading-relaxed">
+                                            {item.text.split(/(\s+)/).map((part, i) => {
+                                                const cleanPart = part.trim().replace(/[.,;:!?()]/g, '');
+                                                const correction = item.corrections?.find(c => c.original.toLowerCase() === cleanPart.toLowerCase());
 
-                                            <div className="flex flex-wrap gap-2 mt-2">
-                                                {item.typos.filter(w => !ignoredWords.has(w.toLowerCase())).map(word => (
-                                                    <div key={word} className="flex items-center gap-2 bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-400 px-2 py-1 rounded-md text-sm border border-red-100 dark:border-red-900/30">
-                                                        <span>{word}</span>
-                                                        <button
-                                                            onClick={() => handleIgnore(word)}
-                                                            className="hover:bg-red-100 dark:hover:bg-red-900/40 p-0.5 rounded transition-colors"
-                                                            title="Ignorer ce mot"
-                                                        >
-                                                            <EyeOff size={12} />
-                                                        </button>
-                                                    </div>
-                                                ))}
-                                            </div>
+                                                return correction ? (
+                                                    <span key={i} className="bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400 px-1 rounded border-b-2 border-red-500 font-medium" title={`Suggestion: ${correction.correction}`}>
+                                                        {part}
+                                                    </span>
+                                                ) : part;
+                                            })}
                                         </div>
 
-                                        <Button
-                                            size="sm"
-                                            variant="secondary"
-                                            icon={Edit2}
-                                            onClick={() => setEditingQuestion(item)}
-                                        >
-                                            Modifier
-                                        </Button>
+                                        {/* Suggestions Area */}
+                                        {item.corrections && item.corrections.length > 0 && (
+                                            <div className="bg-gray-50 dark:bg-gray-900/50 rounded-xl p-4 border border-gray-100 dark:border-gray-700">
+                                                <h4 className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-3 flex items-center gap-2">
+                                                    <Wand2 size={14} /> Suggestions de correction
+                                                </h4>
+                                                <div className="flex flex-wrap gap-3">
+                                                    {item.corrections.map((corr, idx) => (
+                                                        <div key={idx} className="flex items-center gap-3 bg-white dark:bg-gray-800 p-2 pr-3 rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm">
+                                                            <div className="flex flex-col">
+                                                                <span className="text-xs text-red-500 line-through">{corr.original}</span>
+                                                                <span className="text-sm font-bold text-green-600 dark:text-green-400">{corr.correction}</span>
+                                                            </div>
+                                                            <div className="h-8 w-px bg-gray-200 dark:bg-gray-700 mx-1"></div>
+                                                            <button
+                                                                onClick={() => handleApplyCorrection(item.id, corr.original, corr.correction)}
+                                                                className="p-1.5 rounded-md bg-green-50 text-green-600 hover:bg-green-100 dark:bg-green-900/20 dark:text-green-400 dark:hover:bg-green-900/40 transition-colors"
+                                                                title="Appliquer la correction"
+                                                            >
+                                                                <Check size={16} />
+                                                            </button>
+                                                            <button
+                                                                onClick={() => handleIgnore(corr.original)}
+                                                                className="p-1.5 rounded-md bg-gray-100 text-gray-500 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-400 dark:hover:bg-gray-600 transition-colors"
+                                                                title="Ignorer"
+                                                            >
+                                                                <EyeOff size={16} />
+                                                            </button>
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                            </div>
+                                        )}
+
+                                        {/* AI Explanation */}
+                                        {item.suggestion && (
+                                            <div className="text-sm text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/10 p-3 rounded-lg">
+                                                <span className="font-bold">Note IA:</span> {item.suggestion}
+                                            </div>
+                                        )}
+
+                                        <div className="flex justify-end pt-2 border-t border-gray-100 dark:border-gray-700">
+                                            <Button
+                                                size="sm"
+                                                variant="ghost"
+                                                icon={Edit2}
+                                                onClick={() => setEditingQuestion(item)}
+                                            >
+                                                Modifier manuellement
+                                            </Button>
+                                        </div>
                                     </div>
                                 </div>
                             ))}
