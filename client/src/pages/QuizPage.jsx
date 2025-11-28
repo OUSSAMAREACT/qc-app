@@ -186,7 +186,7 @@ export default function QuizPage() {
 
             audio.onerror = (e) => {
                 console.error("Audio load error:", e);
-                alert("Erreur de chargement audio.");
+                alert(`Erreur de chargement audio. Type: ${res.data.type}, Taille: ${res.data.size} bytes`);
                 setPlayingQuestionId(null);
             };
 
