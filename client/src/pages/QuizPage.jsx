@@ -157,7 +157,7 @@ export default function QuizPage() {
                 textToRead += `Speaker 2: Réponse ${index + 1}. ${choice.text}.\n`;
             });
 
-            const res = await axios.post('/api/tts/speak', { text: textToRead }, { responseType: 'blob' });
+            const res = await axios.post('/tts/speak', { text: textToRead }, { responseType: 'blob' });
 
             const audioUrl = URL.createObjectURL(res.data);
             setAudioCache(prev => ({ ...prev, [question.id]: audioUrl }));
@@ -337,8 +337,8 @@ export default function QuizPage() {
                                     <button
                                         onClick={() => handleSpeak(currentQuestion)}
                                         className={`ml-3 inline-flex items-center justify-center p-2 rounded-full transition-colors ${playingQuestionId === currentQuestion.id
-                                                ? 'bg-blue-500 text-white animate-pulse'
-                                                : 'bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 hover:bg-blue-200 dark:hover:bg-blue-900/50'
+                                            ? 'bg-blue-500 text-white animate-pulse'
+                                            : 'bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 hover:bg-blue-200 dark:hover:bg-blue-900/50'
                                             }`}
                                         title="Écouter la question (IA)"
                                         disabled={isAudioLoading && playingQuestionId !== currentQuestion.id}
