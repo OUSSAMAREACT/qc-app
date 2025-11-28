@@ -50,7 +50,8 @@ export default function QuestionManager({ categoryId }) {
         if (!window.confirm("Supprimer cette question ?")) return;
         try {
             await axios.delete(`/questions/${id}`);
-            fetchQuestions();
+            setQuestions(prev => prev.filter(q => q.id !== id));
+            setSelectedQuestions(prev => prev.filter(qId => qId !== id));
         } catch (error) {
             alert("Erreur lors de la suppression");
         }
@@ -193,8 +194,8 @@ export default function QuestionManager({ categoryId }) {
                         <Card
                             key={q.id}
                             className={`group flex justify-between items-start hover:shadow-lg transition-all duration-200 cursor-default border bg-white dark:bg-gray-800 ${selectedQuestions.includes(q.id)
-                                    ? 'border-blue-500 ring-1 ring-blue-500 bg-blue-50/10 dark:bg-blue-900/10'
-                                    : 'border-gray-100 dark:border-gray-700 hover:border-blue-200 dark:hover:border-blue-700'
+                                ? 'border-blue-500 ring-1 ring-blue-500 bg-blue-50/10 dark:bg-blue-900/10'
+                                : 'border-gray-100 dark:border-gray-700 hover:border-blue-200 dark:hover:border-blue-700'
                                 }`}
                         >
                             <div className="flex items-start gap-4 flex-1 pr-4">
