@@ -159,12 +159,37 @@ export default function QuizPage() {
 
             const res = await axios.post('/tts/speak', { text: textToRead }, { responseType: 'blob' });
 
+            // Check if the response is actually audio
+            if (res.data.type === 'application/json') {
+                // It's an error message disguised as a blob
+                const text = await res.data.text();
+                const error = JSON.parse(text);
+                console.error("TTS Backend Error:", error);
+                alert(`Erreur TTS: ${error.message || 'Erreur inconnue'}`);
+                setPlayingQuestionId(null);
+                return;
+            }
+
             const audioUrl = URL.createObjectURL(res.data);
             setAudioCache(prev => ({ ...prev, [question.id]: audioUrl }));
 
             const audio = new Audio(audioUrl);
             audioRef.current = audio;
-            audio.play();
+
+            audio.oncanplaythrough = () => {
+                audio.play().catch(e => {
+                    console.error("Audio play failed:", e);
+                    alert("Impossible de lire l'audio. Format non supporté ?");
+                    setPlayingQuestionId(null);
+                });
+            };
+
+            audio.onerror = (e) => {
+                console.error("Audio load error:", e);
+                alert("Erreur de chargement audio.");
+                setPlayingQuestionId(null);
+            };
+
             audio.onended = () => setPlayingQuestionId(null);
 
         } catch (error) {
