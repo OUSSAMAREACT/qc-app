@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 // Trigger rebuild
 import { Link } from 'react-router-dom';
 import { Button } from '../components/ui/Button';
-import { LayoutDashboard, BookOpen, Award, Users, ArrowLeft, LogOut, ArrowRight, Sun, Moon, Settings, Trophy, Upload, Search } from 'lucide-react';
+import { LayoutDashboard, BookOpen, Award, Users, ArrowLeft, LogOut, ArrowRight, Sun, Moon, Settings, Trophy, Upload, Search, CreditCard } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
 
@@ -15,6 +15,7 @@ import UserManager from '../components/admin/UserManager';
 import SettingsManager from '../components/admin/SettingsManager';
 import ImportQuestionsPage from './ImportQuestionsPage';
 import SpellCheckView from '../components/admin/SpellCheckView';
+import AdminPaymentView from '../components/admin/AdminPaymentView';
 
 export default function AdminDashboardPage() {
     const { user, logout } = useAuth();
@@ -58,6 +59,8 @@ export default function AdminDashboardPage() {
                 return <ImportQuestionsPage />;
             case 'spell-check':
                 return <SpellCheckView />;
+            case 'payments':
+                return <AdminPaymentView />;
             default:
                 return <Overview onNavigate={setCurrentView} user={user} />;
         }
@@ -142,6 +145,12 @@ export default function AdminDashboardPage() {
                                 label="Paramètres"
                                 isActive={currentView === 'settings'}
                                 onClick={() => { setCurrentView('settings'); setSelectedCategory(null); setIsSidebarOpen(false); }}
+                            />
+                            <SidebarItem
+                                icon={<CreditCard size={20} />}
+                                label="Paiements"
+                                isActive={currentView === 'payments'}
+                                onClick={() => { setCurrentView('payments'); setSelectedCategory(null); setIsSidebarOpen(false); }}
                             />
                         </>
                     )}

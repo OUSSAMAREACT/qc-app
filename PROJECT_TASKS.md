@@ -66,7 +66,10 @@
 ## 🚧 Pending / Future Tasks
 
 ### Payment Workflow
-- [ ] **Frontend:** Add "Upload Receipt" feature (Optional but recommended)
+- [ ] **Backend:** Create Payment Model & Controller (Upload, List, Approve)
+- [ ] **Frontend:** Add "Upload Receipt" to PaymentPage
+- [ ] **Frontend:** Create Admin Payment Verification View
+- [ ] **Logic:** Auto-promote user to PREMIUM role upon approval
 
 ### Admin View Optimization
 - [x] **CommonModulesView:** Convert to Responsive Grid & Cards

@@ -17,6 +17,12 @@ import notificationRoutes from './routes/notificationRoutes.js';
 import importRoutes from './routes/importRoutes.js';
 import spellCheckRoutes from './routes/spellCheckRoutes.js';
 import ttsRoutes from './routes/ttsRoutes.js';
+import paymentRoutes from './routes/paymentRoutes.js';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 dotenv.config();
 
@@ -50,6 +56,8 @@ app.use(cors({
 }));
 
 app.use(express.json());
+// Serve uploaded files
+app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
 
 // Routes
 app.use('/api/auth', authRoutes);
@@ -68,6 +76,7 @@ app.use('/api/notifications', notificationRoutes);
 app.use('/api/import', importRoutes);
 app.use('/api/spell-check', spellCheckRoutes);
 app.use('/api/tts', ttsRoutes);
+app.use('/api/payments', paymentRoutes);
 
 app.get('/', (req, res) => {
     res.send('Quiz API is running');
