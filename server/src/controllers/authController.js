@@ -64,7 +64,11 @@ export const register = async (req, res) => {
                 role: user.role,
                 status: user.status,
                 specialty: user.specialty,
-                onboardingCompleted: user.onboardingCompleted
+                onboardingCompleted: user.onboardingCompleted,
+                city: user.city,
+                hospital: user.hospital,
+                gender: user.gender,
+                phoneNumber: user.phoneNumber
             }
         });
     } catch (error) {
@@ -141,7 +145,11 @@ export const login = async (req, res) => {
                 role: user.role,
                 status: user.status,
                 specialty: user.specialty,
-                onboardingCompleted: user.onboardingCompleted
+                onboardingCompleted: user.onboardingCompleted,
+                city: user.city,
+                hospital: user.hospital,
+                gender: user.gender,
+                phoneNumber: user.phoneNumber
             }
         });
     } catch (error) {
@@ -174,7 +182,11 @@ export const getMe = async (req, res) => {
                 status: user.status,
                 specialty: user.specialty,
                 badges: user.badges,
-                onboardingCompleted: user.onboardingCompleted
+                onboardingCompleted: user.onboardingCompleted,
+                city: user.city,
+                hospital: user.hospital,
+                gender: user.gender,
+                phoneNumber: user.phoneNumber
             }
         });
     } catch (error) {
@@ -239,7 +251,11 @@ export const updateProfile = async (req, res) => {
                 name: updatedUser.name,
                 role: updatedUser.role,
                 specialty: updatedUser.specialty, // Return full specialty object
-                onboardingCompleted: updatedUser.onboardingCompleted
+                onboardingCompleted: updatedUser.onboardingCompleted,
+                city: updatedUser.city,
+                hospital: updatedUser.hospital,
+                gender: updatedUser.gender,
+                phoneNumber: updatedUser.phoneNumber
             }
         });
     } catch (error) {
