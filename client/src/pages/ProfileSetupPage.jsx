@@ -5,7 +5,8 @@ import { useAuth } from '../context/AuthContext';
 import { Button } from '../components/ui/Button';
 import { Input } from '../components/ui/Input';
 import { Card } from '../components/ui/Card';
-import { User, Building2, MapPin, Phone, CheckCircle } from 'lucide-react';
+import { User, Building2, MapPin, Phone, Map } from 'lucide-react';
+import { moroccoRegions } from '../data/moroccoData';
 
 export default function ProfileSetupPage() {
     const { user, refreshUser } = useAuth();
@@ -13,6 +14,7 @@ export default function ProfileSetupPage() {
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState('');
 
+    const [selectedRegion, setSelectedRegion] = useState('');
     const [formData, setFormData] = useState({
         city: '',
         hospital: '',
@@ -20,8 +22,17 @@ export default function ProfileSetupPage() {
         phoneNumber: '+212 '
     });
 
+    const availableCities = selectedRegion
+        ? moroccoRegions.find(r => r.name === selectedRegion)?.cities || []
+        : [];
+
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
+    };
+
+    const handleRegionChange = (e) => {
+        setSelectedRegion(e.target.value);
+        setFormData({ ...formData, city: '' }); // Reset city when region changes
     };
 
     const handleSubmit = async (e) => {
@@ -67,26 +78,61 @@ export default function ProfileSetupPage() {
                 )}
 
                 <form onSubmit={handleSubmit} className="space-y-6">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <Input
-                            label="Ville"
-                            name="city"
-                            placeholder="Casablanca"
-                            value={formData.city}
-                            onChange={handleChange}
-                            required
-                            leftIcon={<MapPin size={18} />}
-                        />
-                        <Input
-                            label="Hôpital / Lieu de travail"
-                            name="hospital"
-                            placeholder="CHU Ibn Rochd"
-                            value={formData.hospital}
-                            onChange={handleChange}
-                            required
-                            leftIcon={<Building2 size={18} />}
-                        />
+                    <div className="space-y-4">
+                        {/* Region Selection */}
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Région</label>
+                            <div className="relative">
+                                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400">
+                                    <Map size={18} />
+                                </div>
+                                <select
+                                    value={selectedRegion}
+                                    onChange={handleRegionChange}
+                                    required
+                                    className="w-full pl-10 pr-4 py-2 rounded-lg border bg-gray-50 dark:bg-gray-700 border-gray-200 dark:border-gray-600 focus:bg-white dark:focus:bg-gray-600 transition-colors text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 outline-none appearance-none"
+                                >
+                                    <option value="" disabled>Sélectionner votre région</option>
+                                    {moroccoRegions.map((region) => (
+                                        <option key={region.name} value={region.name}>{region.name}</option>
+                                    ))}
+                                </select>
+                            </div>
+                        </div>
+
+                        {/* City Selection */}
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Ville / Province</label>
+                            <div className="relative">
+                                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400">
+                                    <MapPin size={18} />
+                                </div>
+                                <select
+                                    name="city"
+                                    value={formData.city}
+                                    onChange={handleChange}
+                                    required
+                                    disabled={!selectedRegion}
+                                    className="w-full pl-10 pr-4 py-2 rounded-lg border bg-gray-50 dark:bg-gray-700 border-gray-200 dark:border-gray-600 focus:bg-white dark:focus:bg-gray-600 transition-colors text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 outline-none appearance-none disabled:opacity-50 disabled:cursor-not-allowed"
+                                >
+                                    <option value="" disabled>Sélectionner votre ville</option>
+                                    {availableCities.map((city) => (
+                                        <option key={city} value={city}>{city}</option>
+                                    ))}
+                                </select>
+                            </div>
+                        </div>
                     </div>
+
+                    <Input
+                        label="Hôpital / Lieu de travail"
+                        name="hospital"
+                        placeholder="Ex: CHU Ibn Rochd, Hôpital Militaire..."
+                        value={formData.hospital}
+                        onChange={handleChange}
+                        required
+                        leftIcon={<Building2 size={18} />}
+                    />
 
                     <div>
                         <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Sexe</label>
