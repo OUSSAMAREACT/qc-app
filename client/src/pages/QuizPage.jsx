@@ -25,7 +25,10 @@ export default function QuizPage() {
     const audioRef = useRef(null);
     const [audioCache, setAudioCache] = useState({});
     const [isAudioLoading, setIsAudioLoading] = useState(false);
+    const [audioCache, setAudioCache] = useState({});
+    const [isAudioLoading, setIsAudioLoading] = useState(false);
     const [playingQuestionId, setPlayingQuestionId] = useState(null);
+    const activeQuestionIdRef = useRef(null); // Track active question for race conditions
 
     const navigate = useNavigate();
     const [searchParams] = useSearchParams();
@@ -45,7 +48,13 @@ export default function QuizPage() {
             audioRef.current.pause();
             audioRef.current.currentTime = 0;
         }
+        if (audioRef.current) {
+            audioRef.current.pause();
+            audioRef.current.currentTime = 0;
+        }
         setPlayingQuestionId(null);
+        activeQuestionIdRef.current = null; // Cancel any pending audio
+        window.speechSynthesis.cancel();
         window.speechSynthesis.cancel();
 
         // Prefetch next question audio
@@ -166,6 +175,7 @@ export default function QuizPage() {
 
         setIsAudioLoading(true);
         setPlayingQuestionId(question.id);
+        activeQuestionIdRef.current = question.id; // Mark this as the active audio target
 
         if (!question.id) {
             console.error("Question ID missing:", question);
@@ -202,6 +212,13 @@ export default function QuizPage() {
                 console.error("TTS Backend Error:", error);
                 alert(`Erreur TTS: ${error.message || 'Erreur inconnue'}`);
                 setPlayingQuestionId(null);
+                return;
+            }
+
+            // Check if we are still on the same question before playing
+            if (activeQuestionIdRef.current !== question.id) {
+                console.log("Audio load finished but user moved away. Aborting play.");
+                setIsAudioLoading(false);
                 return;
             }
 
