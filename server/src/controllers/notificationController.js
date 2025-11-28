@@ -85,10 +85,14 @@ export const sendAnnouncement = async (req, res) => {
         }
 
         if (type === 'EMAIL' || type === 'BOTH') {
-            // Send emails in background (don't await loop)
-            users.forEach(user => {
-                sendAnnouncementEmail(user.email, subject, message);
-            });
+            // Send emails in background with rate limiting (1 email every 600ms to stay under 2/sec)
+            const sendEmailsWithDelay = async () => {
+                for (const user of users) {
+                    await sendAnnouncementEmail(user.email, subject, message);
+                    await new Promise(resolve => setTimeout(resolve, 600)); // Wait 600ms
+                }
+            };
+            sendEmailsWithDelay(); // Start background process
         }
 
         res.json({ message: `Annonce envoyée à ${users.length} utilisateurs.` });
