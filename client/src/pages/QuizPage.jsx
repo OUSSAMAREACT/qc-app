@@ -47,7 +47,13 @@ export default function QuizPage() {
         }
         setPlayingQuestionId(null);
         window.speechSynthesis.cancel();
-    }, [currentIndex]);
+
+        // Prefetch next question audio
+        const nextQuestion = questions[currentIndex + 1];
+        if (nextQuestion && !audioCache[nextQuestion.id]) {
+            prefetchAudio(nextQuestion);
+        }
+    }, [currentIndex, questions]);
 
     useEffect(() => {
         if (timeLeft > 0) {
@@ -125,6 +131,27 @@ export default function QuizPage() {
         });
     };
 
+    const prefetchAudio = async (question) => {
+        if (!question || !question.id || audioCache[question.id]) return;
+
+        try {
+            console.log(`Prefetching audio for Q${question.id}...`);
+            let textToRead = `Speaker 1: Question. ${question.text}.\n`;
+            question.choices.forEach((choice, index) => {
+                textToRead += `Speaker 2: Réponse ${index + 1}. ${choice.text}.\n`;
+            });
+
+            const res = await axios.post('/tts/speak', { text: textToRead }, { responseType: 'blob' });
+            if (res.data.type !== 'application/json') {
+                const audioUrl = URL.createObjectURL(res.data);
+                setAudioCache(prev => ({ ...prev, [question.id]: audioUrl }));
+                console.log(`Prefetch complete for Q${question.id}`);
+            }
+        } catch (error) {
+            console.warn("Prefetch failed:", error);
+        }
+    };
+
     const handleSpeak = async (question) => {
         // Stop current audio if playing
         if (audioRef.current) {
@@ -139,6 +166,14 @@ export default function QuizPage() {
 
         setIsAudioLoading(true);
         setPlayingQuestionId(question.id);
+
+        if (!question.id) {
+            console.error("Question ID missing:", question);
+            alert("Erreur: ID de question manquant.");
+            setIsAudioLoading(false);
+            setPlayingQuestionId(null);
+            return;
+        }
 
         try {
             // Check cache
@@ -369,7 +404,10 @@ export default function QuizPage() {
                                         disabled={isAudioLoading && playingQuestionId !== currentQuestion.id}
                                     >
                                         {isAudioLoading && playingQuestionId === currentQuestion.id ? (
-                                            <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                                            <div className="flex items-center gap-2">
+                                                <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                                                <span className="text-xs">Chargement...</span>
+                                            </div>
                                         ) : (
                                             <Volume2 size={20} />
                                         )}
