@@ -17,7 +17,8 @@ export const scanQuestions = async (req, res) => {
         const questions = await prisma.question.findMany({
             orderBy: { id: 'asc' },
             take: take,
-            skip: skip
+            skip: skip,
+            include: { choices: true }
         });
 
         if (questions.length === 0) {
