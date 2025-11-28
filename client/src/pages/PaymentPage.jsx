@@ -32,11 +32,11 @@ export default function PaymentPage() {
             price: '500 DH',
             icon: Calendar,
             color: 'purple',
-            features: ['Accès complet pendant 90 jours', 'Parfait pour un stage ou un module']
+            features: ['Accès complet pendant 90 jours', 'Idéal pour valider vos stages cliniques']
         },
         {
             id: '1_YEAR',
-            name: 'Résidanat',
+            name: 'Annuel',
             duration: '1 An',
             price: '1500 DH',
             icon: Crown,
@@ -117,8 +117,8 @@ export default function PaymentPage() {
                                 key={plan.id}
                                 onClick={() => setSelectedPlan(plan.id)}
                                 className={`relative cursor-pointer rounded-3xl p-6 transition-all duration-300 border-2 ${isSelected
-                                        ? `border-${plan.color}-500 bg-white dark:bg-gray-800 shadow-xl scale-105 z-10`
-                                        : 'border-transparent bg-white/50 dark:bg-gray-800/50 hover:bg-white dark:hover:bg-gray-800 hover:shadow-lg'
+                                    ? `border-${plan.color}-500 bg-white dark:bg-gray-800 shadow-xl scale-105 z-10`
+                                    : 'border-transparent bg-white/50 dark:bg-gray-800/50 hover:bg-white dark:hover:bg-gray-800 hover:shadow-lg'
                                     }`}
                             >
                                 {plan.popular && (
@@ -142,8 +142,8 @@ export default function PaymentPage() {
                                     ))}
                                 </ul>
                                 <div className={`w-full py-2 rounded-xl text-center font-bold transition-colors ${isSelected
-                                        ? `bg-${plan.color}-500 text-white`
-                                        : 'bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-400'
+                                    ? `bg-${plan.color}-500 text-white`
+                                    : 'bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-400'
                                     }`}>
                                     {isSelected ? 'Sélectionné' : 'Choisir'}
                                 </div>

@@ -61,7 +61,7 @@ export default function AdminPaymentView() {
         switch (planType) {
             case '1_MONTH': return 'Sprint (1 Mois)';
             case '3_MONTHS': return 'Semestre (3 Mois)';
-            case '1_YEAR': return 'Résidanat (1 An)';
+            case '1_YEAR': return 'Annuel (1 An)';
             default: return 'Inconnu';
         }
     };
