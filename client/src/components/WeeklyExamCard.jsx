@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from './ui/Button';
-import { Trophy, Calendar, Clock, CheckCircle, ArrowRight, Sparkles } from 'lucide-react';
+import { Trophy, Calendar, Clock, CheckCircle, ArrowRight, Sparkles, Play } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 export default function WeeklyExamCard({ exam }) {
