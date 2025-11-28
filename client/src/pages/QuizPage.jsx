@@ -323,7 +323,7 @@ export default function QuizPage() {
 
                                 </h2>
 
-                                <div className="grid grid-cols-1 gap-3 md:gap-4 flex-1 content-start">
+                                <div className="grid grid-cols-1 gap-2 md:gap-4 flex-1 content-start">
                                     {currentQuestion.choices.map((choice) => {
                                         const isSelected = (answers[currentQuestion.id] || []).includes(choice.id);
                                         return (
@@ -332,7 +332,7 @@ export default function QuizPage() {
                                                 whileTap={{ scale: 0.99 }}
                                                 key={choice.id}
                                                 onClick={() => handleToggleChoice(currentQuestion.id, choice.id)}
-                                                className={`group relative p-3 md:p-5 rounded-2xl border-2 cursor-pointer transition-all duration-200 flex items-center gap-3 md:gap-5 ${isSelected
+                                                className={`group relative p-2.5 md:p-5 rounded-2xl border-2 cursor-pointer transition-all duration-200 flex items-center gap-2.5 md:gap-5 ${isSelected
                                                     ? 'border-primary-500 bg-primary-50/50 dark:bg-primary-900/30 shadow-lg shadow-primary-100 dark:shadow-primary-900/20'
                                                     : 'border-gray-100 dark:border-gray-700 bg-white/50 dark:bg-gray-800/50 hover:border-primary-200 dark:hover:border-primary-700 hover:bg-white dark:hover:bg-gray-800'
                                                     }`}
@@ -347,7 +347,7 @@ export default function QuizPage() {
                                                         </svg>
                                                     )}
                                                 </div>
-                                                <span className={`text-base md:text-lg font-medium transition-colors duration-300 ${isSelected ? 'text-primary-900 dark:text-primary-200' : 'text-gray-600 dark:text-gray-300 group-hover:text-gray-900 dark:group-hover:text-white'
+                                                <span className={`text-sm leading-snug md:text-lg md:leading-normal font-medium transition-colors duration-300 ${isSelected ? 'text-primary-900 dark:text-primary-200' : 'text-gray-600 dark:text-gray-300 group-hover:text-gray-900 dark:group-hover:text-white'
                                                     }`}>
                                                     {choice.text}
                                                 </span>

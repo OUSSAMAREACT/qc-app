@@ -2,7 +2,7 @@ import React from 'react';
 import { clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 
-export function Input({ label, error, className, ...props }) {
+export function Input({ label, error, className, rightElement, ...props }) {
     return (
         <div className="flex flex-col gap-1">
             {label && <label className="text-sm font-medium text-gray-700">{label}</label>}
@@ -17,9 +17,9 @@ export function Input({ label, error, className, ...props }) {
                     )}
                     {...props}
                 />
-                {props.rightElement && (
+                {rightElement && (
                     <div className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500">
-                        {props.rightElement}
+                        {rightElement}
                     </div>
                 )}
             </div>

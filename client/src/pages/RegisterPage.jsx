@@ -25,9 +25,15 @@ export default function RegisterPage() {
         const fetchSpecialties = async () => {
             try {
                 const res = await axios.get('/specialties');
-                setSpecialties(res.data);
+                if (Array.isArray(res.data)) {
+                    setSpecialties(res.data);
+                } else {
+                    console.error("Specialties response is not an array:", res.data);
+                    setSpecialties([]);
+                }
             } catch (error) {
                 console.error("Failed to fetch specialties", error);
+                setSpecialties([]);
             }
         };
         fetchSpecialties();
