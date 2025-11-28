@@ -1,8 +1,8 @@
-const { PrismaClient } = require('@prisma/client');
-const prisma = new PrismaClient();
-const nspell = require('nspell');
-const frDictionary = require('dictionary-fr');
+import { PrismaClient } from '@prisma/client';
+import nspell from 'nspell';
+import frDictionary from 'dictionary-fr';
 
+const prisma = new PrismaClient();
 let spellChecker = null;
 
 // Initialize spell checker
@@ -19,7 +19,7 @@ const initSpellChecker = (callback) => {
 
 initSpellChecker();
 
-exports.scanQuestions = async (req, res) => {
+export const scanQuestions = async (req, res) => {
     try {
         if (!spellChecker) {
             return res.status(503).json({ message: "Dictionary not loaded yet" });
@@ -68,7 +68,7 @@ exports.scanQuestions = async (req, res) => {
     }
 };
 
-exports.ignoreWord = async (req, res) => {
+export const ignoreWord = async (req, res) => {
     const { word } = req.body;
     try {
         await prisma.ignoredWord.create({
