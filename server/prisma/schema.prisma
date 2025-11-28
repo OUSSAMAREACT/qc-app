@@ -37,6 +37,7 @@ model User {
   hospital    String?
   gender      String?      // "MALE", "FEMALE"
   phoneNumber String?
+  premiumExpiresAt DateTime?
 
   // Gamification
   currentStreak Int      @default(0)
@@ -58,6 +59,7 @@ model Payment {
   userId      Int
   user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   receiptUrl  String
+  planType    String?  // 1_MONTH, 3_MONTHS, 1_YEAR
   status      String   @default("PENDING") // PENDING, APPROVED, REJECTED
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt

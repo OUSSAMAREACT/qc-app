@@ -10,6 +10,7 @@ export const uploadReceipt = async (req, res) => {
 
         const userId = req.user.userId;
         const receiptUrl = `/uploads/receipts/${req.file.filename}`;
+        const { planType } = req.body; // "1_MONTH", "3_MONTHS", "1_YEAR"
 
         // Check if user already has a pending payment
         const existingPayment = await prisma.payment.findFirst({
@@ -21,10 +22,12 @@ export const uploadReceipt = async (req, res) => {
 
         if (existingPayment) {
             // Update existing pending payment
-            // Optionally delete old file here if needed
             await prisma.payment.update({
                 where: { id: existingPayment.id },
-                data: { receiptUrl }
+                data: {
+                    receiptUrl,
+                    planType: planType || existingPayment.planType
+                }
             });
             return res.json({ message: "Reçu mis à jour avec succès.", receiptUrl });
         }
@@ -34,6 +37,7 @@ export const uploadReceipt = async (req, res) => {
             data: {
                 userId,
                 receiptUrl,
+                planType,
                 status: 'PENDING'
             }
         });
@@ -89,6 +93,24 @@ export const approvePayment = async (req, res) => {
             return res.status(400).json({ message: "Ce paiement est déjà approuvé." });
         }
 
+        // Calculate Expiration Date
+        let expiresAt = new Date();
+        const plan = payment.planType || '1_YEAR'; // Default to 1 year if missing
+
+        switch (plan) {
+            case '1_MONTH':
+                expiresAt.setDate(expiresAt.getDate() + 30);
+                break;
+            case '3_MONTHS':
+                expiresAt.setDate(expiresAt.getDate() + 90);
+                break;
+            case '1_YEAR':
+                expiresAt.setDate(expiresAt.getDate() + 365);
+                break;
+            default:
+                expiresAt.setDate(expiresAt.getDate() + 365);
+        }
+
         // Transaction: Approve payment AND Upgrade user
         await prisma.$transaction([
             prisma.payment.update({
@@ -97,11 +119,14 @@ export const approvePayment = async (req, res) => {
             }),
             prisma.user.update({
                 where: { id: payment.userId },
-                data: { role: 'PREMIUM' } // Upgrade to PREMIUM
+                data: {
+                    role: 'PREMIUM',
+                    premiumExpiresAt: expiresAt
+                }
             })
         ]);
 
-        res.json({ message: "Paiement approuvé. L'utilisateur est maintenant PREMIUM." });
+        res.json({ message: "Paiement approuvé. L'utilisateur est maintenant PREMIUM jusqu'au " + expiresAt.toLocaleDateString() });
     } catch (error) {
         console.error("Approve payment error:", error);
         res.status(500).json({ message: "Erreur lors de l'approbation." });

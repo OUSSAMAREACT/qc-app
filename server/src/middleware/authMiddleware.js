@@ -12,6 +12,18 @@ export const authenticateToken = (req, res, next) => {
         if (err) {
             return res.status(403).json({ message: "Token invalide ou expiré." });
         }
+
+        // Check for Premium Expiration
+        if (user.role === 'PREMIUM' && user.premiumExpiresAt) {
+            const expiresAt = new Date(user.premiumExpiresAt);
+            if (expiresAt < new Date()) {
+                // Expired! Downgrade for this request
+                user.role = 'STUDENT';
+                // Optional: Trigger async DB update to persist downgrade
+                // prisma.user.update({ where: { id: user.userId }, data: { role: 'STUDENT' } }).catch(console.error);
+            }
+        }
+
         req.user = user;
         next();
     });

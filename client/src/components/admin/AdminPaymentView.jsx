@@ -57,6 +57,15 @@ export default function AdminPaymentView() {
         }
     };
 
+    const getPlanLabel = (planType) => {
+        switch (planType) {
+            case '1_MONTH': return 'Sprint (1 Mois)';
+            case '3_MONTHS': return 'Semestre (3 Mois)';
+            case '1_YEAR': return 'Résidanat (1 An)';
+            default: return 'Inconnu';
+        }
+    };
+
     if (loading) return <div className="p-8 text-center">Chargement...</div>;
 
     return (
@@ -93,9 +102,12 @@ export default function AdminPaymentView() {
                                 <div className="text-sm text-gray-500 dark:text-gray-400">
                                     {payment.user.email} • {payment.user.role}
                                 </div>
-                                <div className="flex items-center gap-2 text-xs text-gray-400">
+                                <div className="flex items-center gap-2 text-sm font-medium text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/20 px-2 py-1 rounded w-fit">
                                     <Clock size={14} />
-                                    {new Date(payment.createdAt).toLocaleString()}
+                                    Plan : {getPlanLabel(payment.planType)}
+                                </div>
+                                <div className="text-xs text-gray-400">
+                                    Reçu le {new Date(payment.createdAt).toLocaleString()}
                                 </div>
                             </div>
 

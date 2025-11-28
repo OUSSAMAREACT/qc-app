@@ -70,6 +70,12 @@
 - [x] **Frontend:** Add "Upload Receipt" to PaymentPage
 - [x] **Frontend:** Create Admin Payment Verification View
 - [x] **Logic:** Auto-promote user to PREMIUM role upon approval
+- [ ] **Database:** Add `premiumExpiresAt` to User and `planType` to Payment
+- [ ] **Backend:** Update `uploadReceipt` to handle plan selection
+- [ ] **Backend:** Update `approvePayment` to calculate expiration
+- [ ] **Backend:** Implement Expiration Logic (Middleware/Downgrade)
+- [ ] **Frontend:** Add Plan Selection UI to PaymentPage
+- [ ] **Frontend:** Show Plan Type in AdminPaymentView
 
 ### Admin View Optimization
 - [x] **CommonModulesView:** Convert to Responsive Grid & Cards
