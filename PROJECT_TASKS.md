@@ -64,8 +64,8 @@
 - [ ] **Frontend:** Add "Upload Receipt" feature (Optional but recommended)
 
 ### Admin View Optimization
-- [ ] **CommonModulesView:** Convert to Responsive Grid & Cards
-- [ ] **SpecialtyView:** Convert to Responsive Grid & Cards
+- [x] **CommonModulesView:** Convert to Responsive Grid & Cards
+- [x] **SpecialtyView:** Convert to Responsive Grid & Cards
 - [ ] **CategoryDetailView:** Improve Question Management UI
 - [ ] **WeeklyExamManager:** Improve Exam Creation Flow
 
