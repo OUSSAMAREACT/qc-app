@@ -2,7 +2,7 @@ import express from 'express';
 import multer from 'multer';
 import path from 'path';
 import fs from 'fs';
-import { authenticateToken, isAdmin } from '../middleware/authMiddleware.js';
+import { authenticateToken, requireAdmin } from '../middleware/authMiddleware.js';
 import { uploadReceipt, getPayments, approvePayment, rejectPayment } from '../controllers/paymentController.js';
 
 const router = express.Router();
@@ -40,8 +40,8 @@ const upload = multer({
 
 // Routes
 router.post('/upload', authenticateToken, upload.single('receipt'), uploadReceipt);
-router.get('/', authenticateToken, isAdmin, getPayments);
-router.put('/:id/approve', authenticateToken, isAdmin, approvePayment);
-router.put('/:id/reject', authenticateToken, isAdmin, rejectPayment);
+router.get('/', authenticateToken, requireAdmin, getPayments);
+router.put('/:id/approve', authenticateToken, requireAdmin, approvePayment);
+router.put('/:id/reject', authenticateToken, requireAdmin, rejectPayment);
 
 export default router;
