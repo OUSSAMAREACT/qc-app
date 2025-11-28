@@ -4,7 +4,6 @@ import { GoogleGenAI } from "@google/genai";
 const prisma = new PrismaClient();
 
 // Initialize Gemini AI
-// Using the key directly as verified in testing
 const ai = new GoogleGenAI({ apiKey: "AIzaSyAMZzszrUCxuUSBo1I7VraT_wSDuMllHMM" });
 
 export const scanQuestions = async (req, res) => {
@@ -14,17 +13,16 @@ export const scanQuestions = async (req, res) => {
             orderBy: { id: 'asc' }
         });
 
-        // Fetch ignored words to filter locally if needed, though we'll ask AI to ignore medical terms
+        // Fetch ignored words
         const ignoredWords = await prisma.ignoredWord.findMany();
         const ignoredSet = new Set(ignoredWords.map(iw => iw.word.toLowerCase()));
 
         const results = [];
-        const BATCH_SIZE = 15; // Process in chunks to respect token limits
+        const BATCH_SIZE = 15;
+        let lastError = null;
 
         for (let i = 0; i < questions.length; i += BATCH_SIZE) {
             const batch = questions.slice(i, i + BATCH_SIZE);
-
-            // Prepare prompt content
             const questionsText = batch.map(q => `ID: ${q.id}\nText: ${q.text}`).join('\n\n');
 
             const prompt = `
@@ -64,7 +62,6 @@ ${questionsText}
                 });
 
                 const responseText = response.text;
-                // Clean up markdown code blocks if present
                 const jsonStr = responseText.replace(/```json\n?|\n?```/g, '').trim();
 
                 let batchResults = [];
@@ -75,7 +72,6 @@ ${questionsText}
                     continue;
                 }
 
-                // Merge with original question data
                 if (Array.isArray(batchResults)) {
                     for (const result of batchResults) {
                         const originalQ = batch.find(q => q.id === result.id);
@@ -88,17 +84,29 @@ ${questionsText}
                         }
                     }
                 }
+
             } catch (err) {
-                console.error(`Error processing batch ${i}: `, err);
-                // Continue to next batch instead of failing everything
+                console.error(`Error processing batch ${i}:`, err);
+                lastError = err;
             }
+        }
+
+        // If we found no results but had an error, throw it so the user knows
+        if (results.length === 0 && lastError) {
+            throw lastError;
         }
 
         res.json(results);
 
     } catch (error) {
         console.error("AI Spell check scan failed", error);
-        res.status(500).json({ message: "Scan failed" });
+        let errorMessage = "Scan failed";
+        if (error.response) {
+            errorMessage = `AI Error: ${error.response.status} ${error.response.statusText || ''}`;
+        } else if (error.message) {
+            errorMessage = `AI Error: ${error.message}`;
+        }
+        res.status(500).json({ message: errorMessage });
     }
 };
 
