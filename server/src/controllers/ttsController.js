@@ -19,7 +19,6 @@ export const generateSpeech = async (req, res) => {
         const config = {
             temperature: 1,
             responseModalities: ['audio'],
-            responseMimeType: 'audio/mp3',
             speechConfig: {
                 multiSpeakerVoiceConfig: {
                     speakerVoiceConfigs: [

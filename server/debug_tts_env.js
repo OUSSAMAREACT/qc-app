@@ -22,7 +22,6 @@ async function testTTS() {
         const config = {
             temperature: 1,
             responseModalities: ['audio'],
-            responseMimeType: 'audio/mp3',
             speechConfig: {
                 multiSpeakerVoiceConfig: {
                     speakerVoiceConfigs: [
