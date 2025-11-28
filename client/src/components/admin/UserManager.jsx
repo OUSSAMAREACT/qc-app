@@ -14,7 +14,7 @@ export default function UserManager() {
     const [searchTerm, setSearchTerm] = useState('');
     const [editingUser, setEditingUser] = useState(null);
     const [deleteConfirm, setDeleteConfirm] = useState(null);
-    const [formData, setFormData] = useState({ name: '', password: '' });
+    const [formData, setFormData] = useState({ name: '', role: '', password: '' });
 
     const [filterStatus, setFilterStatus] = useState('ALL'); // ALL, PENDING, ACTIVE
 
@@ -35,7 +35,7 @@ export default function UserManager() {
 
     const handleEditClick = (user) => {
         setEditingUser(user);
-        setFormData({ name: user.name, password: '' });
+        setFormData({ name: user.name, role: user.role, password: '' });
     };
 
     const handleDeleteClick = (user) => {
@@ -55,14 +55,14 @@ export default function UserManager() {
     const handleUpdate = async (e) => {
         e.preventDefault();
         try {
-            const updateData = { name: formData.name };
+            const updateData = { name: formData.name, role: formData.role };
             if (formData.password) updateData.password = formData.password;
 
             await axios.put(`/users/${editingUser.id}`, updateData);
 
-            setUsers(users.map(u => u.id === editingUser.id ? { ...u, name: formData.name } : u));
+            setUsers(users.map(u => u.id === editingUser.id ? { ...u, name: formData.name, role: formData.role } : u));
             setEditingUser(null);
-            setFormData({ name: '', password: '' });
+            setFormData({ name: '', role: '', password: '' });
         } catch (error) {
             console.error("Failed to update user", error);
             alert("Erreur lors de la mise à jour");
@@ -353,6 +353,23 @@ export default function UserManager() {
                                         />
                                     </div>
                                 </div>
+
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Rôle</label>
+                                    <div className="relative">
+                                        <Shield className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={18} />
+                                        <select
+                                            value={formData.role}
+                                            onChange={(e) => setFormData({ ...formData, role: e.target.value })}
+                                            className="w-full pl-10 pr-4 py-2 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500 outline-none appearance-none"
+                                        >
+                                            <option value="STUDENT">Étudiant</option>
+                                            <option value="ADMIN">Administrateur</option>
+                                            <option value="SUPER_ADMIN">Super Admin</option>
+                                        </select>
+                                    </div>
+                                </div>
+
                                 <div>
                                     <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Nouveau mot de passe (optionnel)</label>
                                     <div className="relative">
