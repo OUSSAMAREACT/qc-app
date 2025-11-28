@@ -70,7 +70,7 @@ export const AuthProvider = ({ children }) => {
         setUser(null);
     };
 
-    const value = { user, token, login, register, logout, loading };
+    const value = { user, token, login, register, logout, loading, refreshUser: fetchCurrentUser };
 
     if (loading) {
         return (

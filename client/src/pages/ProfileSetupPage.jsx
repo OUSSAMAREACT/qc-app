@@ -8,7 +8,7 @@ import { Card } from '../components/ui/Card';
 import { User, Building2, MapPin, Phone, CheckCircle } from 'lucide-react';
 
 export default function ProfileSetupPage() {
-    const { user, login } = useAuth(); // We might need to refresh user data
+    const { user, refreshUser } = useAuth();
     const navigate = useNavigate();
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState('');
@@ -31,11 +31,12 @@ export default function ProfileSetupPage() {
 
         try {
             // Update profile via API
-            const res = await axios.put('/auth/profile', formData);
+            await axios.put('/auth/profile', formData);
 
-            // Ideally, we should update the local user context here
-            // For now, we assume the backend update was successful and redirect
-            // You might want to implement a 'refreshUser' method in AuthContext
+            // Refresh local user data to update context
+            if (refreshUser) {
+                await refreshUser();
+            }
 
             navigate('/dashboard');
         } catch (err) {

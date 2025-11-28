@@ -14,12 +14,15 @@ export default function ProtectedRoute({ children, requireAdmin }) {
         return <Navigate to="/login" />;
     }
 
-    // Onboarding Check
-    if (!user.onboardingCompleted && location.pathname !== '/onboarding' && location.pathname !== '/payment' && !requireAdmin) {
-        return <Navigate to="/onboarding" />;
+    // Profile Completion Check
+    // If user hasn't completed profile (e.g. city is missing), redirect to /profile-setup
+    // But allow access to /profile-setup itself
+    if ((!user.city || !user.hospital) && location.pathname !== '/profile-setup' && !requireAdmin) {
+        return <Navigate to="/profile-setup" />;
     }
 
-    if (user.onboardingCompleted && location.pathname === '/onboarding') {
+    // If profile is completed and user tries to go to /profile-setup, redirect to dashboard
+    if (user.city && user.hospital && location.pathname === '/profile-setup') {
         return <Navigate to="/dashboard" />;
     }
 
