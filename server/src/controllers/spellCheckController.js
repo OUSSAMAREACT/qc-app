@@ -22,8 +22,10 @@ export const scanQuestions = async (req, res) => {
             return res.status(503).json({ message: "Dictionary not loaded yet" });
         }
 
-        // Fetch all questions
-        const questions = await prisma.question.findMany();
+        // Fetch all questions with choices
+        const questions = await prisma.question.findMany({
+            include: { choices: true }
+        });
 
         // Fetch ignored words
         const ignoredWords = await prisma.ignoredWord.findMany();
@@ -50,8 +52,7 @@ export const scanQuestions = async (req, res) => {
 
             if (typos.length > 0) {
                 results.push({
-                    id: q.id,
-                    text: q.text,
+                    ...q, // Return full question object
                     typos: [...new Set(typos)] // Unique typos per question
                 });
             }
