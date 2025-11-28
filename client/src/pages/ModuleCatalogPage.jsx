@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Search, BookOpen, Star, ArrowRight, ArrowLeft, Filter } from 'lucide-react';
+import { Search, BookOpen, Star, ArrowRight, ArrowLeft, Filter, Lock, Crown } from 'lucide-react';
 import axios from 'axios';
 import { useAuth } from '../context/AuthContext';
 
@@ -122,6 +122,33 @@ export default function ModuleCatalogPage() {
                 </div>
             </div>
 
+            {/* Premium Upgrade Banner */}
+            {user?.role === 'STUDENT' && (
+                <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-yellow-400 to-orange-500 p-6 text-white shadow-lg mb-8"
+                >
+                    <div className="flex flex-col md:flex-row items-center justify-between gap-6 relative z-10">
+                        <div className="flex items-center gap-4">
+                            <div className="p-3 bg-white/20 rounded-full backdrop-blur-sm">
+                                <Crown size={32} />
+                            </div>
+                            <div>
+                                <h3 className="text-xl font-bold">Passez au Premium</h3>
+                                <p className="text-white/90">Débloquez l'accès complet à tous les modules de cette liste.</p>
+                            </div>
+                        </div>
+                        <Link to="/payment">
+                            <button className="bg-white text-orange-600 hover:bg-orange-50 px-6 py-3 rounded-xl font-bold shadow-md transition-colors whitespace-nowrap">
+                                Devenir Premium
+                            </button>
+                        </Link>
+                    </div>
+                    <div className="absolute top-0 right-0 -mt-10 -mr-10 w-40 h-40 bg-white/10 rounded-full blur-2xl"></div>
+                </motion.div>
+            )}
+
             {/* Search Bar */}
             <div className="relative max-w-2xl">
                 <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
@@ -209,14 +236,27 @@ export default function ModuleCatalogPage() {
                                 </div>
 
                                 <div className="mt-auto pt-4 border-t border-gray-100 dark:border-gray-700/50">
-                                    <Link to={`/quiz?category=${encodeURIComponent(cat.name)}`}>
-                                        <button className="w-full bg-gray-50 dark:bg-gray-800 hover:bg-gray-900 dark:hover:bg-gray-700 text-gray-900 dark:text-white hover:text-white py-3.5 rounded-xl font-bold transition-all flex items-center justify-between px-5 group/btn">
-                                            <span>Commencer le Quiz</span>
-                                            <div className={`w-8 h-8 rounded-full bg-white dark:bg-gray-700 group-hover/btn:bg-${isSpecialty ? 'yellow' : 'primary'}-500 group-hover/btn:text-white flex items-center justify-center transition-colors shadow-sm`}>
-                                                <ArrowRight size={16} />
-                                            </div>
-                                        </button>
-                                    </Link>
+                                    <div className="mt-auto pt-4 border-t border-gray-100 dark:border-gray-700/50">
+                                        {user?.role === 'STUDENT' && !cat.isFree ? (
+                                            <Link to="/payment">
+                                                <button className="w-full bg-gray-100 dark:bg-gray-800 text-gray-500 dark:text-gray-400 py-3.5 rounded-xl font-bold transition-all flex items-center justify-between px-5 group/btn hover:bg-gray-200 dark:hover:bg-gray-700">
+                                                    <span className="flex items-center gap-2"><Lock size={18} /> Premium</span>
+                                                    <div className="w-8 h-8 rounded-full bg-white dark:bg-gray-700 flex items-center justify-center transition-colors shadow-sm">
+                                                        <Lock size={16} />
+                                                    </div>
+                                                </button>
+                                            </Link>
+                                        ) : (
+                                            <Link to={`/quiz?category=${encodeURIComponent(cat.name)}`}>
+                                                <button className="w-full bg-gray-50 dark:bg-gray-800 hover:bg-gray-900 dark:hover:bg-gray-700 text-gray-900 dark:text-white hover:text-white py-3.5 rounded-xl font-bold transition-all flex items-center justify-between px-5 group/btn">
+                                                    <span>Commencer le Quiz</span>
+                                                    <div className={`w-8 h-8 rounded-full bg-white dark:bg-gray-700 group-hover/btn:bg-${isSpecialty ? 'yellow' : 'primary'}-500 group-hover/btn:text-white flex items-center justify-center transition-colors shadow-sm`}>
+                                                        <ArrowRight size={16} />
+                                                    </div>
+                                                </button>
+                                            </Link>
+                                        )}
+                                    </div>
                                 </div>
                             </div>
                         </motion.div>
