@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import axios from '../../utils/axios';
+import axios from 'axios';
 import { Button } from '../ui/Button';
 import { Search, Check, X, AlertTriangle, Edit2, EyeOff } from 'lucide-react';
 import QuestionForm from '../QuestionForm';
