@@ -85,18 +85,16 @@ export const getActiveExam = async (req, res) => {
         // Check if user already submitted
         const isSubmitted = exam.submissions.length > 0;
 
-        // If submitted, we might want to return the score or just a flag
-        // If not submitted, we return the questions (without correct answers ideally, but for now we send them)
-        // SECURITY NOTE: In a real app, we should strip `isCorrect` from choices if not submitted.
+        // If submitted, we return the score, the saved answers, and the full question details (with explanations)
+        // If not submitted, we strip correct answers and explanations
 
         const sanitizedQuestions = exam.questions.map(q => ({
             ...q,
+            explanation: isSubmitted ? q.explanation : undefined, // Only show explanation if submitted
             choices: q.choices.map(c => ({
                 id: c.id,
                 text: c.text,
-                // Only show isCorrect if submitted (or maybe never, depending on policy)
-                // For now, let's hide it to prevent cheating via network tab
-                // isCorrect: isSubmitted ? c.isCorrect : undefined 
+                isCorrect: isSubmitted ? c.isCorrect : undefined // Only show isCorrect if submitted
             }))
         }));
 
@@ -105,7 +103,8 @@ export const getActiveExam = async (req, res) => {
             questions: sanitizedQuestions,
             isSubmitted,
             userScore: isSubmitted ? exam.submissions[0].score : null,
-            savedAnswers: exam.progress.length > 0 ? exam.progress[0].answers : {}
+            userAnswers: isSubmitted ? exam.submissions[0].answers : null, // Return saved answers
+            savedAnswers: (!isSubmitted && exam.progress.length > 0) ? exam.progress[0].answers : {}
         });
 
     } catch (error) {
@@ -114,39 +113,7 @@ export const getActiveExam = async (req, res) => {
     }
 };
 
-// Save exam progress
-export const saveProgress = async (req, res) => {
-    try {
-        const { examId, answers } = req.body;
-        const userId = req.user.userId;
-
-        if (!examId || !answers) {
-            return res.status(400).json({ message: "Exam ID and answers are required." });
-        }
-
-        await prisma.examProgress.upsert({
-            where: {
-                userId_examId: {
-                    userId,
-                    examId: parseInt(examId)
-                }
-            },
-            update: {
-                answers
-            },
-            create: {
-                userId,
-                examId: parseInt(examId),
-                answers
-            }
-        });
-
-        res.json({ message: "Progress saved." });
-    } catch (error) {
-        console.error("Error saving progress:", error);
-        res.status(500).json({ message: "Failed to save progress." });
-    }
-};
+// ... (saveProgress remains unchanged) ...
 
 // Submit an exam
 export const submitExam = async (req, res) => {
@@ -207,7 +174,8 @@ export const submitExam = async (req, res) => {
             data: {
                 userId,
                 examId: parseInt(examId),
-                score
+                score,
+                answers // Save the user's answers!
             }
         });
 

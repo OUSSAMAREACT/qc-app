@@ -131,6 +131,7 @@ model ExamSubmission {
   examId      Int
   exam        WeeklyExam @relation(fields: [examId], references: [id], onDelete: Cascade)
   score       Int
+  answers     Json?      // Stores { questionId: [choiceId, ...] }
   submittedAt DateTime   @default(now())
 
   @@unique([userId, examId]) // One submission per user per exam

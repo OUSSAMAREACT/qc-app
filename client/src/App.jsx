@@ -14,6 +14,7 @@ import AdminDashboardPage from './pages/AdminDashboardPage';
 import HistoryPage from './pages/HistoryPage';
 import ProfilePage from './pages/ProfilePage';
 import WeeklyExamPage from './pages/WeeklyExamPage';
+import WeeklyExamResultPage from './pages/WeeklyExamResultPage';
 import LeaderboardPage from './pages/LeaderboardPage';
 import ModuleCatalogPage from './pages/ModuleCatalogPage';
 import LandingPage from './pages/LandingPage';
@@ -48,6 +49,7 @@ function App() {
               {/* Public Landing Page */}
               <Route path="/" element={<LandingPage />} />
               <Route path="/about" element={<AboutPage />} />
+
 
               <Route path="/login" element={
                 <PublicRoute>
@@ -154,6 +156,16 @@ function App() {
                   <RequireActive>
                     <Layout>
                       <WeeklyExamPage />
+                    </Layout>
+                  </RequireActive>
+                </ProtectedRoute>
+              } />
+
+              <Route path="/weekly-exam/:id/result" element={
+                <ProtectedRoute>
+                  <RequireActive>
+                    <Layout>
+                      <WeeklyExamResultPage />
                     </Layout>
                   </RequireActive>
                 </ProtectedRoute>

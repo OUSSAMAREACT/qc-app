@@ -67,7 +67,7 @@ export default function WeeklyExamCard({ exam }) {
                             </div>
                         </div>
                         <div className="flex items-center gap-4 bg-black/20 px-6 py-3 rounded-xl border border-white/5">
-                            <div className="text-right">
+                            <div className="text-center">
                                 <p className="text-xs text-indigo-200 uppercase font-bold">Votre Score</p>
                                 <p className="text-2xl font-bold text-white">{exam.userScore} <span className="text-sm text-indigo-300">/ {exam.questions.length}</span></p>
                             </div>
@@ -75,6 +75,11 @@ export default function WeeklyExamCard({ exam }) {
                         <Link to={`/weekly-exam/${exam.id}/leaderboard`}>
                             <Button className="bg-white text-indigo-600 hover:bg-indigo-50 border-0 font-bold shadow-lg shadow-black/10">
                                 Voir le classement <ArrowRight size={18} className="ml-2" />
+                            </Button>
+                        </Link>
+                        <Link to={`/weekly-exam/${exam.id}/result`}>
+                            <Button className="bg-indigo-600 text-white hover:bg-indigo-700 border-0 font-bold shadow-lg shadow-black/10">
+                                Voir mes réponses
                             </Button>
                         </Link>
                     </div>
