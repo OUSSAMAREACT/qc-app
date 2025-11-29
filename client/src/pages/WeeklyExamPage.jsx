@@ -139,7 +139,7 @@ export default function WeeklyExamPage() {
                 examId: exam.id,
                 answers: cleanAnswers
             });
-            navigate('/dashboard');
+            navigate(`/weekly-exam/${exam.id}/result`);
         } catch (error) {
             console.error("Failed to submit exam", error);
             alert("Erreur lors de la soumission. Veuillez réessayer.");
@@ -180,7 +180,8 @@ export default function WeeklyExamPage() {
                 <CheckCircle className="mx-auto h-16 w-16 text-green-500 mb-6" />
                 <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">Examen déjà complété</h2>
                 <p className="text-gray-500 dark:text-gray-400 mb-6">Vous avez déjà soumis vos réponses pour cet examen.</p>
-                <Button className="w-full" onClick={() => navigate('/dashboard')}>Retour au tableau de bord</Button>
+                <Button className="w-full mb-3" onClick={() => navigate(`/weekly-exam/${id}/result`)}>Voir les résultats</Button>
+                <Button variant="outline" className="w-full" onClick={() => navigate('/dashboard')}>Retour au tableau de bord</Button>
             </div>
         </div>
     );
