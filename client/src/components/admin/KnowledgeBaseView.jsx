@@ -13,6 +13,9 @@ export default function KnowledgeBaseView() {
     const [categories, setCategories] = useState([]);
     const [selectedCategory, setSelectedCategory] = useState("");
 
+    const [editingDoc, setEditingDoc] = useState(null);
+    const [editForm, setEditForm] = useState({ title: "", category: "" });
+
     useEffect(() => {
         fetchDocuments();
         fetchCategories();
@@ -78,6 +81,24 @@ export default function KnowledgeBaseView() {
             setDocuments(prev => prev.filter(d => d.id !== id));
         } catch (err) {
             alert("Erreur lors de la suppression");
+        }
+    };
+
+    const startEdit = (doc) => {
+        setEditingDoc(doc);
+        setEditForm({ title: doc.title, category: doc.category || "" });
+    };
+
+    const handleUpdate = async () => {
+        if (!editingDoc) return;
+
+        try {
+            const res = await axios.put(`/knowledge-base/${editingDoc.id}`, editForm);
+            setDocuments(prev => prev.map(d => d.id === editingDoc.id ? res.data : d));
+            setEditingDoc(null);
+        } catch (err) {
+            console.error("Update failed", err);
+            alert("Erreur lors de la mise à jour");
         }
     };
 
@@ -199,19 +220,72 @@ export default function KnowledgeBaseView() {
                                         </div>
                                     </div>
                                 </div>
-                                <Button
-                                    variant="ghost"
-                                    size="sm"
-                                    className="text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20"
-                                    onClick={() => handleDelete(doc.id)}
-                                >
-                                    <Trash2 size={18} />
-                                </Button>
+                                <div className="flex items-center gap-2">
+                                    <Button
+                                        variant="outline"
+                                        size="sm"
+                                        onClick={() => startEdit(doc)}
+                                    >
+                                        Modifier
+                                    </Button>
+                                    <Button
+                                        variant="ghost"
+                                        size="sm"
+                                        className="text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20"
+                                        onClick={() => handleDelete(doc.id)}
+                                    >
+                                        <Trash2 size={18} />
+                                    </Button>
+                                </div>
                             </div>
                         ))}
                     </div>
                 )}
             </div>
+
+            {/* Edit Modal */}
+            {editingDoc && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
+                    <div className="bg-white dark:bg-gray-800 rounded-xl shadow-xl w-full max-w-md p-6 border border-gray-100 dark:border-gray-700">
+                        <h3 className="text-lg font-bold mb-4 text-gray-900 dark:text-white">Modifier le document</h3>
+
+                        <div className="space-y-4">
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                                    Titre (Utilisé pour les citations)
+                                </label>
+                                <input
+                                    type="text"
+                                    value={editForm.title}
+                                    onChange={(e) => setEditForm({ ...editForm, title: e.target.value })}
+                                    className="w-full p-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500"
+                                />
+                            </div>
+
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                                    Catégorie
+                                </label>
+                                <select
+                                    value={editForm.category}
+                                    onChange={(e) => setEditForm({ ...editForm, category: e.target.value })}
+                                    className="w-full p-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500"
+                                >
+                                    <option value="">Toutes les catégories (Général)</option>
+                                    {categories.map(cat => (
+                                        <option key={cat.id} value={cat.name}>{cat.name}</option>
+                                    ))}
+                                </select>
+                            </div>
+
+                            <div className="flex justify-end gap-2 mt-6">
+                                <Button variant="ghost" onClick={() => setEditingDoc(null)}>Annuler</Button>
+                                <Button onClick={handleUpdate}>Enregistrer</Button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }

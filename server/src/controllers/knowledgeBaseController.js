@@ -164,3 +164,22 @@ export const deleteDocument = async (req, res) => {
         res.status(500).json({ message: "Failed to delete document" });
     }
 };
+export const updateDocument = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { title, category } = req.body;
+
+        const document = await prisma.knowledgeBaseDocument.update({
+            where: { id: parseInt(id) },
+            data: {
+                title: title,
+                category: category
+            }
+        });
+
+        res.json(document);
+    } catch (error) {
+        console.error("Update error:", error);
+        res.status(500).json({ message: "Failed to update document" });
+    }
+};
