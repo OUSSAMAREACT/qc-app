@@ -260,10 +260,19 @@ export default function DashboardPage() {
                                                 <div className="absolute -bottom-6 -right-6 text-white/20 transform rotate-12 group-hover:scale-110 group-hover:rotate-6 transition-transform duration-500">
                                                     <BookOpen size={120} />
                                                 </div>
-                                                <div className="absolute top-6 left-6">
+                                                <div className="absolute top-6 left-6 flex gap-2">
                                                     <span className="bg-white/20 backdrop-blur-md text-white text-xs font-bold px-3 py-1 rounded-full border border-white/20 shadow-sm">
                                                         Module Commun
                                                     </span>
+                                                    {cat.isFree ? (
+                                                        <span className="bg-green-500/90 backdrop-blur-md text-white text-xs font-bold px-3 py-1 rounded-full border border-white/20 shadow-sm flex items-center gap-1">
+                                                            Gratuit (Freemium)
+                                                        </span>
+                                                    ) : (
+                                                        <span className="bg-yellow-500/90 backdrop-blur-md text-white text-xs font-bold px-3 py-1 rounded-full border border-white/20 shadow-sm flex items-center gap-1">
+                                                            <Crown size={12} /> Premium
+                                                        </span>
+                                                    )}
                                                 </div>
                                             </div>
 
@@ -363,10 +372,19 @@ export default function DashboardPage() {
                                                     <div className="absolute -bottom-6 -right-6 text-white/20 transform rotate-12 group-hover:scale-110 group-hover:rotate-6 transition-transform duration-500">
                                                         <Star size={120} />
                                                     </div>
-                                                    <div className="absolute top-6 left-6">
+                                                    <div className="absolute top-6 left-6 flex gap-2">
                                                         <span className="bg-white/20 backdrop-blur-md text-white text-xs font-bold px-3 py-1 rounded-full border border-white/20 shadow-sm">
                                                             Spécialité
                                                         </span>
+                                                        {cat.isFree ? (
+                                                            <span className="bg-green-500/90 backdrop-blur-md text-white text-xs font-bold px-3 py-1 rounded-full border border-white/20 shadow-sm flex items-center gap-1">
+                                                                Gratuit (Freemium)
+                                                            </span>
+                                                        ) : (
+                                                            <span className="bg-yellow-500/90 backdrop-blur-md text-white text-xs font-bold px-3 py-1 rounded-full border border-white/20 shadow-sm flex items-center gap-1">
+                                                                <Crown size={12} /> Premium
+                                                            </span>
+                                                        )}
                                                     </div>
                                                 </div>
 

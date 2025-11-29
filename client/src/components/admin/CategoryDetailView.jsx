@@ -25,11 +25,16 @@ export default function CategoryDetailView({ categoryId, onBack }) {
 
     const handleUpdateName = async () => {
         try {
-            await axios.put(`/categories/${categoryId}`, { name: newName, specialtyId: category.specialtyId });
+            await axios.put(`/categories/${categoryId}`, {
+                name: newName,
+                specialtyId: category.specialtyId,
+                isFree: category.isFree
+            });
             setCategory({ ...category, name: newName });
             setIsEditingName(false);
         } catch (error) {
-            alert("Erreur lors de la mise à jour du nom");
+            console.error("Update failed", error);
+            alert(error.response?.data?.message || "Erreur lors de la mise à jour");
         }
     };
 
@@ -58,17 +63,28 @@ export default function CategoryDetailView({ categoryId, onBack }) {
 
                 {isEditingName && (
                     <div className="flex items-center gap-2 flex-1 w-full md:w-auto">
-                        <input
-                            type="text"
-                            value={newName}
-                            onChange={(e) => setNewName(e.target.value)}
-                            className="flex-1 text-xl md:text-2xl font-bold bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-1 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            autoFocus
-                        />
-                        <Button onClick={handleUpdateName} className="p-2 bg-green-600 hover:bg-green-700 text-white rounded-lg">
+                        <div className="flex flex-col gap-1">
+                            <input
+                                type="text"
+                                value={newName}
+                                onChange={(e) => setNewName(e.target.value)}
+                                className="flex-1 text-xl md:text-2xl font-bold bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-1 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                autoFocus
+                            />
+                            <label className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400 cursor-pointer">
+                                <input
+                                    type="checkbox"
+                                    checked={category.isFree}
+                                    onChange={(e) => setCategory({ ...category, isFree: e.target.checked })}
+                                    className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                                />
+                                Module Gratuit (Freemium)
+                            </label>
+                        </div>
+                        <Button onClick={handleUpdateName} className="p-2 bg-green-600 hover:bg-green-700 text-white rounded-lg self-start mt-1">
                             <Save size={20} />
                         </Button>
-                        <Button onClick={() => setIsEditingName(false)} variant="ghost" className="p-2 text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg">
+                        <Button onClick={() => setIsEditingName(false)} variant="ghost" className="p-2 text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg self-start mt-1">
                             <X size={20} />
                         </Button>
                     </div>
