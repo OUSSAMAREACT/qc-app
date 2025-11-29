@@ -50,7 +50,11 @@ app.use(cors({
     optionsSuccessStatus: 200
 }));
 
-app.use(express.json());
+optionsSuccessStatus: 200
+}));
+
+app.use(express.json({ limit: '50mb' }));
+app.use(express.urlencoded({ limit: '50mb', extended: true }));
 
 // Routes
 app.use('/api/auth', authRoutes);

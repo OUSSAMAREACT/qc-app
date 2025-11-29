@@ -32,12 +32,19 @@ export const uploadDocument = async (req, res) => {
             console.log('-----------------------');
 
             if (typeof pdfParse !== 'function') {
-                // Last ditch attempt: if it has a default property that is a function, use it
+                // Try .default
                 if (pdfParse.default && typeof pdfParse.default === 'function') {
                     console.log('Using .default as function');
                     const data = await pdfParse.default(buffer);
                     content = data.text;
-                } else {
+                }
+                // Try .PDFParse (based on debug logs showing this key)
+                else if (pdfParse.PDFParse && typeof pdfParse.PDFParse === 'function') {
+                    console.log('Using .PDFParse as function');
+                    const data = await pdfParse.PDFParse(buffer);
+                    content = data.text;
+                }
+                else {
                     throw new Error(`pdf-parse library is not a function. It is: ${typeof pdfParse}. Keys: ${Object.keys(pdfParse).join(', ')}`);
                 }
             } else {
