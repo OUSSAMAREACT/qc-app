@@ -182,7 +182,7 @@ export default function QuestionForm({ initialData, categoryId, onSuccess, onCan
                     {formData.choices.map((choice, index) => (
                         <div
                             key={index}
-                            className={`flex gap-3 items-center p-3 rounded-xl border transition-all duration-200 ${choice.isCorrect
+                            className={`group flex gap-3 items-center p-3 rounded-xl border transition-all duration-200 ${choice.isCorrect
                                 ? 'bg-green-50 dark:bg-green-900/10 border-green-200 dark:border-green-900/30 ring-1 ring-green-500/20'
                                 : 'bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 hover:border-blue-300 dark:hover:border-blue-500'
                                 }`}
@@ -204,7 +204,7 @@ export default function QuestionForm({ initialData, categoryId, onSuccess, onCan
                                     onChange={(e) => updateChoice(index, 'text', e.target.value)}
                                     placeholder={`Réponse ${index + 1}`}
                                     required
-                                    className="w-full bg-transparent border-none focus:ring-0 p-0 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 font-medium"
+                                    className="w-full bg-transparent border-b border-transparent hover:border-gray-300 focus:border-blue-500 focus:ring-0 px-2 py-1 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 font-medium transition-colors"
                                 />
                             </div>
                             {formData.choices.length > 2 && (
@@ -212,6 +212,7 @@ export default function QuestionForm({ initialData, categoryId, onSuccess, onCan
                                     type="button"
                                     onClick={() => removeChoice(index)}
                                     className="text-gray-400 hover:text-red-500 dark:hover:text-red-400 p-2 opacity-0 group-hover:opacity-100 transition-opacity"
+                                    title="Supprimer cette réponse"
                                 >
                                     <Trash2 size={18} />
                                 </button>
