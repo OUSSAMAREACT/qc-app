@@ -6,7 +6,7 @@ export const getQuestionsWithoutChoices = async (req, res) => {
         const questions = await prisma.question.findMany({
             where: {
                 choices: {
-                    none: {} // Finds questions where choices array is empty
+                    none: { isCorrect: true } // Finds questions where NO choice is marked as correct
                 }
             },
             include: {
@@ -43,7 +43,7 @@ export const bulkDeleteBrokenQuestions = async (req, res) => {
         const result = await prisma.question.deleteMany({
             where: {
                 choices: {
-                    none: {}
+                    none: { isCorrect: true }
                 }
             }
         });
