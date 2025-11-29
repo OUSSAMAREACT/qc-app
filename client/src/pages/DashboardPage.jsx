@@ -119,8 +119,18 @@ export default function DashboardPage() {
                 <div className="absolute inset-0 opacity-10 bg-[radial-gradient(circle_at_top_right,_var(--tw-gradient-stops))] from-white via-transparent to-transparent" />
 
                 <div className="relative z-10">
-                    <h1 className="text-2xl md:text-5xl font-heading font-bold mb-4 tracking-tight">
+                    <h1 className="text-2xl md:text-5xl font-heading font-bold mb-4 tracking-tight flex items-center gap-3">
                         {greeting}, <span className="text-primary-100">{user?.name?.split(' ')[0]}</span> !
+                        {user?.role === 'PREMIUM' && (
+                            <motion.div
+                                initial={{ scale: 0 }}
+                                animate={{ scale: 1 }}
+                                className="bg-yellow-400 text-yellow-900 p-1.5 rounded-full shadow-lg"
+                                title="Membre Premium"
+                            >
+                                <Crown size={24} fill="currentColor" />
+                            </motion.div>
+                        )}
                     </h1>
                     <p className="text-primary-100/90 text-lg md:text-xl max-w-2xl mb-8 font-medium leading-relaxed">
                         Prêt à relever de nouveaux défis aujourd'hui ? Continuez sur votre lancée et atteignez vos objectifs.

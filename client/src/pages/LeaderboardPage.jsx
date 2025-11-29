@@ -101,9 +101,14 @@ export default function LeaderboardPage() {
                         </span>
                     </div>
                     <div className="text-center">
-                        <p className={`font-bold text-gray-900 dark:text-white ${isFirst ? 'text-lg md:text-xl' : 'text-base md:text-lg'}`}>
-                            {entry.user.name}
-                        </p>
+                        <div className="flex items-center gap-1">
+                            <p className={`font-bold text-gray-900 dark:text-white ${isFirst ? 'text-lg md:text-xl' : 'text-base md:text-lg'}`}>
+                                {entry.user.name}
+                            </p>
+                            {entry.user.role === 'PREMIUM' && (
+                                <Crown size={16} className="text-yellow-500 fill-yellow-500" />
+                            )}
+                        </div>
                         <p className="text-xs md:text-sm text-gray-500 dark:text-gray-400 font-medium bg-white/50 dark:bg-black/20 px-2 py-0.5 rounded-full backdrop-blur-sm mt-1">
                             {entry.score} pts
                         </p>
@@ -196,8 +201,13 @@ export default function LeaderboardPage() {
                                         </div>
 
                                         <div className="flex-1 min-w-0">
-                                            <div className="font-bold text-gray-900 dark:text-white truncate text-base md:text-lg">
+                                            <div className="font-bold text-gray-900 dark:text-white truncate text-base md:text-lg flex items-center gap-2">
                                                 {entry.user.name}
+                                                {entry.user.role === 'PREMIUM' && (
+                                                    <div className="bg-yellow-100 dark:bg-yellow-900/30 p-1 rounded-full" title="Premium">
+                                                        <Crown size={14} className="text-yellow-600 dark:text-yellow-400 fill-yellow-600 dark:fill-yellow-400" />
+                                                    </div>
+                                                )}
                                             </div>
                                             <div className="text-xs md:text-sm text-gray-500 dark:text-gray-400 flex items-center gap-1">
                                                 <User size={12} />

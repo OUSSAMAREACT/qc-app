@@ -306,7 +306,7 @@ export const getLeaderboard = async (req, res) => {
             where: { examId: parseInt(examId) },
             include: {
                 user: {
-                    select: { name: true, email: true, specialty: true } // Select minimal user info
+                    select: { name: true, email: true, specialty: true, role: true } // Select minimal user info + role
                 }
             },
             orderBy: [

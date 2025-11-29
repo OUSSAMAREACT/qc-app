@@ -167,9 +167,18 @@ export default function ProfilePage() {
                             </h1>
                             <div className="flex flex-wrap items-center gap-3 text-gray-600 dark:text-gray-300 font-medium mt-2">
                                 <div className="flex items-center gap-2 bg-white dark:bg-gray-800 px-3 py-1.5 rounded-full shadow-sm border border-gray-100 dark:border-gray-700">
-                                    <Award size={16} className="text-yellow-500" />
-                                    <span>{user?.role === 'ADMIN' ? 'Administrateur' : 'Étudiant'}</span>
+                                    <Award size={16} className={user?.role === 'PREMIUM' ? "text-yellow-600" : "text-yellow-500"} />
+                                    <span>
+                                        {user?.role === 'ADMIN' ? 'Administrateur' :
+                                            user?.role === 'PREMIUM' ? 'Étudiant Premium' : 'Étudiant'}
+                                    </span>
                                 </div>
+                                {user?.role === 'PREMIUM' && (
+                                    <div className="flex items-center gap-2 bg-gradient-to-r from-yellow-100 to-amber-100 dark:from-yellow-900/30 dark:to-amber-900/30 px-3 py-1.5 rounded-full shadow-sm border border-yellow-200 dark:border-yellow-700 text-yellow-800 dark:text-yellow-400 font-bold">
+                                        <Crown size={16} fill="currentColor" />
+                                        <span>Membre VIP</span>
+                                    </div>
+                                )}
                                 {user?.specialty ? (
                                     <div className="flex items-center gap-2 bg-white dark:bg-gray-800 px-3 py-1.5 rounded-full shadow-sm border border-gray-100 dark:border-gray-700">
                                         <span className="w-2 h-2 bg-blue-500 rounded-full"></span>
