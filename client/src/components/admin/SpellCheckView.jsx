@@ -65,16 +65,14 @@ export default function SpellCheckView() {
         }
     };
 
-    const handleApplyCorrection = async (questionId, original, correction) => {
+    const handleApplyCorrection = async (questionId, original, correction, isFullReplacement = false) => {
         try {
             const question = results.find(q => q.id === questionId);
             if (!question) return;
 
-            // Replace the word in the text (case insensitive but preserving original case if possible, 
-            // but here we usually want the correction's case)
             // Replace the word in the text
             let newText;
-            if (original === question.text) {
+            if (isFullReplacement) {
                 // Full replacement (Academic Style)
                 newText = correction;
             } else {
@@ -95,7 +93,9 @@ export default function SpellCheckView() {
                     return {
                         ...q,
                         text: newText,
-                        corrections: newCorrections
+                        corrections: newCorrections,
+                        // If full replacement, clear all corrections as they are likely resolved
+                        improved_text: isFullReplacement ? null : q.improved_text
                     };
                 }
                 return q;
@@ -107,9 +107,33 @@ export default function SpellCheckView() {
         }
     };
 
-    const handleEditSuccess = () => {
-        setEditingQuestion(null);
-        handleScan(); // Refresh results
+    const handleEditSuccess = async () => {
+        if (!editingQuestion) return;
+
+        try {
+            // Fetch the updated question to get the new text
+            const res = await axios.get(`/questions/${editingQuestion.id}`);
+            const updatedQuestion = res.data;
+
+            // Update local state
+            setResults(prev => prev.map(q => {
+                if (q.id === updatedQuestion.id) {
+                    return {
+                        ...q,
+                        ...updatedQuestion,
+                        corrections: [], // Clear old suggestions as text changed
+                        improved_text: null, // Clear old style suggestion
+                        critique: null
+                    };
+                }
+                return q;
+            }));
+
+            setEditingQuestion(null);
+        } catch (error) {
+            console.error("Failed to refresh question", error);
+            setEditingQuestion(null);
+        }
     };
 
     // Render Progress Bar
@@ -131,24 +155,27 @@ export default function SpellCheckView() {
         );
     };
 
-    if (editingQuestion) {
-        return (
-            <div className="space-y-6">
-                <div className="flex items-center justify-between">
-                    <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Modifier la question</h2>
-                    <Button variant="outline" onClick={() => setEditingQuestion(null)}>Annuler</Button>
-                </div>
-                <QuestionForm
-                    initialData={editingQuestion}
-                    onSubmit={handleEditSuccess}
-                    onCancel={() => setEditingQuestion(null)}
-                />
-            </div>
-        );
-    }
-
     return (
-        <div className="space-y-6">
+        <div className="space-y-6 relative">
+            {/* Edit Modal */}
+            {editingQuestion && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm overflow-y-auto">
+                    <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-full max-w-4xl max-h-[90vh] overflow-y-auto">
+                        <div className="p-6 border-b border-gray-100 dark:border-gray-700 flex justify-between items-center sticky top-0 bg-white dark:bg-gray-800 z-10">
+                            <h2 className="text-xl font-bold text-gray-900 dark:text-white">Modifier la question</h2>
+                            <Button variant="ghost" size="sm" onClick={() => setEditingQuestion(null)} icon={X}>Fermer</Button>
+                        </div>
+                        <div className="p-6">
+                            <QuestionForm
+                                initialData={editingQuestion}
+                                onSuccess={handleEditSuccess}
+                                onCancel={() => setEditingQuestion(null)}
+                            />
+                        </div>
+                    </div>
+                </div>
+            )}
+
             <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 p-6">
                 <div className="flex items-center justify-between mb-6">
                     <div>
@@ -252,8 +279,8 @@ export default function SpellCheckView() {
                                                     variant="secondary"
                                                     className="w-full sm:w-auto bg-purple-100 text-purple-700 hover:bg-purple-200 dark:bg-purple-900/40 dark:text-purple-300"
                                                     onClick={() => {
-                                                        // Apply full text replacement
-                                                        handleApplyCorrection(item.id, item.text, item.improved_text); // Hack: treat whole text as "original" to replace
+                                                        // Apply full text replacement with flag
+                                                        handleApplyCorrection(item.id, item.text, item.improved_text, true);
                                                     }}
                                                 >
                                                     Remplacer tout le texte
