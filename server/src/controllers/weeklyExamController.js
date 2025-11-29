@@ -65,7 +65,8 @@ export const getActiveExam = async (req, res) => {
             include: {
                 questions: {
                     include: {
-                        choices: true
+                        choices: true,
+                        category: true // Include category
                     }
                 },
                 submissions: {

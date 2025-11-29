@@ -62,7 +62,8 @@ export default function ResultPage() {
                 userAnswer: userChoiceText,
                 correctAnswer: correctChoiceText,
                 choices: questionDetail.choices,
-                userName: user?.name || "Candidat" // Pass user name
+                userName: user?.name || "Candidat",
+                category: category || null // Pass category from location state
             });
 
             setAiExplanation(res.data.explanation);

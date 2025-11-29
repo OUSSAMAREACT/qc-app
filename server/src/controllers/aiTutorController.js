@@ -17,18 +17,18 @@ const getAI = () => {
 
 export const explainWithContext = async (req, res) => {
     try {
-        const { questionText, userAnswer, correctAnswer, choices, userName } = req.body;
+        const { questionText, userAnswer, correctAnswer, choices, userName, category } = req.body;
 
         if (!questionText) {
             return res.status(400).json({ message: "Question text is required" });
         }
 
-        // 1. Retrieve Context (Naive RAG: Fetch all text for now, or simple keyword match)
-        // Optimization: In a real app, we'd use vector embeddings (pgvector). 
-        // For now, we'll fetch the most recent 5 documents to keep context window manageable, 
-        // or filter by keywords if possible.
+        // 1. Retrieve Context
+        // Filter by category if provided, otherwise fetch most recent
+        const whereClause = category ? { category: category } : {};
 
         const documents = await prisma.knowledgeBaseDocument.findMany({
+            where: whereClause,
             take: 5,
             orderBy: { createdAt: 'desc' }
         });

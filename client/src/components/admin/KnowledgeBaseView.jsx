@@ -5,15 +5,22 @@ import { Card } from '../ui/Card';
 import { Upload, FileText, Trash2, BookOpen, AlertCircle, CheckCircle, Loader2 } from 'lucide-react';
 
 export default function KnowledgeBaseView() {
-    const [documents, setDocuments] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [uploading, setUploading] = useState(false);
-    const [file, setFile] = useState(null);
-    const [error, setError] = useState(null);
+    const [categories, setCategories] = useState([]);
+    const [selectedCategory, setSelectedCategory] = useState("");
 
     useEffect(() => {
         fetchDocuments();
+        fetchCategories();
     }, []);
+
+    const fetchCategories = async () => {
+        try {
+            const res = await axios.get('/categories');
+            setCategories(res.data);
+        } catch (err) {
+            console.error("Failed to fetch categories", err);
+        }
+    };
 
     const fetchDocuments = async () => {
         try {
@@ -40,12 +47,16 @@ export default function KnowledgeBaseView() {
         setUploading(true);
         const formData = new FormData();
         formData.append('file', file);
+        if (selectedCategory) {
+            formData.append('category', selectedCategory);
+        }
 
         try {
             await axios.post('/knowledge-base/upload', formData, {
                 headers: { 'Content-Type': 'multipart/form-data' }
             });
             setFile(null);
+            setSelectedCategory(""); // Reset category
             fetchDocuments(); // Refresh list
         } catch (err) {
             console.error("Upload failed", err);
@@ -87,8 +98,8 @@ export default function KnowledgeBaseView() {
                 <h4 className="font-semibold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
                     <Upload size={20} /> Ajouter un document
                 </h4>
-                <div className="flex flex-col sm:flex-row gap-4 items-center">
-                    <div className="flex-1 w-full">
+                <div className="flex flex-col sm:flex-row gap-4 items-start">
+                    <div className="flex-1 w-full space-y-4">
                         <label className="flex flex-col items-center justify-center w-full h-32 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 transition-colors">
                             <div className="flex flex-col items-center justify-center pt-5 pb-6">
                                 <Upload className="w-8 h-8 mb-3 text-gray-400" />
@@ -99,7 +110,28 @@ export default function KnowledgeBaseView() {
                             </div>
                             <input type="file" className="hidden" onChange={handleFileChange} accept=".pdf,.txt" />
                         </label>
+
+                        {/* Category Selector */}
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                                Catégorie (Optionnel)
+                            </label>
+                            <select
+                                value={selectedCategory}
+                                onChange={(e) => setSelectedCategory(e.target.value)}
+                                className="w-full p-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500"
+                            >
+                                <option value="">Toutes les catégories (Général)</option>
+                                {categories.map(cat => (
+                                    <option key={cat.id} value={cat.name}>{cat.name}</option>
+                                ))}
+                            </select>
+                            <p className="text-xs text-gray-500 mt-1">
+                                Si sélectionné, ce document ne sera utilisé que pour les questions de cette catégorie.
+                            </p>
+                        </div>
                     </div>
+
                     <div className="w-full sm:w-auto flex flex-col gap-2">
                         {file && (
                             <div className="flex items-center gap-2 text-sm text-green-600 dark:text-green-400 bg-green-50 dark:bg-green-900/20 px-3 py-2 rounded-lg">
@@ -147,9 +179,19 @@ export default function KnowledgeBaseView() {
                                     </div>
                                     <div>
                                         <h5 className="font-medium text-gray-900 dark:text-white">{doc.title}</h5>
-                                        <p className="text-xs text-gray-500">
-                                            Ajouté le {new Date(doc.createdAt).toLocaleDateString()} • {doc.type}
-                                        </p>
+                                        <div className="flex items-center gap-2 text-xs text-gray-500 mt-1">
+                                            <span>Ajouté le {new Date(doc.createdAt).toLocaleDateString()}</span>
+                                            <span>•</span>
+                                            <span>{doc.type}</span>
+                                            {doc.category && (
+                                                <>
+                                                    <span>•</span>
+                                                    <span className="bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 px-2 py-0.5 rounded-full">
+                                                        {doc.category}
+                                                    </span>
+                                                </>
+                                            )}
+                                        </div>
                                     </div>
                                 </div>
                                 <Button

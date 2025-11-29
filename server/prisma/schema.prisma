@@ -209,5 +209,6 @@ model KnowledgeBaseDocument {
   filename  String
   content   String   @db.Text // Store extracted text
   type      String   // "PDF", "TXT"
+  category  String?  // Optional category for filtering
   createdAt DateTime @default(now())
 }

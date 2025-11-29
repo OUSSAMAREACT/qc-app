@@ -57,7 +57,8 @@ export default function WeeklyExamResultPage() {
                 userAnswer: userChoiceText,
                 correctAnswer: correctChoiceText,
                 choices: question.choices,
-                userName: exam.userName || "Candidat" // Pass user name if available
+                userName: exam.userName || "Candidat",
+                category: question.category?.name || null // Pass category name
             });
 
             setAiExplanation(res.data.explanation);

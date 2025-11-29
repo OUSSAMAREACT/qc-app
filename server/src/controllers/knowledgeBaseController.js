@@ -53,7 +53,8 @@ export const uploadDocument = async (req, res) => {
                 title: originalname,
                 filename: originalname,
                 content: content,
-                type: mimetype === 'application/pdf' ? 'PDF' : 'TXT'
+                type: mimetype === 'application/pdf' ? 'PDF' : 'TXT',
+                category: req.body.category || null
             }
         });
 
@@ -73,6 +74,7 @@ export const getDocuments = async (req, res) => {
                 title: true,
                 filename: true,
                 type: true,
+                category: true,
                 createdAt: true,
                 // Exclude content to keep response light
             },
