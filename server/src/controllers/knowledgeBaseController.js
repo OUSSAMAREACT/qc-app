@@ -115,7 +115,7 @@ export const uploadDocument = async (req, res) => {
 
         const document = await prisma.knowledgeBaseDocument.create({
             data: {
-                title: originalname,
+                title: req.body.title || originalname,
                 filename: originalname,
                 content: content,
                 type: type,

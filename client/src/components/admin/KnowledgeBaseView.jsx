@@ -12,6 +12,7 @@ export default function KnowledgeBaseView() {
     const [error, setError] = useState(null);
     const [categories, setCategories] = useState([]);
     const [selectedCategory, setSelectedCategory] = useState("");
+    const [uploadTitle, setUploadTitle] = useState("");
 
     const [editingDoc, setEditingDoc] = useState(null);
     const [editForm, setEditForm] = useState({ title: "", category: "" });
@@ -58,6 +59,9 @@ export default function KnowledgeBaseView() {
         if (selectedCategory) {
             formData.append('category', selectedCategory);
         }
+        if (uploadTitle) {
+            formData.append('title', uploadTitle);
+        }
 
         try {
             await axios.post('/knowledge-base/upload', formData, {
@@ -65,6 +69,7 @@ export default function KnowledgeBaseView() {
             });
             setFile(null);
             setSelectedCategory(""); // Reset category
+            setUploadTitle(""); // Reset title
             fetchDocuments(); // Refresh list
         } catch (err) {
             console.error("Upload failed", err);
@@ -136,6 +141,23 @@ export default function KnowledgeBaseView() {
                             </div>
                             <input type="file" className="hidden" onChange={handleFileChange} accept=".pdf,.txt,.docx" />
                         </label>
+
+                        {/* Title Input */}
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                                Titre du document (Optionnel)
+                            </label>
+                            <input
+                                type="text"
+                                placeholder="Ex: Loi 07-22 relative à..."
+                                value={uploadTitle}
+                                onChange={(e) => setUploadTitle(e.target.value)}
+                                className="w-full p-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500"
+                            />
+                            <p className="text-xs text-gray-500 mt-1">
+                                Si vide, le nom du fichier sera utilisé.
+                            </p>
+                        </div>
 
                         {/* Category Selector */}
                         <div>
