@@ -3,15 +3,21 @@ import { GoogleGenAI } from "@google/genai";
 
 const prisma = new PrismaClient();
 
-// Initialize Gemini AI
-const apiKey = process.env.GEMINI_API_KEY;
-if (!apiKey) {
-    console.error("CRITICAL: GEMINI_API_KEY is missing from environment variables!");
-} else {
-    console.log("GEMINI_API_KEY loaded successfully (starts with: " + apiKey.substring(0, 4) + "...)");
-}
+// Lazy initialization of Gemini AI
+let ai;
 
-const ai = new GoogleGenAI({ apiKey: apiKey || "dummy_key_to_prevent_crash_on_init" });
+const getAI = () => {
+    if (!ai) {
+        const apiKey = process.env.GEMINI_API_KEY;
+        if (!apiKey) {
+            console.error("CRITICAL: GEMINI_API_KEY is missing from environment variables!");
+            throw new Error("API Key missing");
+        }
+        console.log("GEMINI_API_KEY loaded successfully (starts with: " + apiKey.substring(0, 4) + "...)");
+        ai = new GoogleGenAI({ apiKey });
+    }
+    return ai;
+};
 
 export const scanQuestions = async (req, res) => {
     try {
@@ -77,7 +83,8 @@ ${questionsText}
 `;
 
             try {
-                const response = await ai.models.generateContent({
+                const aiClient = getAI();
+                const response = await aiClient.models.generateContent({
                     model: "gemini-2.5-pro",
                     contents: prompt,
                     config: {
