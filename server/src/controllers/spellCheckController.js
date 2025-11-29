@@ -55,28 +55,30 @@ export const scanQuestions = async (req, res) => {
             const questionsText = batch.map(q => `ID: ${q.id}\nText: ${q.text}`).join('\n\n');
 
             const prompt = `
-You are a strict professional proofreader for French medical exams. 
-Analyze the following questions for spelling, grammar, and syntax errors.
+You are an expert French medical editor and linguist.
+Your task is to review medical exam questions for:
+1. **Spelling & Grammar (STRICT)**: Fix ALL typos, agreement errors, and conjugation mistakes.
+2. **Academic Style (PROFESSIONAL)**: Suggest improvements if the phrasing is awkward, informal, or unclear.
 
-RULES:
-1. Identify ALL spelling errors, including "santée" -> "santé", "acceuil" -> "accueil".
-2. Be strict with French grammar (agreement, conjugation).
-3. IGNORE technical medical terms ONLY if they are correctly spelled.
-4. IGNORE ignored words: ${Array.from(ignoredSet).join(', ')}.
-5. Return ONLY a JSON array.
+CRITICAL INSTRUCTIONS:
+- **"santée" is ALWAYS a mistake.** It must be corrected to "santé".
+- **"acceuil" is ALWAYS a mistake.** It must be corrected to "accueil".
+- **"tachycardie"** is correct. Do not change technical terms if they are spelled correctly.
+- IGNORE ignored words: ${Array.from(ignoredSet).join(', ')}.
 
-FORMAT:
+OUTPUT FORMAT (JSON Array):
 [
     {
         "id": 123,
         "corrections": [
             { "original": "santée", "correction": "santé" }
         ],
-        "suggestion": "Corrected sentence"
+        "improved_text": "Optional: Provide a fully rewritten version ONLY if the original style is poor or contains multiple errors. If the style is good, leave this null.",
+        "critique": "Optional: Brief explanation of why the style was improved."
     }
 ]
 
-If a question has no errors, DO NOT include it in the array.
+If a question is perfect (no typos, good style), DO NOT include it in the array.
 
 QUESTIONS TO ANALYZE:
 ${questionsText}
@@ -112,7 +114,8 @@ ${questionsText}
                             results.push({
                                 ...originalQ,
                                 corrections: result.corrections || [],
-                                suggestion: result.suggestion
+                                improved_text: result.improved_text,
+                                critique: result.critique || result.suggestion // Fallback for older prompt versions
                             });
                         }
                     }

@@ -72,7 +72,15 @@ export default function SpellCheckView() {
 
             // Replace the word in the text (case insensitive but preserving original case if possible, 
             // but here we usually want the correction's case)
-            const newText = question.text.replace(new RegExp(original, 'gi'), correction);
+            // Replace the word in the text
+            let newText;
+            if (original === question.text) {
+                // Full replacement (Academic Style)
+                newText = correction;
+            } else {
+                // Word replacement
+                newText = question.text.replace(new RegExp(original, 'gi'), correction);
+            }
 
             await axios.put(`/questions/${questionId}`, {
                 ...question,
@@ -220,10 +228,36 @@ export default function SpellCheckView() {
                                             </div>
                                         )}
 
-                                        {/* AI Explanation */}
-                                        {item.suggestion && (
-                                            <div className="text-sm text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/10 p-3 rounded-lg">
-                                                <span className="font-bold">Note IA:</span> {item.suggestion}
+                                        {/* AI Explanation / Critique */}
+                                        {item.critique && (
+                                            <div className="text-sm text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/10 p-3 rounded-lg flex gap-2">
+                                                <Wand2 size={16} className="shrink-0 mt-0.5" />
+                                                <div>
+                                                    <span className="font-bold">Note IA:</span> {item.critique}
+                                                </div>
+                                            </div>
+                                        )}
+
+                                        {/* Academic Style Suggestion */}
+                                        {item.improved_text && (
+                                            <div className="bg-purple-50 dark:bg-purple-900/10 border border-purple-100 dark:border-purple-900/30 rounded-xl p-4">
+                                                <h4 className="text-xs font-bold text-purple-600 dark:text-purple-400 uppercase tracking-wider mb-2 flex items-center gap-2">
+                                                    <Wand2 size={14} /> Suggestion Académique
+                                                </h4>
+                                                <p className="text-gray-800 dark:text-gray-200 italic mb-3">
+                                                    "{item.improved_text}"
+                                                </p>
+                                                <Button
+                                                    size="sm"
+                                                    variant="secondary"
+                                                    className="w-full sm:w-auto bg-purple-100 text-purple-700 hover:bg-purple-200 dark:bg-purple-900/40 dark:text-purple-300"
+                                                    onClick={() => {
+                                                        // Apply full text replacement
+                                                        handleApplyCorrection(item.id, item.text, item.improved_text); // Hack: treat whole text as "original" to replace
+                                                    }}
+                                                >
+                                                    Remplacer tout le texte
+                                                </Button>
                                             </div>
                                         )}
 
