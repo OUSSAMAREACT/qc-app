@@ -17,6 +17,9 @@ export const getCategories = async (req, res) => {
             ];
             // Exclude "Banque de Questions" for non-admins
             where.name = { not: "Banque de Questions" };
+
+            // Only show categories with at least one question
+            where.questions = { some: {} };
         }
 
         const categories = await prisma.category.findMany({
