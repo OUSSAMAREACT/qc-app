@@ -547,9 +547,6 @@ export default function ResultPage() {
                                     {aiExplanation}
                                 </div>
                             </div>
-                            <p className="text-xs text-gray-400 text-center">
-                                Cette explication est générée par l'IA en se basant uniquement sur la Base Documentaire fournie.
-                            </p>
                         </div>
                     )}
                     <div className="flex justify-end">
