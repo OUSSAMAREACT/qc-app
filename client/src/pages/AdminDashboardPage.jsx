@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 // Trigger rebuild
 import { Link } from 'react-router-dom';
 import { Button } from '../components/ui/Button';
-import { LayoutDashboard, BookOpen, Award, Users, ArrowLeft, LogOut, ArrowRight, Sun, Moon, Settings, Trophy, Upload, Search, CreditCard, Send } from 'lucide-react';
+import { LayoutDashboard, BookOpen, Award, Users, ArrowLeft, LogOut, ArrowRight, Sun, Moon, Settings, Trophy, Upload, Search, CreditCard, Send, AlertTriangle } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
 
@@ -16,7 +16,9 @@ import SettingsManager from '../components/admin/SettingsManager';
 import ImportQuestionsPage from './ImportQuestionsPage';
 import SpellCheckView from '../components/admin/SpellCheckView';
 import AdminPaymentView from '../components/admin/AdminPaymentView';
+import AdminPaymentView from '../components/admin/AdminPaymentView';
 import AdminAnnouncementView from '../components/admin/AdminAnnouncementView';
+import AdminDataIntegrityView from '../components/admin/AdminDataIntegrityView';
 
 export default function AdminDashboardPage() {
     const { user, logout } = useAuth();
@@ -64,6 +66,8 @@ export default function AdminDashboardPage() {
                 return <AdminPaymentView />;
             case 'broadcast':
                 return <AdminAnnouncementView />;
+            case 'integrity':
+                return <AdminDataIntegrityView />;
             default:
                 return <Overview onNavigate={setCurrentView} user={user} />;
         }
@@ -160,6 +164,12 @@ export default function AdminDashboardPage() {
                                 label="Broadcast"
                                 isActive={currentView === 'broadcast'}
                                 onClick={() => { setCurrentView('broadcast'); setSelectedCategory(null); setIsSidebarOpen(false); }}
+                            />
+                            <SidebarItem
+                                icon={<AlertTriangle size={20} />}
+                                label="Maintenance"
+                                isActive={currentView === 'integrity'}
+                                onClick={() => { setCurrentView('integrity'); setSelectedCategory(null); setIsSidebarOpen(false); }}
                             />
                         </>
                     )}
