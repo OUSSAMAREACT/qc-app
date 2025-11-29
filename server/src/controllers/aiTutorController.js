@@ -1,0 +1,90 @@
+import { GoogleGenAI } from "@google/genai";
+import { PrismaClient } from '@prisma/client';
+import dotenv from 'dotenv';
+
+dotenv.config();
+
+const prisma = new PrismaClient();
+const apiKey = process.env.GEMINI_API_KEY;
+
+// Lazy load AI client
+const getAI = () => {
+    if (!apiKey) {
+        throw new Error("GEMINI_API_KEY is not set");
+    }
+    return new GoogleGenAI({ apiKey });
+};
+
+export const explainWithContext = async (req, res) => {
+    try {
+        const { questionText, userAnswer, correctAnswer, choices } = req.body;
+
+        if (!questionText) {
+            return res.status(400).json({ message: "Question text is required" });
+        }
+
+        // 1. Retrieve Context (Naive RAG: Fetch all text for now, or simple keyword match)
+        // Optimization: In a real app, we'd use vector embeddings (pgvector). 
+        // For now, we'll fetch the most recent 5 documents to keep context window manageable, 
+        // or filter by keywords if possible.
+
+        const documents = await prisma.knowledgeBaseDocument.findMany({
+            take: 5,
+            orderBy: { createdAt: 'desc' }
+        });
+
+        if (documents.length === 0) {
+            return res.status(404).json({
+                message: "Aucun document de référence trouvé. Veuillez en ajouter dans la Base Documentaire."
+            });
+        }
+
+        const contextText = documents.map(doc => `--- DOCUMENT: ${doc.title} ---\n${doc.content}\n`).join("\n");
+
+        // 2. Construct Prompt
+        const prompt = `
+You are an expert Nursing Tutor for Moroccan students (ISPITS/ENSP).
+Your goal is to explain why a specific answer is correct/incorrect based STRICTLY on the provided official documents.
+
+CONTEXT (Official Laws & Guidelines):
+${contextText}
+
+QUESTION:
+${questionText}
+
+CHOICES:
+${choices ? choices.map(c => `- ${c.text} ${c.isCorrect ? '(Correct)' : ''}`).join('\n') : ''}
+
+STUDENT ANSWER: ${userAnswer}
+CORRECT ANSWER: ${correctAnswer}
+
+INSTRUCTIONS:
+1. Explain specifically why the student's answer is wrong (if it is) and why the correct answer is right.
+2. CITE YOUR SOURCES. Use the document titles provided in the context (e.g., "Selon la Loi 43-13...").
+3. If the answer is NOT found in the context, state clearly: "Je ne trouve pas la réponse exacte dans les documents fournis, mais voici une explication générale..." (and provide a general medical explanation).
+4. Keep it concise, encouraging, and professional (French).
+`;
+
+        // 3. Call Gemini
+        const aiClient = getAI();
+        const response = await aiClient.models.generateContent({
+            model: "gemini-2.0-flash", // Fast model for interactive tutor
+            contents: prompt,
+        });
+
+        let explanation = "";
+        if (typeof response.text === 'function') {
+            explanation = response.text();
+        } else if (response.text) {
+            explanation = response.text;
+        } else {
+            explanation = "Erreur de génération de réponse.";
+        }
+
+        res.json({ explanation });
+
+    } catch (error) {
+        console.error("AI Tutor Error:", error);
+        res.status(500).json({ message: "Failed to generate explanation", error: error.message });
+    }
+};

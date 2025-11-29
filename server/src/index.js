@@ -18,6 +18,8 @@ import importRoutes from './routes/importRoutes.js';
 import spellCheckRoutes from './routes/spellCheckRoutes.js';
 import ttsRoutes from './routes/ttsRoutes.js';
 import paymentRoutes from './routes/paymentRoutes.js';
+import knowledgeBaseRoutes from './routes/knowledgeBaseRoutes.js';
+import aiTutorRoutes from './routes/aiTutorRoutes.js';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
@@ -48,31 +50,11 @@ app.use(cors({
     optionsSuccessStatus: 200
 }));
 
-
-
-app.use(express.json());
-// Serve uploaded files
-app.use('/api/uploads', express.static(path.join(__dirname, '../uploads')));
-
-// Routes
-app.use('/api/auth', authRoutes);
-app.use('/api/questions', questionRoutes);
-app.use('/api/quiz', quizRoutes);
-app.use('/api/categories', categoryRoutes);
-app.use('/api/specialties', specialtyRoutes);
-app.use('/api/weekly-exams', weeklyExamRoutes);
-app.use('/api/gamification', gamificationRoutes);
-app.use('/api/onboarding', onboardingRoutes);
-app.use('/api/users', userRoutes);
-app.use('/api/settings', systemSettingsRoutes);
-app.use('/api/debug', debugRoutes);
-app.use('/api/comments', commentRoutes);
-app.options('/api/notifications', cors()); // Force preflight handling for this route
-app.use('/api/notifications', notificationRoutes);
-app.use('/api/import', importRoutes);
 app.use('/api/spell-check', spellCheckRoutes);
 app.use('/api/tts', ttsRoutes);
 app.use('/api/payments', paymentRoutes);
+app.use('/api/knowledge-base', knowledgeBaseRoutes);
+app.use('/api/ai-tutor', aiTutorRoutes);
 
 app.get('/', (req, res) => {
     res.send('Quiz API is running');

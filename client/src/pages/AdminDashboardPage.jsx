@@ -18,6 +18,7 @@ import SpellCheckView from '../components/admin/SpellCheckView';
 import AdminPaymentView from '../components/admin/AdminPaymentView';
 import AdminAnnouncementView from '../components/admin/AdminAnnouncementView';
 import AdminDataIntegrityView from '../components/admin/AdminDataIntegrityView';
+import KnowledgeBaseView from '../components/admin/KnowledgeBaseView';
 
 export default function AdminDashboardPage() {
     const { user, logout } = useAuth();
@@ -67,6 +68,8 @@ export default function AdminDashboardPage() {
                 return <AdminAnnouncementView />;
             case 'integrity':
                 return <AdminDataIntegrityView />;
+            case 'knowledge-base':
+                return <KnowledgeBaseView />;
             default:
                 return <Overview onNavigate={setCurrentView} user={user} />;
         }
@@ -169,6 +172,12 @@ export default function AdminDashboardPage() {
                                 label="Maintenance"
                                 isActive={currentView === 'integrity'}
                                 onClick={() => { setCurrentView('integrity'); setSelectedCategory(null); setIsSidebarOpen(false); }}
+                            />
+                            <SidebarItem
+                                icon={<BookOpen size={20} />}
+                                label="Base Documentaire"
+                                isActive={currentView === 'knowledge-base'}
+                                onClick={() => { setCurrentView('knowledge-base'); setSelectedCategory(null); setIsSidebarOpen(false); }}
                             />
                         </>
                     )}

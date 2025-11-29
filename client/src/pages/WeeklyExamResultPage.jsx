@@ -2,8 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import axios from 'axios';
 import { Button } from '../components/ui/Button';
-import { ArrowLeft, CheckCircle, XCircle, Trophy, HelpCircle, AlertCircle } from 'lucide-react';
+import { ArrowLeft, CheckCircle, XCircle, Trophy, HelpCircle, AlertCircle, Brain, Sparkles } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { Modal } from '../components/ui/Modal';
 
 export default function WeeklyExamResultPage() {
     const { id } = useParams();
@@ -11,14 +12,16 @@ export default function WeeklyExamResultPage() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
+    // AI Tutor State
+    const [aiExplanation, setAiExplanation] = useState(null);
+    const [aiLoading, setAiLoading] = useState(false);
+    const [aiModalOpen, setAiModalOpen] = useState(false);
+    const [selectedQuestionForAI, setSelectedQuestionForAI] = useState(null);
+
     useEffect(() => {
         const fetchExam = async () => {
             try {
-                const response = await axios.get('/weekly-exams/active'); // Or fetch by ID if needed, but active is safer for now
-                // Ideally we should have an endpoint to get a specific exam result even if not active, 
-                // but for now let's assume the user is viewing the active exam they just finished.
-                // If we need past exams, we'd need a new endpoint. 
-                // Let's stick to active for now as per the flow.
+                const response = await axios.get('/weekly-exams/active');
                 setExam(response.data);
             } catch (err) {
                 console.error("Error fetching exam result:", err);
@@ -29,6 +32,41 @@ export default function WeeklyExamResultPage() {
         };
         fetchExam();
     }, [id]);
+
+    const handleExplainAI = async (question) => {
+        setSelectedQuestionForAI(question);
+        setAiModalOpen(true);
+        setAiLoading(true);
+        setAiExplanation(null);
+
+        try {
+            const userChoiceIds = exam.userAnswers[question.id] || [];
+            // Find text for user's answer
+            const userChoiceText = question.choices
+                .filter(c => userChoiceIds.includes(c.id))
+                .map(c => c.text)
+                .join(", ") || "Aucune réponse";
+
+            const correctChoiceText = question.choices
+                .filter(c => c.isCorrect)
+                .map(c => c.text)
+                .join(", ");
+
+            const res = await axios.post('/ai-tutor/explain', {
+                questionText: question.text,
+                userAnswer: userChoiceText,
+                correctAnswer: correctChoiceText,
+                choices: question.choices
+            });
+
+            setAiExplanation(res.data.explanation);
+        } catch (err) {
+            console.error("AI Tutor Error:", err);
+            setAiExplanation("Désolé, je n'ai pas pu générer d'explication pour le moment. Vérifiez que la Base Documentaire contient des documents pertinents.");
+        } finally {
+            setAiLoading(false);
+        }
+    };
 
     if (loading) return <div className="p-8 text-center">Chargement des résultats...</div>;
     if (error) return <div className="p-8 text-center text-red-500">{error}</div>;
@@ -67,8 +105,6 @@ export default function WeeklyExamResultPage() {
                         const userChoiceIds = userAnswers[question.id] || [];
                         const correctChoices = question.choices.filter(c => c.isCorrect);
                         const correctChoiceIds = correctChoices.map(c => c.id);
-
-                        // Determine if user got it right
                         const isCorrect = userChoiceIds.length === correctChoiceIds.length &&
                             userChoiceIds.every(id => correctChoiceIds.includes(id));
 
@@ -88,7 +124,6 @@ export default function WeeklyExamResultPage() {
                                             {question.choices.map(choice => {
                                                 const isSelected = userChoiceIds.includes(choice.id);
                                                 const isActuallyCorrect = choice.isCorrect;
-
                                                 let choiceClass = "p-3 rounded-xl border flex items-center justify-between ";
                                                 if (isActuallyCorrect) {
                                                     choiceClass += "bg-green-100 border-green-300 text-green-800 dark:bg-green-900/40 dark:border-green-700 dark:text-green-200";
@@ -97,28 +132,36 @@ export default function WeeklyExamResultPage() {
                                                 } else {
                                                     choiceClass += "bg-white border-gray-200 text-gray-600 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 opacity-70";
                                                 }
-
                                                 return (
                                                     <div key={choice.id} className={choiceClass}>
                                                         <span>{choice.text}</span>
-                                                        {isSelected && (
-                                                            <span className="text-xs font-bold uppercase px-2 py-1 rounded bg-black/10">Votre choix</span>
-                                                        )}
+                                                        {isSelected && <span className="text-xs font-bold uppercase px-2 py-1 rounded bg-black/10">Votre choix</span>}
                                                     </div>
                                                 );
                                             })}
                                         </div>
 
-                                        {question.explanation && (
-                                            <div className="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-xl border border-blue-100 dark:border-blue-800">
-                                                <div className="flex items-center gap-2 text-blue-700 dark:text-blue-300 font-bold mb-1">
-                                                    <HelpCircle size={18} /> Explication
+                                        <div className="flex flex-col sm:flex-row gap-4 mt-4">
+                                            {question.explanation && (
+                                                <div className="flex-1 bg-blue-50 dark:bg-blue-900/20 p-4 rounded-xl border border-blue-100 dark:border-blue-800">
+                                                    <div className="flex items-center gap-2 text-blue-700 dark:text-blue-300 font-bold mb-1">
+                                                        <HelpCircle size={18} /> Explication
+                                                    </div>
+                                                    <p className="text-blue-800 dark:text-blue-200 text-sm leading-relaxed">
+                                                        {question.explanation}
+                                                    </p>
                                                 </div>
-                                                <p className="text-blue-800 dark:text-blue-200 text-sm leading-relaxed">
-                                                    {question.explanation}
-                                                </p>
-                                            </div>
-                                        )}
+                                            )}
+
+                                            <Button
+                                                variant="outline"
+                                                onClick={() => handleExplainAI(question)}
+                                                className="self-start bg-gradient-to-r from-purple-50 to-indigo-50 dark:from-purple-900/20 dark:to-indigo-900/20 border-purple-200 dark:border-purple-800 text-purple-700 dark:text-purple-300 hover:shadow-md transition-all"
+                                            >
+                                                <Sparkles size={18} className="mr-2 text-purple-500" />
+                                                Expliquer avec l'IA
+                                            </Button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -126,6 +169,43 @@ export default function WeeklyExamResultPage() {
                     })}
                 </div>
             </motion.div>
+
+            <Modal
+                isOpen={aiModalOpen}
+                onClose={() => setAiModalOpen(false)}
+                title={
+                    <div className="flex items-center gap-2 text-purple-600 dark:text-purple-400">
+                        <Brain size={24} />
+                        <span>Tuteur IA (Basé sur vos documents)</span>
+                    </div>
+                }
+            >
+                <div className="space-y-4">
+                    {aiLoading ? (
+                        <div className="flex flex-col items-center justify-center py-8 space-y-4">
+                            <div className="w-12 h-12 border-4 border-purple-200 border-t-purple-600 rounded-full animate-spin"></div>
+                            <p className="text-gray-500 animate-pulse">Analyse des documents officiels en cours...</p>
+                        </div>
+                    ) : (
+                        <div className="prose dark:prose-invert max-w-none">
+                            <div className="bg-purple-50 dark:bg-purple-900/20 p-4 rounded-xl border border-purple-100 dark:border-purple-800 mb-4">
+                                <h4 className="font-bold text-purple-800 dark:text-purple-300 mb-2 flex items-center gap-2">
+                                    <Sparkles size={16} /> Explication Personnalisée
+                                </h4>
+                                <div className="text-gray-700 dark:text-gray-300 whitespace-pre-wrap leading-relaxed">
+                                    {aiExplanation}
+                                </div>
+                            </div>
+                            <p className="text-xs text-gray-400 text-center">
+                                Cette explication est générée par l'IA en se basant uniquement sur la Base Documentaire fournie.
+                            </p>
+                        </div>
+                    )}
+                    <div className="flex justify-end">
+                        <Button variant="ghost" onClick={() => setAiModalOpen(false)}>Fermer</Button>
+                    </div>
+                </div>
+            </Modal>
         </div>
     );
 }

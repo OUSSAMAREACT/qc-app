@@ -202,3 +202,12 @@ model IgnoredWord {
   word      String   @unique
   createdAt DateTime @default(now())
 }
+
+model KnowledgeBaseDocument {
+  id        Int      @id @default(autoincrement())
+  title     String
+  filename  String
+  content   String   @db.Text // Store extracted text
+  type      String   // "PDF", "TXT"
+  createdAt DateTime @default(now())
+}
