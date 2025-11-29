@@ -18,7 +18,8 @@ export const getUsers = async (req, res) => {
                     }
                 },
                 createdAt: true,
-                onboardingCompleted: true
+                onboardingCompleted: true,
+                premiumExpiresAt: true
             },
             orderBy: {
                 createdAt: 'desc'
@@ -33,13 +34,14 @@ export const getUsers = async (req, res) => {
 
 export const updateUser = async (req, res) => {
     const { id } = req.params;
-    const { name, password, role, status } = req.body;
+    const { name, password, role, status, premiumExpiresAt } = req.body;
 
     try {
         const updateData = {};
         if (name) updateData.name = name;
         if (role) updateData.role = role;
         if (status) updateData.status = status;
+        if (premiumExpiresAt !== undefined) updateData.premiumExpiresAt = premiumExpiresAt ? new Date(premiumExpiresAt) : null;
         if (password) {
             const salt = await bcrypt.genSalt(10);
             updateData.password = await bcrypt.hash(password, salt);
@@ -53,7 +55,8 @@ export const updateUser = async (req, res) => {
                 email: true,
                 name: true,
                 role: true,
-                status: true
+                status: true,
+                premiumExpiresAt: true
             }
         });
 

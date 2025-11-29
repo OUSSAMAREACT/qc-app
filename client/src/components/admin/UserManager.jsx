@@ -14,7 +14,7 @@ export default function UserManager() {
     const [searchTerm, setSearchTerm] = useState('');
     const [editingUser, setEditingUser] = useState(null);
     const [deleteConfirm, setDeleteConfirm] = useState(null);
-    const [formData, setFormData] = useState({ name: '', role: '', password: '' });
+    const [formData, setFormData] = useState({ name: '', role: '', password: '', premiumExpiresAt: null });
 
     const [filterStatus, setFilterStatus] = useState('ALL'); // ALL, PENDING, ACTIVE
 
@@ -35,7 +35,12 @@ export default function UserManager() {
 
     const handleEditClick = (user) => {
         setEditingUser(user);
-        setFormData({ name: user.name, role: user.role, password: '' });
+        setFormData({
+            name: user.name,
+            role: user.role,
+            password: '',
+            premiumExpiresAt: user.premiumExpiresAt
+        });
     };
 
     const handleDeleteClick = (user) => {
@@ -55,14 +60,23 @@ export default function UserManager() {
     const handleUpdate = async (e) => {
         e.preventDefault();
         try {
-            const updateData = { name: formData.name, role: formData.role };
+            const updateData = {
+                name: formData.name,
+                role: formData.role,
+                premiumExpiresAt: formData.premiumExpiresAt
+            };
             if (formData.password) updateData.password = formData.password;
 
             await axios.put(`/users/${editingUser.id}`, updateData);
 
-            setUsers(users.map(u => u.id === editingUser.id ? { ...u, name: formData.name, role: formData.role } : u));
+            setUsers(users.map(u => u.id === editingUser.id ? {
+                ...u,
+                name: formData.name,
+                role: formData.role,
+                premiumExpiresAt: formData.premiumExpiresAt
+            } : u));
             setEditingUser(null);
-            setFormData({ name: '', role: '', password: '' });
+            setFormData({ name: '', role: '', password: '', premiumExpiresAt: null });
         } catch (error) {
             console.error("Failed to update user", error);
             alert("Erreur lors de la mise à jour");
@@ -374,6 +388,19 @@ export default function UserManager() {
                                 </div>
 
                                 <div>
+                                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Expiration Premium</label>
+                                    <div className="relative">
+                                        <input
+                                            type="date"
+                                            value={formData.premiumExpiresAt ? new Date(formData.premiumExpiresAt).toISOString().split('T')[0] : ''}
+                                            onChange={(e) => setFormData({ ...formData, premiumExpiresAt: e.target.value })}
+                                            className="w-full pl-4 pr-4 py-2 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500 outline-none"
+                                        />
+                                    </div>
+                                    <p className="text-xs text-gray-500 mt-1">Laisser vide pour un accès illimité ou standard.</p>
+                                </div>
+
+                                <div>
                                     <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Nouveau mot de passe (optionnel)</label>
                                     <div className="relative">
                                         <Key className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={18} />
@@ -393,11 +420,12 @@ export default function UserManager() {
                             </form>
                         </motion.div>
                     </motion.div>
-                )}
-            </AnimatePresence>
+                )
+                }
+            </AnimatePresence >
 
             {/* Delete Confirmation Modal */}
-            <AnimatePresence>
+            < AnimatePresence >
                 {deleteConfirm && (
                     <motion.div
                         initial={{ opacity: 0 }}
@@ -425,7 +453,7 @@ export default function UserManager() {
                         </motion.div>
                     </motion.div>
                 )}
-            </AnimatePresence>
-        </div>
+            </AnimatePresence >
+        </div >
     );
 }
