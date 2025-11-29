@@ -1,7 +1,11 @@
 import { PrismaClient } from '@prisma/client';
 import { createRequire } from 'module';
 const require = createRequire(import.meta.url);
-const pdfParse = require('pdf-parse');
+let pdfParse = require('pdf-parse');
+// Handle CommonJS/ESM interop: if it's an object with .default, use that
+if (typeof pdfParse !== 'function' && pdfParse.default) {
+    pdfParse = pdfParse.default;
+}
 import fs from 'fs';
 
 const prisma = new PrismaClient();
@@ -16,6 +20,10 @@ export const uploadDocument = async (req, res) => {
         let content = "";
 
         if (mimetype === 'application/pdf') {
+            console.log('Invoking pdfParse, type:', typeof pdfParse);
+            if (typeof pdfParse !== 'function') {
+                throw new Error(`pdf-parse library is not a function. It is: ${typeof pdfParse}`);
+            }
             const data = await pdfParse(buffer);
             content = data.text;
         } else if (mimetype === 'text/plain') {
