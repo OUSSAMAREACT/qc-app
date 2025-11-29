@@ -138,8 +138,16 @@ export const approvePayment = async (req, res) => {
             })
         ]);
 
+        // Format plan name for email
+        const planNames = {
+            '1_MONTH': 'Mensuel (1 Mois)',
+            '3_MONTHS': 'Trimestriel (3 Mois)',
+            '1_YEAR': 'Annuel (1 An)'
+        };
+        const readablePlan = planNames[plan] || plan;
+
         // Send Email & Notification (Async, don't block response)
-        sendPaymentApprovedEmail(payment.user.email, payment.user.name, plan, expiresAt);
+        sendPaymentApprovedEmail(payment.user.email, payment.user.name, readablePlan, expiresAt);
         createNotification(payment.userId, 'PAYMENT', "Votre paiement a été approuvé ! Bienvenue Premium.", '/dashboard');
 
         res.json({ message: "Paiement approuvé. L'utilisateur est maintenant PREMIUM jusqu'au " + expiresAt.toLocaleDateString() });
