@@ -3,8 +3,8 @@ import { GoogleGenAI } from "@google/genai";
 
 const prisma = new PrismaClient();
 
-// Initialize Gemini AI with the working key
-const ai = new GoogleGenAI({ apiKey: "AIzaSyCqbwwv6bOktU70j57vkLjsYEDAHa0bs-Y" });
+// Initialize Gemini AI
+const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 
 export const scanQuestions = async (req, res) => {
     try {
