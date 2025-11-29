@@ -1,12 +1,8 @@
 import { PrismaClient } from '@prisma/client';
-import { createRequire } from 'module';
-const require = createRequire(import.meta.url);
-let pdfParse = require('pdf-parse');
+import pdfParseLib from 'pdf-parse';
 
-// Handle CommonJS/ESM interop: if it's an object with .default, use that
-if (typeof pdfParse !== 'function' && pdfParse.default) {
-    pdfParse = pdfParse.default;
-}
+// Handle potential ESM/CJS default export mismatch
+const pdfParse = pdfParseLib.default || pdfParseLib;
 import fs from 'fs';
 
 const prisma = new PrismaClient();
