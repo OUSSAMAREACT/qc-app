@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '../components/ui/Button';
 import { Card } from '../components/ui/Card';
-import { BookOpen, Trophy, Target, Users, ArrowRight, LayoutDashboard, LogIn, Sun, Moon } from 'lucide-react';
+import { BookOpen, Trophy, Target, Users, ArrowRight, LayoutDashboard, LogIn, Sun, Moon, Zap } from 'lucide-react';
 import SEO from '../components/SEO';
 import { motion } from 'framer-motion';
 import { useAuth } from '../context/AuthContext';
@@ -197,6 +197,51 @@ export default function LandingPage() {
                                 title="Législation & Droit"
                                 description="Tout sur la protection sociale, la responsabilité médicale et les décrets régissant la profession."
                             />
+                        </div>
+                    </div>
+                </section>
+
+                {/* New Features Section */}
+                <section className="py-24 bg-blue-50 dark:bg-gray-900/50 relative overflow-hidden">
+                    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+                        <div className="text-center mb-20">
+                            <span className="text-blue-600 dark:text-blue-400 font-bold tracking-wider uppercase text-sm">Innovation</span>
+                            <h2 className="text-3xl md:text-4xl font-bold mt-2 mb-6">Une Technologie au Service de votre Réussite</h2>
+                            <p className="text-gray-600 dark:text-gray-400 max-w-2xl mx-auto text-lg">
+                                Profitez d'outils exclusifs pour optimiser votre apprentissage et gagner du temps.
+                            </p>
+                        </div>
+
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+                            <Card className="p-8 border-none shadow-xl bg-white dark:bg-gray-800 rounded-3xl overflow-hidden relative group hover:-translate-y-1 transition-transform duration-300">
+                                <div className="absolute top-0 right-0 w-32 h-32 bg-purple-500/10 rounded-bl-full -mr-8 -mt-8 transition-transform group-hover:scale-110"></div>
+                                <div className="relative z-10">
+                                    <div className="w-14 h-14 bg-purple-100 dark:bg-purple-900/30 rounded-2xl flex items-center justify-center text-purple-600 mb-6">
+                                        <Zap size={32} />
+                                    </div>
+                                    <h3 className="text-2xl font-bold mb-4">Tuteur IA Personnel</h3>
+                                    <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
+                                        Ne restez jamais bloqué. Notre IA analyse vos réponses et vous fournit des explications détaillées et personnalisées pour chaque question.
+                                    </p>
+                                </div>
+                            </Card>
+
+                            <Card className="p-8 border-none shadow-xl bg-white dark:bg-gray-800 rounded-3xl overflow-hidden relative group hover:-translate-y-1 transition-transform duration-300">
+                                <div className="absolute top-0 right-0 w-32 h-32 bg-blue-500/10 rounded-bl-full -mr-8 -mt-8 transition-transform group-hover:scale-110"></div>
+                                <div className="relative z-10">
+                                    <div className="w-14 h-14 bg-blue-100 dark:bg-blue-900/30 rounded-2xl flex items-center justify-center text-blue-600 mb-6">
+                                        <div className="relative">
+                                            <div className="absolute -right-1 -top-1 w-3 h-3 bg-red-500 rounded-full animate-ping"></div>
+                                            <Users size={32} className="hidden" /> {/* Placeholder to keep import if needed, but using a different icon here would be better if imported. I'll use LayoutDashboard as a fallback or just text if icon missing. Wait, I can use the existing imports. */}
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-volume-2"><path d="M11 4.702a.705.705 0 0 0-1.203-.498L6.413 7.587A1.4 1.4 0 0 1 5.416 8H3a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h2.416a1.4 1.4 0 0 1 .997.413l3.383 3.384A.705.705 0 0 0 11 19.298z" /><path d="M16 9a5 5 0 0 1 0 6" /><path d="M19.364 18.364a9 9 0 0 0 0-12.728" /></svg>
+                                        </div>
+                                    </div>
+                                    <h3 className="text-2xl font-bold mb-4">Révision Audio (TTS)</h3>
+                                    <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
+                                        Apprenez partout. Écoutez les questions et les choix de réponses en haute qualité audio, idéal pour réviser dans les transports ou en faisant du sport.
+                                    </p>
+                                </div>
+                            </Card>
                         </div>
                     </div>
                 </section>
