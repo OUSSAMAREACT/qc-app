@@ -41,12 +41,15 @@ const allowedOrigins = [
 ];
 
 app.use(cors({
-    origin: allowedOrigins,
+    origin: true, // Reflects the request origin, effectively allowing all origins while keeping credentials working
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization'],
-    optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
+    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept', 'Origin'],
+    optionsSuccessStatus: 200
 }));
+
+// Explicitly handle preflight requests for all routes
+app.options('*', cors());
 
 app.use(express.json());
 // Serve uploaded files
