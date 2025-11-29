@@ -507,8 +507,8 @@ export default function ResultPage() {
                                             {detail.explanation && (
                                                 <div className="flex-1 bg-blue-50 dark:bg-blue-900/10 p-5 rounded-xl border border-blue-100 dark:border-blue-900/30 flex gap-4">
                                                     <Info size={24} className="text-blue-600 dark:text-blue-400 flex-shrink-0" />
-                                                    <div className="space-y-1">
-                                                        <h4 className="font-bold text-blue-900 dark:text-blue-300 text-sm uppercase tracking-wide">Explication</h4>
+                                                    <div className="space-y-1 max-h-60 overflow-y-auto pr-2 custom-scrollbar">
+                                                        <h4 className="font-bold text-blue-900 dark:text-blue-300 text-sm uppercase tracking-wide sticky top-0 bg-blue-50 dark:bg-blue-900/10 pb-1">Explication</h4>
                                                         <p className="text-blue-800 dark:text-blue-200 text-sm leading-relaxed">
                                                             {detail.explanation}
                                                         </p>
