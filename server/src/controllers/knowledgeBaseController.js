@@ -1,7 +1,7 @@
 import { PrismaClient } from '@prisma/client';
 import { createRequire } from 'module';
 const require = createRequire(import.meta.url);
-const pdf = require('pdf-parse');
+const pdfParse = require('pdf-parse');
 import fs from 'fs';
 
 const prisma = new PrismaClient();
@@ -16,7 +16,7 @@ export const uploadDocument = async (req, res) => {
         let content = "";
 
         if (mimetype === 'application/pdf') {
-            const data = await pdf(buffer);
+            const data = await pdfParse(buffer);
             content = data.text;
         } else if (mimetype === 'text/plain') {
             content = buffer.toString('utf-8');
