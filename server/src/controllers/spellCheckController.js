@@ -94,7 +94,17 @@ ${questionsText}
                     }
                 });
 
-                const responseText = response.text();
+                // Handle response.text being a property or function depending on SDK version
+                let responseText;
+                if (typeof response.text === 'function') {
+                    responseText = response.text();
+                } else if (response.text) {
+                    responseText = response.text;
+                } else {
+                    console.warn("Unexpected Gemini response structure:", Object.keys(response));
+                    responseText = JSON.stringify(response);
+                }
+
                 console.log(`AI Response for batch ${i}:`, responseText); // DEBUG LOG
                 // Clean markdown if present
                 const jsonStr = responseText.replace(/```json\n?|\n?```/g, '').trim();
