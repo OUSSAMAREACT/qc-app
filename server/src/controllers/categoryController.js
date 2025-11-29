@@ -69,13 +69,14 @@ export const getCategoryById = async (req, res) => {
 
 export const createCategory = async (req, res) => {
     try {
-        const { name, specialtyId } = req.body;
+        const { name, specialtyId, isFree } = req.body;
         if (!name) return res.status(400).json({ message: "Le nom est requis." });
 
         const category = await prisma.category.create({
             data: {
                 name,
-                specialtyId: specialtyId ? parseInt(specialtyId) : null
+                specialtyId: specialtyId ? parseInt(specialtyId) : null,
+                isFree: isFree || false
             },
             include: { specialty: true }
         });
@@ -98,14 +99,15 @@ export const createCategory = async (req, res) => {
 export const updateCategory = async (req, res) => {
     try {
         const { id } = req.params;
-        const { name, specialtyId } = req.body;
+        const { name, specialtyId, isFree } = req.body;
         if (!name) return res.status(400).json({ message: "Le nom est requis." });
 
         const category = await prisma.category.update({
             where: { id: parseInt(id) },
             data: {
                 name,
-                specialtyId: specialtyId ? parseInt(specialtyId) : null
+                specialtyId: specialtyId ? parseInt(specialtyId) : null,
+                isFree: isFree !== undefined ? isFree : undefined
             },
             include: { specialty: true }
         });
