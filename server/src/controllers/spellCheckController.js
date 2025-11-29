@@ -4,7 +4,14 @@ import { GoogleGenAI } from "@google/genai";
 const prisma = new PrismaClient();
 
 // Initialize Gemini AI
-const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
+const apiKey = process.env.GEMINI_API_KEY;
+if (!apiKey) {
+    console.error("CRITICAL: GEMINI_API_KEY is missing from environment variables!");
+} else {
+    console.log("GEMINI_API_KEY loaded successfully (starts with: " + apiKey.substring(0, 4) + "...)");
+}
+
+const ai = new GoogleGenAI({ apiKey: apiKey || "dummy_key_to_prevent_crash_on_init" });
 
 export const scanQuestions = async (req, res) => {
     try {
