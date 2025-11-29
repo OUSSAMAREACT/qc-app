@@ -2,9 +2,16 @@ import { PrismaClient } from '@prisma/client';
 import { createRequire } from 'module';
 const require = createRequire(import.meta.url);
 let pdfParse = require('pdf-parse');
+
+console.log('RAW pdf-parse require result:', pdfParse);
+console.log('Type of raw result:', typeof pdfParse);
+console.log('Keys of raw result:', Object.keys(pdfParse));
+
 // Handle CommonJS/ESM interop: if it's an object with .default, use that
 if (typeof pdfParse !== 'function' && pdfParse.default) {
+    console.log('Found .default property, using it.');
     pdfParse = pdfParse.default;
+    console.log('New type after .default:', typeof pdfParse);
 }
 import fs from 'fs';
 
