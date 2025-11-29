@@ -173,14 +173,14 @@ export default function AdminDashboardPage() {
                                 isActive={currentView === 'integrity'}
                                 onClick={() => { setCurrentView('integrity'); setSelectedCategory(null); setIsSidebarOpen(false); }}
                             />
-                            <SidebarItem
-                                icon={<BookOpen size={20} />}
-                                label="Base Documentaire"
-                                isActive={currentView === 'knowledge-base'}
-                                onClick={() => { setCurrentView('knowledge-base'); setSelectedCategory(null); setIsSidebarOpen(false); }}
-                            />
                         </>
                     )}
+                    <SidebarItem
+                        icon={<BookOpen size={20} />}
+                        label="Base Documentaire"
+                        isActive={currentView === 'knowledge-base'}
+                        onClick={() => { setCurrentView('knowledge-base'); setSelectedCategory(null); setIsSidebarOpen(false); }}
+                    />
                 </nav>
 
                 <div className="p-4 border-t border-gray-100 dark:border-gray-700 space-y-2">
@@ -324,6 +324,23 @@ function Overview({ onNavigate, user }) {
                         </div>
                     </>
                 )}
+
+                <div
+                    onClick={() => onNavigate('knowledge-base')}
+                    className="group relative overflow-hidden bg-white dark:bg-gray-800 rounded-3xl p-8 shadow-sm hover:shadow-xl transition-all duration-300 border border-gray-100 dark:border-gray-700 cursor-pointer"
+                >
+                    <div className="absolute top-0 right-0 -mt-4 -mr-4 w-32 h-32 bg-cyan-500/10 rounded-full blur-2xl group-hover:bg-cyan-500/20 transition-colors"></div>
+                    <div className="relative z-10">
+                        <div className="w-12 h-12 bg-cyan-100 dark:bg-cyan-900/30 text-cyan-600 rounded-2xl flex items-center justify-center mb-6">
+                            <BookOpen size={24} />
+                        </div>
+                        <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">Base Documentaire</h3>
+                        <p className="text-gray-500 dark:text-gray-400 mb-6">Gérez les documents officiels pour l'IA Tutor.</p>
+                        <div className="flex items-center text-cyan-600 font-medium">
+                            Gérer <ArrowRight size={16} className="ml-2 group-hover:translate-x-1 transition-transform" />
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     );
