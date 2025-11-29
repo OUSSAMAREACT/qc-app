@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import { Search, BookOpen, Star, ArrowRight, ArrowLeft, Filter, Lock, Crown } from 'lucide-react';
 import axios from 'axios';
 import { useAuth } from '../context/AuthContext';
+import SEO from '../components/SEO';
 
 export default function ModuleCatalogPage() {
     const { type } = useParams(); // 'specialty' or 'common'
@@ -91,6 +92,13 @@ export default function ModuleCatalogPage() {
 
     return (
         <div className="space-y-8 min-h-screen pb-20">
+            <SEO
+                title={isSpecialty ? "Modules de Spécialité" : "Modules Communs"}
+                description={isSpecialty
+                    ? "Explorez les modules dédiés à votre spécialité sur QCMEchelle11."
+                    : "Accédez à l'ensemble des modules du tronc commun sur QCMEchelle11."}
+                url={`/modules/${type}`}
+            />
             {/* Header Section */}
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                 <div>

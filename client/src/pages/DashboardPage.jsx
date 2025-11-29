@@ -9,6 +9,7 @@ import { motion } from 'framer-motion';
 import GamificationWidget from '../components/GamificationWidget';
 import WeeklyExamCard from '../components/WeeklyExamCard';
 import axios from 'axios';
+import SEO from '../components/SEO';
 
 export default function DashboardPage() {
     const { user } = useAuth();
@@ -110,6 +111,11 @@ export default function DashboardPage() {
             animate="visible"
             className="space-y-8"
         >
+            <SEO
+                title="Tableau de bord"
+                description="Suivez votre progression, accédez à vos modules et examens, et consultez vos statistiques sur QCMEchelle11."
+                url="/dashboard"
+            />
             {/* Hero Section */}
             <motion.div
                 variants={itemVariants}

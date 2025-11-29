@@ -5,6 +5,7 @@ import { Button } from '../components/ui/Button';
 import { ArrowLeft, CheckCircle, XCircle, Trophy, HelpCircle, AlertCircle, Brain, Sparkles } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { Modal } from '../components/ui/Modal';
+import SEO from '../components/SEO';
 
 export default function WeeklyExamResultPage() {
     const { id } = useParams();
@@ -78,6 +79,12 @@ export default function WeeklyExamResultPage() {
 
     return (
         <div className="max-w-4xl mx-auto px-4 py-8">
+            <SEO
+                title={`Résultats - ${exam.title}`}
+                description={`Résultats de l'examen hebdomadaire : ${exam.userScore}/${exam.questions.length}.`}
+                url={`/weekly-exam/${id}/result`}
+                robots="noindex, nofollow"
+            />
             <Link to="/dashboard" className="inline-flex items-center text-gray-500 hover:text-indigo-600 mb-6 transition-colors">
                 <ArrowLeft size={20} className="mr-2" /> Retour au Dashboard
             </Link>

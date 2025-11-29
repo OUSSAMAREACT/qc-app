@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { Card } from '../components/ui/Card';
 import { Button } from '../components/ui/Button';
 import { ArrowLeft, Clock, BookOpen, BarChart2 } from 'lucide-react';
+import SEO from '../components/SEO';
 
 export default function HistoryPage() {
     const [history, setHistory] = useState([]);
@@ -26,6 +27,11 @@ export default function HistoryPage() {
 
     return (
         <div className="min-h-screen bg-gray-50 dark:bg-gray-900 font-sans pb-12 transition-colors duration-300">
+            <SEO
+                title="Mon Historique"
+                description="Consultez l'historique de vos quiz et suivez votre progression sur QCMEchelle11."
+                url="/history"
+            />
             <nav className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 sticky top-0 z-20 shadow-sm transition-colors duration-300">
                 <div className="max-w-4xl mx-auto px-6 py-4 flex items-center gap-4">
                     <Link to="/dashboard">

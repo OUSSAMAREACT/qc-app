@@ -5,6 +5,7 @@ import { Button } from '../components/ui/Button';
 import { LayoutDashboard, BookOpen, Award, Users, ArrowLeft, LogOut, ArrowRight, Sun, Moon, Settings, Trophy, Upload, Search, CreditCard, Send, AlertTriangle } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
+import SEO from '../components/SEO';
 
 // Views
 import CommonModulesView from '../components/admin/CommonModulesView';
@@ -77,6 +78,12 @@ export default function AdminDashboardPage() {
 
     return (
         <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex font-sans transition-colors duration-300 relative">
+            <SEO
+                title="Administration"
+                description="Panneau d'administration pour gérer les utilisateurs, les modules et les examens de QCMEchelle11."
+                url="/admin"
+                robots="noindex, nofollow"
+            />
             {/* Mobile Header */}
             <div className="lg:hidden fixed top-0 left-0 right-0 h-16 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between px-4 z-30">
                 <div className="flex items-center gap-2">

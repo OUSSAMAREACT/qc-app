@@ -5,6 +5,7 @@ import { Button } from '../components/ui/Button';
 import { Card } from '../components/ui/Card';
 import { Clock, ChevronRight, ChevronLeft, CheckCircle, AlertCircle, Menu, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import SEO from '../components/SEO';
 
 export default function WeeklyExamPage() {
     const { id } = useParams();
@@ -210,6 +211,12 @@ export default function WeeklyExamPage() {
 
     return (
         <div className="min-h-screen bg-gray-50 dark:bg-gray-900 font-sans transition-colors duration-300 flex flex-col">
+            <SEO
+                title={exam.title}
+                description="Examen hebdomadaire en cours sur QCMEchelle11."
+                url={`/weekly-exam/${id}`}
+                robots="noindex, nofollow"
+            />
             {/* Header */}
             <header className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 sticky top-0 z-30 shadow-sm">
                 <div className="max-w-5xl mx-auto px-4 h-16 flex items-center justify-between">

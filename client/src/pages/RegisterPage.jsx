@@ -6,6 +6,7 @@ import { Button } from '../components/ui/Button';
 import { Input } from '../components/ui/Input';
 import { Card } from '../components/ui/Card';
 import { BookOpen, UserPlus, ArrowLeft, Eye, EyeOff } from 'lucide-react';
+import SEO from '../components/SEO';
 
 export default function RegisterPage() {
     const [name, setName] = useState('');
@@ -67,6 +68,11 @@ export default function RegisterPage() {
 
     return (
         <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-600 to-indigo-900 dark:from-gray-900 dark:to-gray-800 p-4 font-sans transition-colors duration-300">
+            <SEO
+                title="Inscription"
+                description="Créez votre compte QCMEchelle11 gratuitement et commencez à préparer votre examen Echelle 11 dès aujourd'hui."
+                url="/register"
+            />
 
             <div className="w-full max-w-md">
                 <div className="text-center mb-8">

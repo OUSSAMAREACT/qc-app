@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { Upload, FileText, Check, AlertCircle, Loader } from 'lucide-react';
 import { motion } from 'framer-motion';
+import SEO from '../components/SEO';
 
 const ImportQuestionsPage = () => {
     const [file, setFile] = useState(null);
@@ -63,6 +64,12 @@ const ImportQuestionsPage = () => {
 
     return (
         <div className="p-6 max-w-6xl mx-auto">
+            <SEO
+                title="Importer des Questions"
+                description="Outil d'importation de questions pour les administrateurs."
+                url="/import"
+                robots="noindex, nofollow"
+            />
             <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-8">Importer des Questions (CSV / JSON)</h1>
 
             <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8 mb-8 border border-gray-100 dark:border-gray-700">

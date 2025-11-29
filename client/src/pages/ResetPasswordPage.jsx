@@ -5,6 +5,7 @@ import { Button } from '../components/ui/Button';
 import { Input } from '../components/ui/Input';
 import { Card } from '../components/ui/Card';
 import { BookOpen, Lock, Eye, EyeOff, CheckCircle, ArrowRight } from 'lucide-react';
+import SEO from '../components/SEO';
 
 export default function ResetPasswordPage() {
     const [password, setPassword] = useState('');
@@ -50,6 +51,12 @@ export default function ResetPasswordPage() {
     if (!token) {
         return (
             <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900 p-4">
+                <SEO
+                    title="Réinitialisation du mot de passe"
+                    description="Réinitialisez votre mot de passe QCMEchelle11."
+                    url="/reset-password"
+                    robots="noindex, nofollow"
+                />
                 <Card className="max-w-md w-full text-center p-8">
                     <div className="text-red-500 mb-4">Lien invalide ou manquant.</div>
                     <Link to="/login">
@@ -62,6 +69,12 @@ export default function ResetPasswordPage() {
 
     return (
         <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-600 to-indigo-900 dark:from-gray-900 dark:to-gray-800 p-4 font-sans transition-colors duration-300">
+            <SEO
+                title="Nouveau mot de passe"
+                description="Définissez votre nouveau mot de passe pour accéder à votre compte QCMEchelle11."
+                url="/reset-password"
+                robots="noindex, nofollow"
+            />
             <div className="w-full max-w-md">
                 <div className="text-center mb-8">
                     <div className="bg-white/10 dark:bg-white/5 w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4 backdrop-blur-sm shadow-xl border border-white/20 dark:border-white/10">

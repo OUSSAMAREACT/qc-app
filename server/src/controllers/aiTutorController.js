@@ -62,7 +62,7 @@ STUDENT NAME: ${userName || "Candidat"}
 INSTRUCTIONS:
 1. Start by addressing the student formally: "M. ${userName || "Candidat"}, vous avez choisi..." (Use "Mme" if appropriate, but default to "M." or just the name if unsure, or "Bonjour ${userName || "Candidat"}").
 2. Explain specifically why the student's answer is wrong (if it is) and why the correct answer is right.
-3. CITE YOUR SOURCES. Use the document titles provided in the context (e.g., "Selon la Loi 43-13...").
+3. CITE YOUR SOURCES. Use the document titles provided in the context (e.g., "Selon la Loi 43-13..."). IMPORTANT: The documents contain page markers like "--- PAGE 15 ---". Use these markers to cite the specific page number (e.g., "Page 15"). Ignore any other page numbers found in the text (like footers) if they differ.
 4. If the answer is NOT found in the context, state clearly: "Je ne trouve pas la réponse exacte dans les documents fournis, mais voici une explication générale..." (and provide a general medical explanation).
 5. Keep it concise, encouraging, and professional (French).
 `;

@@ -6,11 +6,12 @@ import axios from 'axios';
 import {
     User, Mail, Lock, Save, Award,
     TrendingUp, Calendar, BookOpen, Target,
-    MapPin, Building2, Phone, Map
+    MapPin, Building2, Phone, Map, Crown
 } from 'lucide-react';
 import PremiumBadge from '../components/ui/PremiumBadge';
 import { motion } from 'framer-motion';
 import { moroccoRegions } from '../data/moroccoData';
+import SEO from '../components/SEO';
 
 export default function ProfilePage() {
     const { user, login } = useAuth();
@@ -140,6 +141,11 @@ export default function ProfilePage() {
             animate="visible"
             className="max-w-6xl mx-auto space-y-8 pb-12"
         >
+            <SEO
+                title="Mon Profil"
+                description="Gérez votre profil, vos informations personnelles et vos statistiques sur QCMEchelle11."
+                url="/profile"
+            />
             {/* Header Section with Cover */}
             <motion.div variants={itemVariants} className="relative mb-12">
                 <div className="h-48 md:h-64 bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 rounded-3xl shadow-lg overflow-hidden relative">

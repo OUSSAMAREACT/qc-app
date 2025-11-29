@@ -10,6 +10,7 @@ import CommentsSheet from '../components/CommentsSheet';
 import { motion } from 'framer-motion';
 import axios from 'axios';
 import { Modal } from '../components/ui/Modal';
+import SEO from '../components/SEO';
 
 export default function ResultPage() {
     const location = useLocation();
@@ -103,6 +104,12 @@ export default function ResultPage() {
     if (!result && !questionIdParam) {
         return (
             <div className="min-h-screen flex flex-col items-center justify-center gap-4 bg-gray-50 dark:bg-gray-900">
+                <SEO
+                    title="Résultats du Quiz"
+                    description="Consultez vos résultats de quiz sur QCMEchelle11."
+                    url="/result"
+                    robots="noindex, nofollow"
+                />
                 <p className="text-gray-500">Aucun résultat disponible.</p>
                 <Button onClick={() => navigate('/dashboard')}>Retour au tableau de bord</Button>
             </div>
@@ -122,6 +129,11 @@ export default function ResultPage() {
     if (!result && selectedQuestion) {
         return (
             <div className="min-h-screen bg-gray-50 dark:bg-gray-900 p-4 md:p-8 font-sans">
+                <SEO
+                    title={`Discussion - Question ${selectedQuestion.id}`}
+                    description="Participez à la discussion sur cette question."
+                    url={`/result?questionId=${selectedQuestion.id}`}
+                />
                 <div className="max-w-4xl mx-auto space-y-8">
                     <div className="flex justify-between items-center">
                         <Button onClick={() => navigate('/dashboard')} variant="secondary">
@@ -290,6 +302,12 @@ export default function ResultPage() {
 
     return (
         <div className="min-h-screen bg-gray-50 dark:bg-gray-900 p-4 md:p-8 font-sans transition-colors duration-300">
+            <SEO
+                title={`Résultats - ${category || "Quiz"}`}
+                description={`Vous avez obtenu ${score}/${totalQuestions} au quiz ${category || ""}.`}
+                url="/result"
+                robots="noindex, nofollow"
+            />
             <div className="max-w-4xl mx-auto space-y-8">
 
                 {/* Header Section with Glassmorphism */}

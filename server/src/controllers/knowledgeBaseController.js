@@ -30,13 +30,67 @@ export const uploadDocument = async (req, res) => {
             // Check if it's the standard v1 (Function based)
             else if (typeof pdfParse === 'function') {
                 console.log('Using pdf-parse v1 (Function based)');
-                const data = await pdfParse(buffer);
+
+                const render_page = (pageData) => {
+                    let render_options = {
+                        normalizeWhitespace: false,
+                        disableCombineTextItems: false
+                    }
+
+                    return pageData.getTextContent(render_options)
+                        .then(function (textContent) {
+                            let lastY, text = '';
+                            for (let item of textContent.items) {
+                                if (lastY == item.transform[5] || !lastY) {
+                                    text += item.str;
+                                }
+                                else {
+                                    text += '\n' + item.str;
+                                }
+                                lastY = item.transform[5];
+                            }
+                            return `\n--- PAGE ${pageData.pageNumber} ---\n${text}`;
+                        });
+                }
+
+                const options = {
+                    pagerender: render_page
+                }
+
+                const data = await pdfParse(buffer, options);
                 content = data.text;
             }
             // Fallback for default export weirdness
             else if (pdfParse.default && typeof pdfParse.default === 'function') {
                 console.log('Using pdf-parse v1 (Default export function)');
-                const data = await pdfParse.default(buffer);
+
+                const render_page = (pageData) => {
+                    let render_options = {
+                        normalizeWhitespace: false,
+                        disableCombineTextItems: false
+                    }
+
+                    return pageData.getTextContent(render_options)
+                        .then(function (textContent) {
+                            let lastY, text = '';
+                            for (let item of textContent.items) {
+                                if (lastY == item.transform[5] || !lastY) {
+                                    text += item.str;
+                                }
+                                else {
+                                    text += '\n' + item.str;
+                                }
+                                lastY = item.transform[5];
+                            }
+                            return `\n--- PAGE ${pageData.pageNumber} ---\n${text}`;
+                        });
+                }
+
+                const options = {
+                    pagerender: render_page
+                }
+
+                const data = await pdfParse.default(buffer, options);
                 content = data.text;
             }
             else {

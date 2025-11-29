@@ -6,6 +6,7 @@ import { Button } from '../components/ui/Button';
 import { Card } from '../components/ui/Card';
 import { Modal } from '../components/ui/Modal';
 import { AlertTriangle, Clock, Volume2 } from 'lucide-react';
+import SEO from '../components/SEO';
 
 // Simple beep sound (base64)
 const BEEP_SOUND = "data:audio/wav;base64,UklGRl9vT1BXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YU"; // Placeholder, will use a real one or AudioContext
@@ -317,6 +318,11 @@ export default function QuizPage() {
 
     return (
         <div className="min-h-screen bg-gray-50 dark:bg-gray-900 p-4 flex flex-col items-center pb-32 md:pb-20 font-sans transition-colors duration-300">
+            <SEO
+                title="Quiz en cours"
+                description="Testez vos connaissances avec nos QCM interactifs pour l'examen Echelle 11."
+                url="/quiz"
+            />
             {/* Dark Premium Floating Timer (Bottom Right on Desktop, Bottom Center on Mobile) */}
             <div className={`fixed bottom-6 left-1/2 -translate-x-1/2 md:left-auto md:translate-x-0 md:right-6 z-40 transition-all duration-500 transform hover:scale-105 ${isLowTime ? 'animate-pulse' : ''
                 }`}>

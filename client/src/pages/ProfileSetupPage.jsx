@@ -7,6 +7,7 @@ import { Input } from '../components/ui/Input';
 import { Card } from '../components/ui/Card';
 import { User, Building2, MapPin, Phone, Map } from 'lucide-react';
 import { moroccoRegions } from '../data/moroccoData';
+import SEO from '../components/SEO';
 
 export default function ProfileSetupPage() {
     const { user, refreshUser } = useAuth();
@@ -60,6 +61,11 @@ export default function ProfileSetupPage() {
 
     return (
         <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900 p-4">
+            <SEO
+                title="Configuration du Profil"
+                description="Finalisez votre profil pour accéder à toutes les fonctionnalités de QCMEchelle11."
+                url="/profile-setup"
+            />
             <Card className="w-full max-w-lg shadow-xl border-0 ring-1 ring-gray-200 dark:ring-gray-700">
                 <div className="text-center mb-8">
                     <div className="w-16 h-16 bg-blue-100 dark:bg-blue-900/30 rounded-full flex items-center justify-center mx-auto mb-4">

@@ -5,6 +5,7 @@ import { Button } from '../components/ui/Button';
 import { Card } from '../components/ui/Card';
 import { Trophy, ArrowLeft, Medal, Crown, Sparkles, User } from 'lucide-react';
 import { motion } from 'framer-motion';
+import SEO from '../components/SEO';
 
 export default function LeaderboardPage() {
     const { id } = useParams();
@@ -126,6 +127,11 @@ export default function LeaderboardPage() {
 
     return (
         <div className="min-h-screen bg-gray-50 dark:bg-gray-900 font-sans pb-12 transition-colors duration-300">
+            <SEO
+                title={`Classement - ${examTitle || 'Examen Hebdomadaire'}`}
+                description="Découvrez le classement des meilleurs étudiants de la semaine sur QCMEchelle11."
+                url={`/leaderboard/${id}`}
+            />
             {/* Header */}
             <div className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 sticky top-0 z-30 shadow-sm/50 backdrop-blur-md bg-white/80 dark:bg-gray-800/80">
                 <div className="max-w-4xl mx-auto px-4 md:px-6 py-4 flex items-center gap-4">

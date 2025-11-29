@@ -5,6 +5,7 @@ import { Button } from '../components/ui/Button';
 import { Input } from '../components/ui/Input';
 import { Card } from '../components/ui/Card';
 import { BookOpen, LogIn, ArrowRight, ArrowLeft, Eye, EyeOff, Shield } from 'lucide-react';
+import SEO from '../components/SEO';
 
 export default function LoginPage() {
     const [email, setEmail] = useState('');
@@ -36,6 +37,11 @@ export default function LoginPage() {
 
     return (
         <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-600 to-indigo-900 dark:from-gray-900 dark:to-gray-800 p-4 font-sans transition-colors duration-300">
+            <SEO
+                title="Connexion"
+                description="Connectez-vous à votre espace QCMEchelle11 pour accéder à vos QCM, examens blancs et suivre votre progression."
+                url="/login"
+            />
             <div className="w-full max-w-md">
                 <div className="text-center mb-8">
                     <div className="bg-white/10 dark:bg-white/5 w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4 backdrop-blur-sm shadow-xl border border-white/20 dark:border-white/10">

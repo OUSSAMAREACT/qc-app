@@ -5,6 +5,7 @@ import { CreditCard, Smartphone, Facebook, MessageCircle, Copy, CheckCircle, Upl
 import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import SEO from '../components/SEO';
 
 export default function PaymentPage() {
     const { user, logout } = useAuth();
@@ -96,6 +97,11 @@ export default function PaymentPage() {
 
     return (
         <div className="min-h-screen bg-gray-50 dark:bg-gray-900 p-4 md:p-8 pb-20">
+            <SEO
+                title="Abonnement Premium"
+                description="Choisissez votre formule d'abonnement pour accéder à tous les contenus de QCMEchelle11."
+                url="/payment"
+            />
             <div className="max-w-6xl mx-auto space-y-12">
                 {/* Header */}
                 <div className="text-center space-y-4">
