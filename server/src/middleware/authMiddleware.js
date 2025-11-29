@@ -30,9 +30,7 @@ export const authenticateToken = (req, res, next) => {
 };
 
 export const requireAdmin = (req, res, next) => {
-    console.log("Checking Admin Access. User Role:", req.user?.role);
     if (req.user.role !== 'ADMIN' && req.user.role !== 'SUPER_ADMIN') {
-        console.log("Access Denied. Role is not ADMIN or SUPER_ADMIN.");
         return res.status(403).json({ message: "Accès réservé aux administrateurs." });
     }
     next();
