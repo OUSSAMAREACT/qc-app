@@ -2,6 +2,7 @@ import { PrismaClient } from '@prisma/client';
 import { createRequire } from 'module';
 const require = createRequire(import.meta.url);
 const pdfParse = require('pdf-parse');
+const mammoth = require('mammoth');
 import fs from 'fs';
 
 const prisma = new PrismaClient();
@@ -14,8 +15,10 @@ export const uploadDocument = async (req, res) => {
 
         const { originalname, mimetype, buffer } = req.file;
         let content = "";
+        let type = "TXT";
 
         if (mimetype === 'application/pdf') {
+            type = "PDF";
             // Check if we are dealing with v2/v3 (Class based)
             if (pdfParse.PDFParse) {
                 console.log('Using pdf-parse v2/v3 (Class based)');
@@ -39,10 +42,18 @@ export const uploadDocument = async (req, res) => {
             else {
                 throw new Error(`Unsupported pdf-parse version. Exports: ${Object.keys(pdfParse).join(', ')}`);
             }
+        } else if (mimetype === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
+            type = "DOCX";
+            const result = await mammoth.extractRawText({ buffer: buffer });
+            content = result.value;
+            if (result.messages.length > 0) {
+                console.log("Mammoth messages:", result.messages);
+            }
         } else if (mimetype === 'text/plain') {
+            type = "TXT";
             content = buffer.toString('utf-8');
         } else {
-            return res.status(400).json({ message: "Unsupported file type. Only PDF and TXT are allowed." });
+            return res.status(400).json({ message: "Unsupported file type. Only PDF, DOCX, and TXT are allowed." });
         }
 
         // Basic cleaning of content (remove excessive whitespace)
@@ -53,7 +64,7 @@ export const uploadDocument = async (req, res) => {
                 title: originalname,
                 filename: originalname,
                 content: content,
-                type: mimetype === 'application/pdf' ? 'PDF' : 'TXT',
+                type: type,
                 category: req.body.category || null
             }
         });

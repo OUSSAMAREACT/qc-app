@@ -106,9 +106,9 @@ export default function KnowledgeBaseView() {
                                 <p className="mb-2 text-sm text-gray-500 dark:text-gray-400">
                                     <span className="font-semibold">Cliquez pour upload</span> ou glissez-déposez
                                 </p>
-                                <p className="text-xs text-gray-500 dark:text-gray-400">PDF ou TXT (Max 10MB)</p>
+                                <p className="text-xs text-gray-500 dark:text-gray-400">PDF, DOCX ou TXT (Max 10MB)</p>
                             </div>
-                            <input type="file" className="hidden" onChange={handleFileChange} accept=".pdf,.txt" />
+                            <input type="file" className="hidden" onChange={handleFileChange} accept=".pdf,.txt,.docx" />
                         </label>
 
                         {/* Category Selector */}
@@ -174,7 +174,7 @@ export default function KnowledgeBaseView() {
                         {documents.map(doc => (
                             <div key={doc.id} className="flex items-center justify-between p-4 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl shadow-sm hover:shadow-md transition-shadow">
                                 <div className="flex items-center gap-4">
-                                    <div className={`p-2 rounded-lg ${doc.type === 'PDF' ? 'bg-red-100 text-red-600' : 'bg-gray-100 text-gray-600'}`}>
+                                    <div className={`p-2 rounded-lg ${doc.type === 'PDF' ? 'bg-red-100 text-red-600' : doc.type === 'DOCX' ? 'bg-blue-100 text-blue-600' : 'bg-gray-100 text-gray-600'}`}>
                                         <FileText size={24} />
                                     </div>
                                     <div>
