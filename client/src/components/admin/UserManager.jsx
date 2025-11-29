@@ -380,7 +380,8 @@ export default function UserManager() {
                                             onChange={(e) => setFormData({ ...formData, role: e.target.value })}
                                             className="w-full pl-10 pr-4 py-2 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500 outline-none appearance-none"
                                         >
-                                            <option value="STUDENT">Étudiant</option>
+                                            <option value="STUDENT">Étudiant (Freemium)</option>
+                                            <option value="PREMIUM">Premium</option>
                                             <option value="ADMIN">Administrateur</option>
                                             <option value="SUPER_ADMIN">Super Admin</option>
                                         </select>
