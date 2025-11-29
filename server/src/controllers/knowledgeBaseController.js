@@ -3,15 +3,9 @@ import { createRequire } from 'module';
 const require = createRequire(import.meta.url);
 let pdfParse = require('pdf-parse');
 
-console.log('RAW pdf-parse require result:', pdfParse);
-console.log('Type of raw result:', typeof pdfParse);
-console.log('Keys of raw result:', Object.keys(pdfParse));
-
 // Handle CommonJS/ESM interop: if it's an object with .default, use that
 if (typeof pdfParse !== 'function' && pdfParse.default) {
-    console.log('Found .default property, using it.');
     pdfParse = pdfParse.default;
-    console.log('New type after .default:', typeof pdfParse);
 }
 import fs from 'fs';
 
@@ -27,12 +21,29 @@ export const uploadDocument = async (req, res) => {
         let content = "";
 
         if (mimetype === 'application/pdf') {
-            console.log('Invoking pdfParse, type:', typeof pdfParse);
-            if (typeof pdfParse !== 'function') {
-                throw new Error(`pdf-parse library is not a function. It is: ${typeof pdfParse}`);
+            console.log('--- DEBUG PDF-PARSE ---');
+            console.log('Type:', typeof pdfParse);
+            console.log('Is Array:', Array.isArray(pdfParse));
+            console.log('Keys:', Object.keys(pdfParse));
+            console.log('String representation:', pdfParse.toString());
+            if (pdfParse.default) {
+                console.log('Has .default:', typeof pdfParse.default);
             }
-            const data = await pdfParse(buffer);
-            content = data.text;
+            console.log('-----------------------');
+
+            if (typeof pdfParse !== 'function') {
+                // Last ditch attempt: if it has a default property that is a function, use it
+                if (pdfParse.default && typeof pdfParse.default === 'function') {
+                    console.log('Using .default as function');
+                    const data = await pdfParse.default(buffer);
+                    content = data.text;
+                } else {
+                    throw new Error(`pdf-parse library is not a function. It is: ${typeof pdfParse}. Keys: ${Object.keys(pdfParse).join(', ')}`);
+                }
+            } else {
+                const data = await pdfParse(buffer);
+                content = data.text;
+            }
         } else if (mimetype === 'text/plain') {
             content = buffer.toString('utf-8');
         } else {
