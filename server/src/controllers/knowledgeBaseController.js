@@ -17,8 +17,29 @@ export const uploadDocument = async (req, res) => {
         let content = "";
 
         if (mimetype === 'application/pdf') {
-            const data = await pdfParse(buffer);
-            content = data.text;
+            // Check if we are dealing with v2/v3 (Class based)
+            if (pdfParse.PDFParse) {
+                console.log('Using pdf-parse v2/v3 (Class based)');
+                // The docs say: new PDFParse({ data: buffer })
+                const parser = new pdfParse.PDFParse({ data: buffer });
+                const result = await parser.getText();
+                content = result.text;
+            }
+            // Check if it's the standard v1 (Function based)
+            else if (typeof pdfParse === 'function') {
+                console.log('Using pdf-parse v1 (Function based)');
+                const data = await pdfParse(buffer);
+                content = data.text;
+            }
+            // Fallback for default export weirdness
+            else if (pdfParse.default && typeof pdfParse.default === 'function') {
+                console.log('Using pdf-parse v1 (Default export function)');
+                const data = await pdfParse.default(buffer);
+                content = data.text;
+            }
+            else {
+                throw new Error(`Unsupported pdf-parse version. Exports: ${Object.keys(pdfParse).join(', ')}`);
+            }
         } else if (mimetype === 'text/plain') {
             content = buffer.toString('utf-8');
         } else {
