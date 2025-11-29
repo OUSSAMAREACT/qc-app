@@ -51,47 +51,34 @@ export const uploadDocument = async (req, res) => {
                     title: originalname,
                     filename: originalname,
                     content: content,
-                    type: mimetype === 'application/pdf' ? 'PDF' : 'TXT'
-                }
-            });
+                    try {
+                        const documents = await prisma.knowledgeBaseDocument.findMany({
+                            select: {
+                                id: true,
+                                title: true,
+                                filename: true,
+                                type: true,
+                                createdAt: true,
+                                // Exclude content to keep response light
+                            },
+                            orderBy: { createdAt: 'desc' }
+                        });
+                        res.json(documents);
+                    } catch(error) {
+                        console.error("Fetch error:", error);
+                        res.status(500).json({ message: "Failed to fetch documents" });
+                    }
+                };
 
-            res.status(201).json(document);
-
-        } catch (error) {
-            console.error("Upload error:", error);
-            res.status(500).json({ message: "Failed to process document", error: error.message });
-        }
-    };
-
-    export const getDocuments = async (req, res) => {
-        try {
-            const documents = await prisma.knowledgeBaseDocument.findMany({
-                select: {
-                    id: true,
-                    title: true,
-                    filename: true,
-                    type: true,
-                    createdAt: true,
-                    // Exclude content to keep response light
-                },
-                orderBy: { createdAt: 'desc' }
-            });
-            res.json(documents);
-        } catch (error) {
-            console.error("Fetch error:", error);
-            res.status(500).json({ message: "Failed to fetch documents" });
-        }
-    };
-
-    export const deleteDocument = async (req, res) => {
-        try {
-            const { id } = req.params;
-            await prisma.knowledgeBaseDocument.delete({
-                where: { id: parseInt(id) }
-            });
-            res.json({ message: "Document deleted successfully" });
-        } catch (error) {
-            console.error("Delete error:", error);
-            res.status(500).json({ message: "Failed to delete document" });
-        }
-    };
+                export const deleteDocument = async (req, res) => {
+                    try {
+                        const { id } = req.params;
+                        await prisma.knowledgeBaseDocument.delete({
+                            where: { id: parseInt(id) }
+                        });
+                        res.json({ message: "Document deleted successfully" });
+                    } catch (error) {
+                        console.error("Delete error:", error);
+                        res.status(500).json({ message: "Failed to delete document" });
+                    }
+                };
