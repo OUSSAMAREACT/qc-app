@@ -44,45 +44,30 @@ const allowedOrigins = [
 
 app.use(cors({
     origin: true, // Reflects the request origin, effectively allowing all origins while keeping credentials working
-    credentials: true,
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept', 'Origin'],
-    optionsSuccessStatus: 200
-}));
+    app.use('/api/quiz', quizRoutes);
+    app.use('/api/categories', categoryRoutes);
+    app.use('/api/specialties', specialtyRoutes);
+    app.use('/api/weekly-exams', weeklyExamRoutes);
+    app.use('/api/gamification', gamificationRoutes);
+    app.use('/api/onboarding', onboardingRoutes);
+    app.use('/api/users', userRoutes);
+    app.use('/api/settings', systemSettingsRoutes);
+    app.use('/api/debug', debugRoutes);
+    app.use('/api/comments', commentRoutes);
+    app.options('/api/notifications', cors()); // Force preflight handling for this route
+    app.use('/api/notifications', notificationRoutes);
+    app.use('/api/import', importRoutes);
+    app.use('/api/spell-check', spellCheckRoutes);
+    app.use('/api/tts', ttsRoutes);
+    app.use('/api/payments', paymentRoutes);
+    app.use('/api/knowledge-base', knowledgeBaseRoutes);
+    app.use('/api/ai-tutor', aiTutorRoutes);
 
-optionsSuccessStatus: 200
-}));
+    app.get('/', (req, res) => {
+        res.send('Quiz API is running');
+    });
 
-app.use(express.json({ limit: '50mb' }));
-app.use(express.urlencoded({ limit: '50mb', extended: true }));
-
-// Routes
-app.use('/api/auth', authRoutes);
-app.use('/api/questions', questionRoutes);
-app.use('/api/quiz', quizRoutes);
-app.use('/api/categories', categoryRoutes);
-app.use('/api/specialties', specialtyRoutes);
-app.use('/api/weekly-exams', weeklyExamRoutes);
-app.use('/api/gamification', gamificationRoutes);
-app.use('/api/onboarding', onboardingRoutes);
-app.use('/api/users', userRoutes);
-app.use('/api/settings', systemSettingsRoutes);
-app.use('/api/debug', debugRoutes);
-app.use('/api/comments', commentRoutes);
-app.options('/api/notifications', cors()); // Force preflight handling for this route
-app.use('/api/notifications', notificationRoutes);
-app.use('/api/import', importRoutes);
-app.use('/api/spell-check', spellCheckRoutes);
-app.use('/api/tts', ttsRoutes);
-app.use('/api/payments', paymentRoutes);
-app.use('/api/knowledge-base', knowledgeBaseRoutes);
-app.use('/api/ai-tutor', aiTutorRoutes);
-
-app.get('/', (req, res) => {
-    res.send('Quiz API is running');
-});
-
-if (process.env.NODE_ENV !== 'production' || !process.env.VERCEL) {
+    if(process.env.NODE_ENV !== 'production' || !process.env.VERCEL) {
     app.listen(PORT, '0.0.0.0', () => {
         console.log(`Server running on port ${PORT}`);
         console.log("Server starting...");
