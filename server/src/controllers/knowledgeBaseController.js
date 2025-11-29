@@ -1,5 +1,5 @@
 import { PrismaClient } from '@prisma/client';
-import pdf from 'pdf-parse/lib/pdf-parse.js';
+import pdf from 'pdf-parse';
 import fs from 'fs';
 
 const prisma = new PrismaClient();
