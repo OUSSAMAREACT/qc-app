@@ -48,8 +48,7 @@ app.use(cors({
     optionsSuccessStatus: 200
 }));
 
-// Explicitly handle preflight requests for all routes
-app.options('*', cors());
+
 
 app.use(express.json());
 // Serve uploaded files
