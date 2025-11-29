@@ -35,50 +35,90 @@ export const uploadDocument = async (req, res) => {
                 // Try .default
                 if (pdfParse.default && typeof pdfParse.default === 'function') {
                     console.log('Using .default as function');
+                    const data = await pdfParse.default(buffer);
                     content = data.text;
                 }
-            } else if (mimetype === 'text/plain') {
-                content = buffer.toString('utf-8');
+                // Try .PDFParse (based on debug logs showing this key)
+                else if (pdfParse.PDFParse) {
+                    console.log('Using .PDFParse with new');
+                    const instance = new pdfParse.PDFParse(buffer);
+                    console.log('Instance keys:', Object.keys(instance));
+
+                    // Standard pdf-parse pattern: new PDFParse(...).promise
+                    if (instance.promise) {
+                        console.log('Found .promise on instance, awaiting it...');
+                        const data = await instance.promise;
+                        console.log('Data keys:', Object.keys(data || {}));
+                        content = data.text;
+                    } else {
+                        console.log('No .promise found, trying to await instance directly...');
+                        const data = await instance;
+                        console.log('Data keys (direct await):', Object.keys(data || {}));
+                        content = data ? data.text : '';
+                    }
+                }
+                else {
+                    throw new Error(`pdf-parse library is not a function. It is: ${typeof pdfParse}. Keys: ${Object.keys(pdfParse).join(', ')}`);
+                }
             } else {
-                return res.status(400).json({ message: "Unsupported file type. Only PDF and TXT are allowed." });
+                const data = await pdfParse(buffer);
+                content = data.text;
             }
+        } else if (mimetype === 'text/plain') {
+            content = buffer.toString('utf-8');
+        } else {
+            return res.status(400).json({ message: "Unsupported file type. Only PDF and TXT are allowed." });
+        }
 
-            // Basic cleaning of content (remove excessive whitespace)
-            content = content.replace(/\s+/g, ' ').trim();
+        // Basic cleaning of content (remove excessive whitespace)
+        content = content.replace(/\s+/g, ' ').trim();
 
-            const document = await prisma.knowledgeBaseDocument.create({
-                data: {
-                    title: originalname,
-                    filename: originalname,
-                    content: content,
-                    try {
-                        const documents = await prisma.knowledgeBaseDocument.findMany({
-                            select: {
-                                id: true,
-                                title: true,
-                                filename: true,
-                                type: true,
-                                createdAt: true,
-                                // Exclude content to keep response light
-                            },
-                            orderBy: { createdAt: 'desc' }
-                        });
-                        res.json(documents);
-                    } catch(error) {
-                        console.error("Fetch error:", error);
-                        res.status(500).json({ message: "Failed to fetch documents" });
-                    }
-                };
+        const document = await prisma.knowledgeBaseDocument.create({
+            data: {
+                title: originalname,
+                filename: originalname,
+                content: content,
+                type: mimetype === 'application/pdf' ? 'PDF' : 'TXT'
+            }
+        });
 
-                export const deleteDocument = async (req, res) => {
-                    try {
-                        const { id } = req.params;
-                        await prisma.knowledgeBaseDocument.delete({
-                            where: { id: parseInt(id) }
-                        });
-                        res.json({ message: "Document deleted successfully" });
-                    } catch (error) {
-                        console.error("Delete error:", error);
-                        res.status(500).json({ message: "Failed to delete document" });
-                    }
-                };
+        res.status(201).json(document);
+
+    } catch (error) {
+        console.error("Upload error:", error);
+        res.status(500).json({ message: "Failed to process document", error: error.message });
+    }
+};
+
+export const getDocuments = async (req, res) => {
+    try {
+        const documents = await prisma.knowledgeBaseDocument.findMany({
+            select: {
+                id: true,
+                title: true,
+                filename: true,
+                type: true,
+                createdAt: true,
+                // Exclude content to keep response light
+            },
+            orderBy: { createdAt: 'desc' }
+        });
+        res.json(documents);
+    } catch (error) {
+        console.error("Fetch error:", error);
+        res.status(500).json({ message: "Failed to fetch documents" });
+    }
+};
+
+export const deleteDocument = async (req, res) => {
+    try {
+        const { id } = req.params;
+        await prisma.knowledgeBaseDocument.delete({
+            where: { id: parseInt(id) }
+        });
+        res.json({ message: "Document deleted successfully" });
+    } catch (error) {
+        console.error("Delete error:", error);
+        res.status(500).json({ message: "Failed to delete document" });
+    }
+};
