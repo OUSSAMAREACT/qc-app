@@ -39,9 +39,13 @@ export const uploadDocument = async (req, res) => {
                     content = data.text;
                 }
                 // Try .PDFParse (based on debug logs showing this key)
-                else if (pdfParse.PDFParse && typeof pdfParse.PDFParse === 'function') {
-                    console.log('Using .PDFParse as function');
-                    const data = await pdfParse.PDFParse(buffer);
+                else if (pdfParse.PDFParse) {
+                    console.log('Using .PDFParse with new');
+                    // The error said it needs 'new', so it's a class.
+                    // If it returns a Promise (like the function version), await new ... works.
+                    const instance = new pdfParse.PDFParse(buffer);
+                    // Check if it's a promise or needs .then
+                    const data = await instance;
                     content = data.text;
                 }
                 else {
