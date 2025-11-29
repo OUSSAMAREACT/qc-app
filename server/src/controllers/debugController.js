@@ -10,8 +10,14 @@ export const getQuestionsWithoutChoices = async (req, res) => {
                 }
             },
             include: {
-                category: { select: { name: true } },
-                specialty: { select: { name: true } }
+                category: {
+                    select: {
+                        name: true,
+                        specialty: {
+                            select: { name: true }
+                        }
+                    }
+                }
             },
             orderBy: { createdAt: 'desc' }
         });
