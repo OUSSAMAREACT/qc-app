@@ -42,23 +42,24 @@ export const scanQuestions = async (req, res) => {
             const questionsText = batch.map(q => `ID: ${q.id}\nText: ${q.text}`).join('\n\n');
 
             const prompt = `
-You are a professional proofreader for French medical exams. 
-Analyze the following questions for spelling and grammar errors.
+You are a strict professional proofreader for French medical exams. 
+Analyze the following questions for spelling, grammar, and syntax errors.
 
 RULES:
-1. Identify REAL typos (e.g., "iniative" -> "initiative", "tachycardie" -> "tachycardie" is correct).
-2. IGNORE technical medical terms, drug names, and proper nouns unless they are clearly misspelled.
-3. IGNORE ignored words: ${Array.from(ignoredSet).join(', ')}.
-4. Return ONLY a JSON array.
+1. Identify ALL spelling errors, including "santée" -> "santé", "acceuil" -> "accueil".
+2. Be strict with French grammar (agreement, conjugation).
+3. IGNORE technical medical terms ONLY if they are correctly spelled.
+4. IGNORE ignored words: ${Array.from(ignoredSet).join(', ')}.
+5. Return ONLY a JSON array.
 
 FORMAT:
 [
     {
         "id": 123,
         "corrections": [
-            { "original": "iniative", "correction": "initiative" }
+            { "original": "santée", "correction": "santé" }
         ],
-        "suggestion": "Corrected sentence or explanation"
+        "suggestion": "Corrected sentence"
     }
 ]
 
@@ -77,7 +78,8 @@ ${questionsText}
                     }
                 });
 
-                const responseText = response.text;
+                const responseText = response.text();
+                console.log(`AI Response for batch ${i}:`, responseText); // DEBUG LOG
                 // Clean markdown if present
                 const jsonStr = responseText.replace(/```json\n?|\n?```/g, '').trim();
 
