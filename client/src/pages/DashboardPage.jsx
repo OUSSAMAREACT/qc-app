@@ -307,10 +307,17 @@ export default function DashboardPage() {
                                     ))}
                                 </div>
                                 {commonCategories.length > INITIAL_DISPLAY_COUNT && (
-                                    <div className="flex justify-center">
-                                        <Link to="/modules/common" className="text-primary-600 dark:text-primary-400 font-medium hover:underline flex items-center gap-1">
-                                            Tout voir
-                                            <ChevronRight size={16} />
+                                    <div className="flex justify-center mt-8">
+                                        <Link to="/modules/common">
+                                            <button className="group relative px-8 py-3 rounded-2xl bg-white dark:bg-gray-800 text-gray-900 dark:text-white font-bold shadow-lg shadow-gray-200/50 dark:shadow-black/20 hover:shadow-xl hover:shadow-primary-500/20 transition-all duration-300 border border-gray-100 dark:border-gray-700 overflow-hidden">
+                                                <div className="absolute inset-0 bg-gradient-to-r from-primary-50 to-transparent dark:from-primary-900/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                                                <span className="relative flex items-center gap-2">
+                                                    Voir tous les modules
+                                                    <div className="bg-primary-100 dark:bg-primary-900/50 p-1 rounded-full group-hover:bg-primary-600 group-hover:text-white transition-colors duration-300">
+                                                        <ChevronRight size={16} />
+                                                    </div>
+                                                </span>
+                                            </button>
                                         </Link>
                                     </div>
                                 )}
@@ -403,10 +410,17 @@ export default function DashboardPage() {
                                         ))}
                                     </div>
                                     {specialtyCategories.length > INITIAL_DISPLAY_COUNT && (
-                                        <div className="flex justify-center">
-                                            <Link to="/modules/specialty" className="text-primary-600 dark:text-primary-400 font-medium hover:underline flex items-center gap-1">
-                                                Tout voir
-                                                <ChevronRight size={16} />
+                                        <div className="flex justify-center mt-8">
+                                            <Link to="/modules/specialty">
+                                                <button className="group relative px-8 py-3 rounded-2xl bg-white dark:bg-gray-800 text-gray-900 dark:text-white font-bold shadow-lg shadow-gray-200/50 dark:shadow-black/20 hover:shadow-xl hover:shadow-primary-500/20 transition-all duration-300 border border-gray-100 dark:border-gray-700 overflow-hidden">
+                                                    <div className="absolute inset-0 bg-gradient-to-r from-primary-50 to-transparent dark:from-primary-900/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                                                    <span className="relative flex items-center gap-2">
+                                                        Voir tous les modules
+                                                        <div className="bg-primary-100 dark:bg-primary-900/50 p-1 rounded-full group-hover:bg-primary-600 group-hover:text-white transition-colors duration-300">
+                                                            <ChevronRight size={16} />
+                                                        </div>
+                                                    </span>
+                                                </button>
                                             </Link>
                                         </div>
                                     )}
