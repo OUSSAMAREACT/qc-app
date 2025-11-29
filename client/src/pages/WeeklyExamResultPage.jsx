@@ -56,7 +56,8 @@ export default function WeeklyExamResultPage() {
                 questionText: question.text,
                 userAnswer: userChoiceText,
                 correctAnswer: correctChoiceText,
-                choices: question.choices
+                choices: question.choices,
+                userName: exam.userName || "Candidat" // Pass user name if available
             });
 
             setAiExplanation(res.data.explanation);
@@ -159,7 +160,7 @@ export default function WeeklyExamResultPage() {
                                                 className="self-start bg-gradient-to-r from-purple-50 to-indigo-50 dark:from-purple-900/20 dark:to-indigo-900/20 border-purple-200 dark:border-purple-800 text-purple-700 dark:text-purple-300 hover:shadow-md transition-all"
                                             >
                                                 <Sparkles size={18} className="mr-2 text-purple-500" />
-                                                Expliquer avec l'IA
+                                                Explication
                                             </Button>
                                         </div>
                                     </div>
@@ -176,7 +177,7 @@ export default function WeeklyExamResultPage() {
                 title={
                     <div className="flex items-center gap-2 text-purple-600 dark:text-purple-400">
                         <Brain size={24} />
-                        <span>Tuteur IA (Basé sur vos documents)</span>
+                        <span>Explication (Basé sur les documents officiels)</span>
                     </div>
                 }
             >

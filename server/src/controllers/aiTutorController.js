@@ -17,7 +17,7 @@ const getAI = () => {
 
 export const explainWithContext = async (req, res) => {
     try {
-        const { questionText, userAnswer, correctAnswer, choices } = req.body;
+        const { questionText, userAnswer, correctAnswer, choices, userName } = req.body;
 
         if (!questionText) {
             return res.status(400).json({ message: "Question text is required" });
@@ -57,12 +57,14 @@ ${choices ? choices.map(c => `- ${c.text} ${c.isCorrect ? '(Correct)' : ''}`).jo
 
 STUDENT ANSWER: ${userAnswer}
 CORRECT ANSWER: ${correctAnswer}
+STUDENT NAME: ${userName || "Candidat"}
 
 INSTRUCTIONS:
-1. Explain specifically why the student's answer is wrong (if it is) and why the correct answer is right.
-2. CITE YOUR SOURCES. Use the document titles provided in the context (e.g., "Selon la Loi 43-13...").
-3. If the answer is NOT found in the context, state clearly: "Je ne trouve pas la réponse exacte dans les documents fournis, mais voici une explication générale..." (and provide a general medical explanation).
-4. Keep it concise, encouraging, and professional (French).
+1. Start by addressing the student formally: "M. ${userName || "Candidat"}, vous avez choisi..." (Use "Mme" if appropriate, but default to "M." or just the name if unsure, or "Bonjour ${userName || "Candidat"}").
+2. Explain specifically why the student's answer is wrong (if it is) and why the correct answer is right.
+3. CITE YOUR SOURCES. Use the document titles provided in the context (e.g., "Selon la Loi 43-13...").
+4. If the answer is NOT found in the context, state clearly: "Je ne trouve pas la réponse exacte dans les documents fournis, mais voici une explication générale..." (and provide a general medical explanation).
+5. Keep it concise, encouraging, and professional (French).
 `;
 
         // 3. Call Gemini
