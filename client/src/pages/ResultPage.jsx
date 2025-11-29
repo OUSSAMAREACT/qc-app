@@ -5,10 +5,11 @@ import { Button } from '../components/ui/Button';
 import { Card } from '../components/ui/Card';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
-import { CheckCircle, XCircle, ArrowRight, RefreshCw, Download, Info, MessageCircle, Trophy, Target, Calendar } from 'lucide-react';
+import { CheckCircle, XCircle, ArrowRight, RefreshCw, Download, Info, MessageCircle, Trophy, Target, Calendar, Sparkles, Brain } from 'lucide-react';
 import CommentsSheet from '../components/CommentsSheet';
 import { motion } from 'framer-motion';
 import axios from 'axios';
+import { Modal } from '../components/ui/Modal';
 
 export default function ResultPage() {
     const location = useLocation();
@@ -18,9 +19,58 @@ export default function ResultPage() {
     const [commentsOpen, setCommentsOpen] = useState(false);
     const [selectedQuestion, setSelectedQuestion] = useState(null);
 
+    // AI Tutor State
+    const [aiExplanation, setAiExplanation] = useState(null);
+    const [aiLoading, setAiLoading] = useState(false);
+    const [aiModalOpen, setAiModalOpen] = useState(false);
+    const [selectedQuestionForAI, setSelectedQuestionForAI] = useState(null);
+
     const openComments = (questionId, questionText) => {
         setSelectedQuestion({ id: questionId, text: questionText });
         setCommentsOpen(true);
+    };
+
+    const handleExplainAI = async (questionDetail) => {
+        // Construct a question object similar to what WeeklyExam expects
+        // detail has: questionId, questionText, choices, userSelectedIds, isCorrect, explanation
+        const questionObj = {
+            id: questionDetail.questionId,
+            text: questionDetail.questionText,
+            choices: questionDetail.choices
+        };
+
+        setSelectedQuestionForAI(questionObj);
+        setAiModalOpen(true);
+        setAiLoading(true);
+        setAiExplanation(null);
+
+        try {
+            const userChoiceIds = questionDetail.userSelectedIds || [];
+            // Find text for user's answer
+            const userChoiceText = questionDetail.choices
+                .filter(c => userChoiceIds.includes(c.id))
+                .map(c => c.text)
+                .join(", ") || "Aucune réponse";
+
+            const correctChoiceText = questionDetail.choices
+                .filter(c => c.isCorrect)
+                .map(c => c.text)
+                .join(", ");
+
+            const res = await axios.post('/ai-tutor/explain', {
+                questionText: questionDetail.questionText,
+                userAnswer: userChoiceText,
+                correctAnswer: correctChoiceText,
+                choices: questionDetail.choices
+            });
+
+            setAiExplanation(res.data.explanation);
+        } catch (err) {
+            console.error("AI Tutor Error:", err);
+            setAiExplanation("Désolé, je n'ai pas pu générer d'explication pour le moment. Vérifiez que la Base Documentaire contient des documents pertinents.");
+        } finally {
+            setAiLoading(false);
+        }
     };
 
     const [loadingQuestion, setLoadingQuestion] = useState(false);
@@ -433,17 +483,28 @@ export default function ResultPage() {
                                         </div>
 
                                         {/* Explanation Section */}
-                                        {detail.explanation && (
-                                            <div className="mt-6 ml-0 md:ml-12 bg-blue-50 dark:bg-blue-900/10 p-5 rounded-xl border border-blue-100 dark:border-blue-900/30 flex gap-4">
-                                                <Info size={24} className="text-blue-600 dark:text-blue-400 flex-shrink-0" />
-                                                <div className="space-y-1">
-                                                    <h4 className="font-bold text-blue-900 dark:text-blue-300 text-sm uppercase tracking-wide">Explication</h4>
-                                                    <p className="text-blue-800 dark:text-blue-200 text-sm leading-relaxed">
-                                                        {detail.explanation}
-                                                    </p>
+                                        <div className="flex flex-col sm:flex-row gap-4 mt-6 ml-0 md:ml-12">
+                                            {detail.explanation && (
+                                                <div className="flex-1 bg-blue-50 dark:bg-blue-900/10 p-5 rounded-xl border border-blue-100 dark:border-blue-900/30 flex gap-4">
+                                                    <Info size={24} className="text-blue-600 dark:text-blue-400 flex-shrink-0" />
+                                                    <div className="space-y-1">
+                                                        <h4 className="font-bold text-blue-900 dark:text-blue-300 text-sm uppercase tracking-wide">Explication</h4>
+                                                        <p className="text-blue-800 dark:text-blue-200 text-sm leading-relaxed">
+                                                            {detail.explanation}
+                                                        </p>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                        )}
+                                            )}
+
+                                            <Button
+                                                variant="outline"
+                                                onClick={() => handleExplainAI(detail)}
+                                                className="self-start bg-gradient-to-r from-purple-50 to-indigo-50 dark:from-purple-900/20 dark:to-indigo-900/20 border-purple-200 dark:border-purple-800 text-purple-700 dark:text-purple-300 hover:shadow-md transition-all"
+                                            >
+                                                <Sparkles size={18} className="mr-2 text-purple-500" />
+                                                Expliquer avec l'IA
+                                            </Button>
+                                        </div>
                                     </div>
                                 </Card>
                             </motion.div>
@@ -458,6 +519,43 @@ export default function ResultPage() {
                 questionId={selectedQuestion?.id}
                 questionText={selectedQuestion?.text}
             />
+
+            <Modal
+                isOpen={aiModalOpen}
+                onClose={() => setAiModalOpen(false)}
+                title={
+                    <div className="flex items-center gap-2 text-purple-600 dark:text-purple-400">
+                        <Brain size={24} />
+                        <span>Tuteur IA (Basé sur vos documents)</span>
+                    </div>
+                }
+            >
+                <div className="space-y-4">
+                    {aiLoading ? (
+                        <div className="flex flex-col items-center justify-center py-8 space-y-4">
+                            <div className="w-12 h-12 border-4 border-purple-200 border-t-purple-600 rounded-full animate-spin"></div>
+                            <p className="text-gray-500 animate-pulse">Analyse des documents officiels en cours...</p>
+                        </div>
+                    ) : (
+                        <div className="prose dark:prose-invert max-w-none">
+                            <div className="bg-purple-50 dark:bg-purple-900/20 p-4 rounded-xl border border-purple-100 dark:border-purple-800 mb-4">
+                                <h4 className="font-bold text-purple-800 dark:text-purple-300 mb-2 flex items-center gap-2">
+                                    <Sparkles size={16} /> Explication Personnalisée
+                                </h4>
+                                <div className="text-gray-700 dark:text-gray-300 whitespace-pre-wrap leading-relaxed">
+                                    {aiExplanation}
+                                </div>
+                            </div>
+                            <p className="text-xs text-gray-400 text-center">
+                                Cette explication est générée par l'IA en se basant uniquement sur la Base Documentaire fournie.
+                            </p>
+                        </div>
+                    )}
+                    <div className="flex justify-end">
+                        <Button variant="ghost" onClick={() => setAiModalOpen(false)}>Fermer</Button>
+                    </div>
+                </div>
+            </Modal>
         </div>
     );
 }

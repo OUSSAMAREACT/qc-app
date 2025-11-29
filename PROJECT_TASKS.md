@@ -57,6 +57,10 @@
     - Multi-speaker support (Male/Female)
     - Prefetching for low latency
     - Fix "Ghost Audio" and race conditions
+- [x] **Knowledge Base (RAG)**
+    - Admin PDF/TXT Upload
+    - AI Tutor "Explain with Context"
+    - Fixed PDF parsing in Docker environment
 
 ### Payment Workflow (Manual Bank Transfer)
 - [x] **Frontend:** Create PaymentPage (RIB Display)
