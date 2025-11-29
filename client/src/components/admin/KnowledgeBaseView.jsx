@@ -5,6 +5,11 @@ import { Card } from '../ui/Card';
 import { Upload, FileText, Trash2, BookOpen, AlertCircle, CheckCircle, Loader2 } from 'lucide-react';
 
 export default function KnowledgeBaseView() {
+    const [documents, setDocuments] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [uploading, setUploading] = useState(false);
+    const [file, setFile] = useState(null);
+    const [error, setError] = useState(null);
     const [categories, setCategories] = useState([]);
     const [selectedCategory, setSelectedCategory] = useState("");
 
