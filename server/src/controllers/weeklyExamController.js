@@ -113,7 +113,39 @@ export const getActiveExam = async (req, res) => {
     }
 };
 
-// ... (saveProgress remains unchanged) ...
+// Save exam progress
+export const saveProgress = async (req, res) => {
+    try {
+        const { examId, answers } = req.body;
+        const userId = req.user.userId;
+
+        if (!examId || !answers) {
+            return res.status(400).json({ message: "Exam ID and answers are required." });
+        }
+
+        await prisma.examProgress.upsert({
+            where: {
+                userId_examId: {
+                    userId,
+                    examId: parseInt(examId)
+                }
+            },
+            update: {
+                answers
+            },
+            create: {
+                userId,
+                examId: parseInt(examId),
+                answers
+            }
+        });
+
+        res.json({ message: "Progress saved." });
+    } catch (error) {
+        console.error("Error saving progress:", error);
+        res.status(500).json({ message: "Failed to save progress." });
+    }
+};
 
 // Submit an exam
 export const submitExam = async (req, res) => {
