@@ -41,9 +41,11 @@ const FormattedText = ({ text, className = "" }) => {
             {lines.map((line, index) => {
                 const trimmedLine = line.trim();
 
-                // Check if it's a list item (starts with *)
-                if (trimmedLine.startsWith('*')) {
-                    const content = trimmedLine.replace(/^\*\s*/, ''); // Remove leading * and space
+                // Check if it's a list item (starts with * or - but not **)
+                const isList = (trimmedLine.startsWith('*') && !trimmedLine.startsWith('**')) || trimmedLine.startsWith('-');
+
+                if (isList) {
+                    const content = trimmedLine.replace(/^[\*\-]\s*/, ''); // Remove leading * or - and space
                     return (
                         <div key={index} className="flex items-start gap-3 group">
                             <div className="mt-1.5 flex-shrink-0">
