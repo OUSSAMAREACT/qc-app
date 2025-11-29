@@ -5,7 +5,62 @@ import { Button } from '../components/ui/Button';
 import { Card } from '../components/ui/Card';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
-import { CheckCircle, XCircle, ArrowRight, RefreshCw, Download, Info, MessageCircle, Trophy, Target, Calendar, Sparkles, Brain } from 'lucide-react';
+import { CheckCircle, XCircle, ArrowRight, RefreshCw, Download, Info, MessageCircle, Trophy, Target, Calendar, Lightbulb, BookOpen } from 'lucide-react';
+
+// ... (lines 9-519)
+
+<Button
+    variant="outline"
+    onClick={() => handleExplainAI(detail)}
+    className="self-start bg-gradient-to-r from-purple-50 to-indigo-50 dark:from-purple-900/20 dark:to-indigo-900/20 border-purple-200 dark:border-purple-800 text-purple-700 dark:text-purple-300 hover:shadow-md transition-all"
+>
+    <Lightbulb size={18} className="mr-2 text-purple-500" />
+    Explication
+</Button>
+                                        </div >
+                                    </div >
+                                </Card >
+                            </motion.div >
+                        );
+                    })}
+                </motion.div >
+            </div >
+
+            <CommentsSheet
+                isOpen={commentsOpen}
+                onClose={() => setCommentsOpen(false)}
+                questionId={selectedQuestion?.id}
+                questionText={selectedQuestion?.text}
+            />
+
+            <Modal
+                isOpen={aiModalOpen}
+                onClose={() => setAiModalOpen(false)}
+                title={
+                    <div className="flex items-center gap-2 text-purple-600 dark:text-purple-400">
+                        <BookOpen size={24} />
+                        <span>Explication (Basé sur les documents officiels)</span>
+                    </div>
+                }
+            >
+                <div className="space-y-4">
+                    {aiLoading ? (
+                        <div className="flex flex-col items-center justify-center py-8 space-y-4">
+                            <div className="w-12 h-12 border-4 border-purple-200 border-t-purple-600 rounded-full animate-spin"></div>
+                            <p className="text-gray-500 animate-pulse">Recherche dans les documents officiels...</p>
+                        </div>
+                    ) : (
+                        <div className="prose dark:prose-invert max-w-none">
+                            <div className="bg-purple-50 dark:bg-purple-900/20 p-4 rounded-xl border border-purple-100 dark:border-purple-800 mb-4">
+                                <h4 className="font-bold text-purple-800 dark:text-purple-300 mb-2 flex items-center gap-2">
+                                    <Lightbulb size={16} /> Explication Détaillée
+                                </h4>
+                                <div className="text-gray-700 dark:text-gray-300">
+                                    <FormattedText text={aiExplanation} />
+                                </div>
+                            </div>
+                        </div>
+                    )}
 import CommentsSheet from '../components/CommentsSheet';
 import { motion } from 'framer-motion';
 import axios from 'axios';
