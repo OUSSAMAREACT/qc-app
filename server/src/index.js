@@ -67,6 +67,7 @@ app.use('/api/users', userRoutes);
 app.use('/api/settings', systemSettingsRoutes);
 app.use('/api/debug', debugRoutes);
 app.use('/api/comments', commentRoutes);
+app.options('/api/notifications', cors()); // Force preflight handling for this route
 app.use('/api/notifications', notificationRoutes);
 app.use('/api/import', importRoutes);
 app.use('/api/spell-check', spellCheckRoutes);

@@ -2,6 +2,7 @@ import prisma from '../prisma.js';
 
 export const getNotifications = async (req, res) => {
     try {
+        console.log("Fetching notifications for user:", req.user.userId);
         const userId = req.user.userId;
         const notifications = await prisma.notification.findMany({
             where: { userId },
