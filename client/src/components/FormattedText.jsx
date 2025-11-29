@@ -9,9 +9,23 @@ const FormattedText = ({ text, className = "" }) => {
         const parts = str.split(/(\*\*.*?\*\*)/g);
         return parts.map((part, index) => {
             if (part.startsWith('**') && part.endsWith('**')) {
+                const content = part.slice(2, -2);
+                const lowerContent = content.toLowerCase();
+
+                let colorClass = "text-gray-900 dark:text-white";
+
+                // Check for positive keywords
+                if (lowerContent.includes('correct') || lowerContent.includes('vrai') || lowerContent.includes('juste')) {
+                    colorClass = "text-emerald-600 dark:text-emerald-400";
+                }
+                // Check for negative keywords
+                else if (lowerContent.includes('incorrect') || lowerContent.includes('faux')) {
+                    colorClass = "text-red-600 dark:text-red-400";
+                }
+
                 return (
-                    <span key={index} className="font-bold text-gray-900 dark:text-white">
-                        {part.slice(2, -2)}
+                    <span key={index} className={`font-bold ${colorClass}`}>
+                        {content}
                     </span>
                 );
             }
