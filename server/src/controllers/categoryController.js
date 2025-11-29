@@ -27,7 +27,10 @@ export const getCategories = async (req, res) => {
                 },
                 specialty: true // Include specialty details
             },
-            orderBy: { name: 'asc' } // Sort alphabetically
+            orderBy: [
+                { isFree: 'desc' }, // Free modules first
+                { name: 'asc' }     // Then alphabetically
+            ]
         });
 
         // Flatten specialty name for frontend compatibility if needed, or frontend adapts
