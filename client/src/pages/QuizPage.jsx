@@ -51,11 +51,11 @@ export default function QuizPage() {
         activeQuestionIdRef.current = null; // Cancel any pending audio
         window.speechSynthesis.cancel();
 
-        // Prefetch next question audio
-        const nextQuestion = questions[currentIndex + 1];
-        if (nextQuestion && !audioCache[nextQuestion.id]) {
-            prefetchAudio(nextQuestion);
-        }
+        // Prefetching disabled to save API quota
+        // const nextQuestion = questions[currentIndex + 1];
+        // if (nextQuestion && !audioCache[nextQuestion.id]) {
+        //     prefetchAudio(nextQuestion);
+        // }
     }, [currentIndex, questions]);
 
     useEffect(() => {
