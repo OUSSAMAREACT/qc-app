@@ -192,13 +192,7 @@ export default function DashboardPage() {
                 <div className="space-y-8 lg:col-span-2">
                     {/* Stats Cards */}
                     <motion.div variants={itemVariants} className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                        <div className="bg-white dark:bg-dark-card p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 flex flex-col items-center text-center hover:border-primary-200 dark:hover:border-primary-800 transition-colors group">
-                            <div className="w-12 h-12 bg-orange-100 dark:bg-orange-900/30 text-orange-600 dark:text-orange-400 rounded-full flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
-                                <Flame size={24} />
-                            </div>
-                            <div className="text-3xl font-bold text-gray-900 dark:text-white mb-1">{user?.currentStreak || 0}</div>
-                            <div className="text-sm text-gray-500 dark:text-gray-400 font-medium">Jours de suite</div>
-                        </div>
+
                         <div className="bg-white dark:bg-dark-card p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 flex flex-col items-center text-center hover:border-primary-200 dark:hover:border-primary-800 transition-colors group">
                             <div className="w-12 h-12 bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 rounded-full flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
                                 <Target size={24} />

@@ -52,17 +52,21 @@ export const generateSpeech = async (req, res) => {
             },
         ];
 
+        console.log("Generating speech for text:", text.substring(0, 50) + "...");
         const response = await client.models.generateContent({
             model: modelName,
             config: config,
             contents: contents,
         });
 
+        console.log("Gemini Response received");
+
         const candidates = response.candidates;
         if (candidates && candidates.length > 0) {
             const parts = candidates[0].content.parts;
             for (const part of parts) {
                 if (part.inlineData) {
+                    console.log("Audio data found in response");
                     const pcmData = Buffer.from(part.inlineData.data, 'base64');
 
                     // Gemini TTS defaults to 24kHz, Mono, 16-bit PCM (audio/l16)
@@ -76,12 +80,17 @@ export const generateSpeech = async (req, res) => {
                     return;
                 }
             }
+        } else {
+            console.error("No candidates in Gemini response:", JSON.stringify(response, null, 2));
         }
 
         res.status(500).json({ message: "No audio generated" });
 
     } catch (error) {
-        console.error("TTS Error:", error);
+        console.error("TTS Error Details:", error);
+        if (error.response) {
+            console.error("API Response Error:", JSON.stringify(error.response, null, 2));
+        }
         res.status(500).json({
             message: "Error generating speech",
             details: error.message,
