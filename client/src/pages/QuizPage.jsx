@@ -103,9 +103,16 @@ export default function QuizPage() {
     const fetchQuiz = async () => {
         setLoading(true);
         try {
-            const url = categoryParam
-                ? `/quiz/start?limit=1000&category=${encodeURIComponent(categoryParam)}`
-                : '/quiz/start?limit=1000';
+            const searchParams = new URLSearchParams(location.search);
+            const mode = searchParams.get('mode');
+
+            let url = '/quiz/start?limit=1000';
+
+            if (mode === 'rapide') {
+                url = '/quiz/start?mode=rapide';
+            } else if (categoryParam) {
+                url = `/quiz/start?limit=1000&category=${encodeURIComponent(categoryParam)}`;
+            }
 
             const res = await axios.get(url);
             setQuestions(res.data);

@@ -31,6 +31,7 @@ model User {
   submissions ExamSubmission[]
   badges      Badge[]
   progress    ExamProgress[]
+  questionHistory UserQuestionHistory[]
   
   // Profile Fields
   city        String?
@@ -102,6 +103,7 @@ model Question {
   weeklyExams WeeklyExam[]
   comments    Comment[]
   audioFile   String?   // Cached TTS audio filename
+  userHistory UserQuestionHistory[]
 }
 
 model Choice {
@@ -196,6 +198,18 @@ model Notification {
   link      String?  // URL or path to redirect to
   read      Boolean  @default(false)
   createdAt DateTime @default(now())
+}
+
+model UserQuestionHistory {
+  id         Int      @id @default(autoincrement())
+  userId     Int
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  questionId Int
+  question   Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  answeredAt DateTime @default(now())
+  isCorrect  Boolean
+
+  @@unique([userId, questionId])
 }
 
 model IgnoredWord {

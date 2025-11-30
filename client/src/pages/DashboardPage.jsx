@@ -140,7 +140,7 @@ export default function DashboardPage() {
                         </p>
 
                         <div className="flex flex-wrap gap-4 mt-8">
-                            <Link to="/quiz">
+                            <Link to="/quiz?mode=rapide">
                                 <button className="group bg-white text-gray-900 hover:bg-blue-50 px-8 py-4 rounded-2xl font-bold flex items-center gap-3 transition-all shadow-[0_0_20px_rgba(255,255,255,0.3)] hover:shadow-[0_0_30px_rgba(255,255,255,0.5)] transform hover:-translate-y-1 active:scale-95">
                                     <div className="bg-gray-900 text-white p-1.5 rounded-full group-hover:scale-110 transition-transform">
                                         <Play size={14} fill="currentColor" />

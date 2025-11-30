@@ -2,8 +2,86 @@ import prisma from '../prisma.js';
 
 export const startQuiz = async (req, res) => {
     try {
-        const { category, difficulty, limit = 20 } = req.query;
+        const { category, difficulty, limit = 20, mode } = req.query;
+        const userId = req.user.userId;
+        const userRole = req.user.role;
+
         const where = {};
+
+        // --- Quiz Rapide Logic ---
+        if (mode === 'rapide') {
+            // 1. Limit to 30 questions
+            const quizLimit = 30;
+
+            // 2. Access Control: Free users only get Free categories
+            if (userRole === 'STUDENT') {
+                where.category = { isFree: true };
+            }
+
+            // 3. History Tracking: Exclude answered questions
+            // Fetch IDs of questions already answered by this user
+            const answeredHistory = await prisma.userQuestionHistory.findMany({
+                where: { userId },
+                select: { questionId: true }
+            });
+            const answeredIds = answeredHistory.map(h => h.questionId);
+
+            if (answeredIds.length > 0) {
+                where.id = { notIn: answeredIds };
+            }
+
+            // 4. Fetch available questions
+            let questions = await prisma.question.findMany({
+                where,
+                include: {
+                    choices: true,
+                    category: true,
+                },
+                take: 100, // Fetch a pool to randomize from
+            });
+
+            // 5. Reset Logic: If no questions left, reset history and fetch again
+            if (questions.length === 0) {
+                // Check if there are ANY questions available for this user (ignoring history)
+                // If so, it means they finished them all.
+                const totalAvailable = await prisma.question.count({
+                    where: userRole === 'STUDENT' ? { category: { isFree: true } } : {}
+                });
+
+                if (totalAvailable > 0) {
+                    // Reset history
+                    await prisma.userQuestionHistory.deleteMany({
+                        where: { userId }
+                    });
+
+                    // Fetch again
+                    questions = await prisma.question.findMany({
+                        where: userRole === 'STUDENT' ? { category: { isFree: true } } : {},
+                        include: {
+                            choices: true,
+                            category: true,
+                        },
+                        take: 100,
+                    });
+                }
+            }
+
+            // 6. Randomize and Slice
+            const shuffled = questions.sort(() => 0.5 - Math.random()).slice(0, quizLimit);
+
+            // Sanitize
+            const sanitized = shuffled.map(q => ({
+                ...q,
+                text: q.text.replace(/\s*\(plusieurs\s+réponses?\)/gi, '').trim(),
+                choices: q.choices
+                    .sort(() => 0.5 - Math.random())
+                    .map(c => ({ id: c.id, text: c.text, questionId: c.questionId })),
+            }));
+
+            return res.json(sanitized);
+        }
+
+        // --- Normal Quiz Logic (Existing) ---
 
         // If category is provided (name), find the category first or filter by relation
         if (category) {
@@ -11,17 +89,11 @@ export const startQuiz = async (req, res) => {
             if (cat) {
                 where.categoryId = cat.id;
             } else {
-                // If category name doesn't exist, return empty or error? 
-                // For now, let's return empty to avoid crash
                 return res.json([]);
             }
         }
 
         if (difficulty) where.difficulty = difficulty;
-
-        // Fetch random questions (Prisma doesn't support random natively well, so we fetch more and shuffle or use raw query)
-        // For simplicity, we'll fetch all matching (or a subset) and shuffle in memory for now.
-        // In production with many questions, use raw query "ORDER BY RANDOM()".
 
         const questions = await prisma.question.findMany({
             where,
@@ -116,6 +188,21 @@ export const submitQuiz = async (req, res) => {
         // We pass totalQuestions as questionsAnswered count.
         const { updateGamificationStats } = await import('../services/gamificationService.js');
         await updateGamificationStats(userId, totalQuestions);
+
+        // --- Save Question History ---
+        // We save all answered questions (correct or not) to history so they aren't repeated in "Quiz Rapide"
+        // Use createMany with skipDuplicates if supported, or loop.
+        // Prisma createMany skipDuplicates is supported in recent versions.
+        if (questionIds.length > 0) {
+            await prisma.userQuestionHistory.createMany({
+                data: questionIds.map(qId => ({
+                    userId,
+                    questionId: qId,
+                    isCorrect: details.find(d => d.questionId === qId)?.isCorrect || false
+                })),
+                skipDuplicates: true
+            });
+        }
 
         res.json({
             score,
