@@ -7,7 +7,7 @@ import {
     User, Mail, Lock, Save, Award,
     TrendingUp, Calendar, BookOpen, Target,
     MapPin, Building2, Phone, Map, Crown,
-    Sparkles, Shield, Edit3, Camera, CreditCard, CheckCircle
+    Sparkles, Shield, Edit3, Camera, CreditCard, CheckCircle, Clock, AlertCircle
 } from 'lucide-react';
 import PremiumBadge from '../components/ui/PremiumBadge';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -123,6 +123,16 @@ export default function ProfilePage() {
         ? moroccoRegions.find(r => r.name === selectedRegion)?.cities || []
         : [];
 
+    const getDaysRemaining = () => {
+        if (!user?.premiumExpiresAt) return 0;
+        const today = new Date();
+        const expiry = new Date(user.premiumExpiresAt);
+        const diffTime = expiry - today;
+        if (diffTime < 0) return 0;
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+        return diffDays;
+    };
+
     const containerVariants = {
         hidden: { opacity: 0 },
         visible: {
@@ -205,20 +215,20 @@ export default function ProfilePage() {
 
                                     {/* Specialty Badge */}
                                     {user?.specialty ? (
-                                        <div className="flex items-center gap-2 bg-white/10 backdrop-blur-md px-4 py-1.5 rounded-full text-sm font-medium shadow-sm border border-white/20 text-white">
-                                            <div className="w-2 h-2 bg-blue-400 rounded-full animate-pulse"></div>
+                                        <div className="flex items-center gap-2 bg-white/90 backdrop-blur-md px-4 py-1.5 rounded-full text-sm font-medium shadow-sm border border-white/50 text-gray-700">
+                                            <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>
                                             {user.specialty.name}
                                         </div>
                                     ) : (
-                                        <div className="flex items-center gap-2 bg-red-500/20 backdrop-blur-md text-red-100 px-4 py-1.5 rounded-full text-sm font-medium border border-red-500/30">
-                                            <div className="w-2 h-2 bg-red-400 rounded-full animate-pulse"></div>
+                                        <div className="flex items-center gap-2 bg-red-50 text-red-600 px-4 py-1.5 rounded-full text-sm font-medium border border-red-100 shadow-sm">
+                                            <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse"></div>
                                             Spécialité non définie
                                         </div>
                                     )}
 
                                     {/* Location Badge */}
                                     {user?.city && (
-                                        <div className="flex items-center gap-2 bg-white/10 backdrop-blur-md px-4 py-1.5 rounded-full text-sm font-medium shadow-sm border border-white/20 text-white">
+                                        <div className="flex items-center gap-2 bg-white/90 backdrop-blur-md px-4 py-1.5 rounded-full text-sm font-medium shadow-sm border border-white/50 text-gray-700">
                                             <MapPin size={14} /> {user.city}
                                         </div>
                                     )}
@@ -286,26 +296,40 @@ export default function ProfilePage() {
                                 )}
                             </div>
 
-                            <div className="mt-6 p-4 bg-gray-50 dark:bg-gray-800/50 rounded-2xl border border-gray-100 dark:border-gray-700">
-                                <div className="flex justify-between items-center">
-                                    <div>
-                                        <p className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-1">Plan Actuel</p>
-                                        <p className="text-lg font-bold text-gray-900 dark:text-white flex items-center gap-2">
-                                            {user?.role === 'PREMIUM' ? 'Membre Premium' : 'Compte Gratuit'}
-                                            {user?.role === 'PREMIUM' && <Crown size={16} className="text-yellow-500" fill="currentColor" />}
-                                        </p>
-                                    </div>
-                                    {user?.role === 'PREMIUM' && user?.premiumExpiresAt && (
-                                        <div className="text-right">
-                                            <p className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-1">Expire le</p>
-                                            <p className="text-lg font-bold text-gray-900 dark:text-white">
-                                                {new Date(user.premiumExpiresAt).toLocaleDateString()}
+                            <div className="mt-6 p-6 bg-gray-50 dark:bg-gray-800/50 rounded-2xl border border-gray-100 dark:border-gray-700">
+                                <div className="flex flex-col md:flex-row justify-between items-center gap-4">
+                                    <div className="flex-1 w-full">
+                                        <p className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Plan Actuel</p>
+                                        <div className="flex items-center gap-3">
+                                            <p className="text-2xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
+                                                {user?.role === 'PREMIUM' ? 'Membre Premium' : 'Compte Gratuit'}
+                                                {user?.role === 'PREMIUM' && <Crown size={20} className="text-yellow-500" fill="currentColor" />}
                                             </p>
+                                        </div>
+                                    </div>
+
+                                    {user?.role === 'PREMIUM' && user?.premiumExpiresAt && (
+                                        <div className="flex items-center gap-6 w-full md:w-auto bg-white dark:bg-gray-800 p-4 rounded-xl border border-gray-100 dark:border-gray-700 shadow-sm">
+                                            <div className="text-center px-2">
+                                                <p className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">Expire le</p>
+                                                <p className="text-base font-bold text-gray-900 dark:text-white">
+                                                    {new Date(user.premiumExpiresAt).toLocaleDateString()}
+                                                </p>
+                                            </div>
+                                            <div className="w-px h-10 bg-gray-200 dark:bg-gray-700"></div>
+                                            <div className="text-center px-2">
+                                                <p className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">Jours Restants</p>
+                                                <p className={`text-xl font-bold ${getDaysRemaining() < 7 ? 'text-red-500' : 'text-indigo-600'}`}>
+                                                    {getDaysRemaining()} Jours
+                                                </p>
+                                            </div>
                                         </div>
                                     )}
                                 </div>
+
                                 {user?.role !== 'PREMIUM' && (
-                                    <p className="mt-3 text-sm text-gray-500 dark:text-gray-400">
+                                    <p className="mt-4 text-sm text-gray-500 dark:text-gray-400 flex items-center gap-2">
+                                        <Sparkles size={16} className="text-yellow-500" />
                                         Passez à la vitesse supérieure pour accéder à tous les modules et fonctionnalités exclusives.
                                     </p>
                                 )}
