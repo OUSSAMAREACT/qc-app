@@ -427,31 +427,90 @@ export default function QuizPage() {
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
-                    className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm"
+                    className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-md"
                 >
                     <motion.div
-                        initial={{ scale: 0.9, opacity: 0 }}
-                        animate={{ scale: 1, opacity: 1 }}
-                        exit={{ scale: 0.9, opacity: 0 }}
-                        className="bg-white dark:bg-gray-800 rounded-3xl shadow-2xl max-w-md w-full overflow-hidden border border-gray-100 dark:border-gray-700 relative"
+                        initial={{ scale: 0.9, y: 20, opacity: 0 }}
+                        animate={{ scale: 1, y: 0, opacity: 1 }}
+                        exit={{ scale: 0.9, y: 20, opacity: 0 }}
+                        transition={{ type: "spring", stiffness: 300, damping: 25 }}
+                        className="bg-white dark:bg-gray-900 rounded-[2rem] shadow-2xl max-w-md w-full overflow-hidden border border-white/20 dark:border-gray-700 relative"
                     >
-                        <div className="relative h-32 bg-gradient-to-br from-red-500 to-pink-600 flex items-center justify-center overflow-hidden">
-                            <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10"></div>
-                            <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full blur-2xl transform translate-x-10 -translate-y-10"></div>
-                            <RefreshCw size={48} className="text-white relative z-10 drop-shadow-lg" />
+                        {/* Header with animated gradient blob */}
+                        <div className="relative h-40 bg-gray-50 dark:bg-gray-800 flex items-center justify-center overflow-hidden">
+                            <div className="absolute inset-0 bg-grid-slate-200/50 dark:bg-grid-slate-800/50 [mask-image:linear-gradient(0deg,white,rgba(255,255,255,0.6))] dark:[mask-image:linear-gradient(0deg,rgba(255,255,255,0.1),rgba(255,255,255,0.5))]"></div>
+
+                            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-32 h-32 bg-gradient-to-tr from-red-500 to-orange-500 rounded-full blur-[60px] opacity-40 animate-pulse"></div>
+
+                            <motion.div
+                                initial={{ scale: 0, rotate: -180 }}
+                                animate={{ scale: 1, rotate: 0 }}
+                                transition={{ type: "spring", stiffness: 200, damping: 15, delay: 0.2 }}
+                                className="relative z-10 bg-white dark:bg-gray-800 p-4 rounded-2xl shadow-xl border border-red-100 dark:border-red-900/30"
+                            >
+                                <RefreshCw size={40} className="text-red-500 dark:text-red-400" />
+                            </motion.div>
                         </div>
 
-                        <div className="p-8 text-center">
-                            <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">Mode Révision</h3>
-                            <p className="text-gray-600 dark:text-gray-300 mb-6 leading-relaxed">
-                                Bienvenue dans votre Boîte à Erreurs !
-                                <br /><br />
-                                Ici, vous retrouvez toutes les questions où vous avez échoué. Répondez juste pour les faire disparaître !
-                            </p>
+                        <div className="p-8 text-center relative z-10">
+                            <motion.h3
+                                initial={{ opacity: 0, y: 10 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ delay: 0.3 }}
+                                className="text-2xl font-bold text-gray-900 dark:text-white mb-3"
+                            >
+                                Maîtrisez vos erreurs
+                            </motion.h3>
 
-                            <Button onClick={handleCloseOnboarding} className="w-full py-3 text-lg">
-                                C'est parti !
-                            </Button>
+                            <motion.p
+                                initial={{ opacity: 0, y: 10 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ delay: 0.4 }}
+                                className="text-gray-500 dark:text-gray-400 mb-8 leading-relaxed text-sm"
+                            >
+                                La <span className="font-semibold text-red-500">Boîte à Erreurs</span> est votre outil de perfectionnement.
+                                <br />
+                                Transformez vos points faibles en forces.
+                            </motion.p>
+
+                            <motion.div
+                                initial={{ opacity: 0, y: 10 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ delay: 0.5 }}
+                                className="space-y-3 mb-8 text-left bg-gray-50 dark:bg-gray-800/50 p-5 rounded-xl border border-gray-100 dark:border-gray-700/50"
+                            >
+                                <div className="flex items-start gap-3">
+                                    <div className="mt-1 w-5 h-5 rounded-full bg-red-100 dark:bg-red-900/30 flex items-center justify-center flex-shrink-0">
+                                        <span className="text-red-600 dark:text-red-400 text-xs font-bold">1</span>
+                                    </div>
+                                    <p className="text-sm text-gray-600 dark:text-gray-300">Retrouvez ici toutes les questions échouées.</p>
+                                </div>
+                                <div className="flex items-start gap-3">
+                                    <div className="mt-1 w-5 h-5 rounded-full bg-green-100 dark:bg-green-900/30 flex items-center justify-center flex-shrink-0">
+                                        <span className="text-green-600 dark:text-green-400 text-xs font-bold">2</span>
+                                    </div>
+                                    <p className="text-sm text-gray-600 dark:text-gray-300">Répondez correctement pour les valider.</p>
+                                </div>
+                                <div className="flex items-start gap-3">
+                                    <div className="mt-1 w-5 h-5 rounded-full bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center flex-shrink-0">
+                                        <span className="text-blue-600 dark:text-blue-400 text-xs font-bold">3</span>
+                                    </div>
+                                    <p className="text-sm text-gray-600 dark:text-gray-300">Videz votre boîte pour atteindre l'excellence !</p>
+                                </div>
+                            </motion.div>
+
+                            <motion.div
+                                initial={{ opacity: 0, y: 20 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ delay: 0.6 }}
+                            >
+                                <Button
+                                    onClick={handleCloseOnboarding}
+                                    className="w-full py-4 text-lg font-bold bg-gradient-to-r from-red-500 to-orange-500 hover:from-red-600 hover:to-orange-600 text-white shadow-lg shadow-red-500/30 rounded-xl transform transition hover:scale-[1.02] active:scale-95"
+                                >
+                                    Commencer la révision
+                                </Button>
+                            </motion.div>
                         </div>
                     </motion.div>
                 </motion.div>
@@ -651,8 +710,8 @@ export default function QuizPage() {
                                     <button
                                         onClick={() => handleSpeak(currentQuestion)}
                                         className={`ml - 3 inline - flex items - center justify - center p - 2 rounded - full transition - colors ${playingQuestionId === currentQuestion.id
-                                                ? 'bg-blue-500 text-white animate-pulse'
-                                                : 'bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 hover:bg-blue-200 dark:hover:bg-blue-900/50'
+                                            ? 'bg-blue-500 text-white animate-pulse'
+                                            : 'bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 hover:bg-blue-200 dark:hover:bg-blue-900/50'
                                             } `}
                                         title="Écouter la question (IA)"
                                         disabled={isAudioLoading && playingQuestionId !== currentQuestion.id}
@@ -679,13 +738,13 @@ export default function QuizPage() {
                                                 key={choice.id}
                                                 onClick={() => handleToggleChoice(currentQuestion.id, choice.id)}
                                                 className={`group relative p - 2.5 md: p - 5 rounded - 2xl border - 2 cursor - pointer transition - all duration - 200 flex items - center gap - 2.5 md: gap - 5 ${isSelected
-                                                        ? 'border-primary-500 bg-primary-50/50 dark:bg-primary-900/30 shadow-lg shadow-primary-100 dark:shadow-primary-900/20'
-                                                        : 'border-gray-100 dark:border-gray-700 bg-white/50 dark:bg-gray-800/50 hover:border-primary-200 dark:hover:border-primary-700 hover:bg-white dark:hover:bg-gray-800'
+                                                    ? 'border-primary-500 bg-primary-50/50 dark:bg-primary-900/30 shadow-lg shadow-primary-100 dark:shadow-primary-900/20'
+                                                    : 'border-gray-100 dark:border-gray-700 bg-white/50 dark:bg-gray-800/50 hover:border-primary-200 dark:hover:border-primary-700 hover:bg-white dark:hover:bg-gray-800'
                                                     } `}
                                             >
                                                 <div className={`w - 6 h - 6 md: w - 8 md: h - 8 rounded - lg md: rounded - xl border - 2 flex items - center justify - center transition - all duration - 300 flex - shrink - 0 ${isSelected
-                                                        ? 'bg-primary-600 border-primary-600 shadow-md transform scale-110'
-                                                        : 'border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 group-hover:border-primary-300 dark:group-hover:border-primary-500'
+                                                    ? 'bg-primary-600 border-primary-600 shadow-md transform scale-110'
+                                                    : 'border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 group-hover:border-primary-300 dark:group-hover:border-primary-500'
                                                     } `}>
                                                     {isSelected && (
                                                         <svg className="w-3 h-3 md:w-4 md:h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
