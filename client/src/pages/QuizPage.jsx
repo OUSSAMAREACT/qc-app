@@ -6,7 +6,7 @@ import { Button } from '../components/ui/Button';
 import { Card } from '../components/ui/Card';
 import { Modal } from '../components/ui/Modal';
 
-import { AlertTriangle, Clock, Volume2, Crown } from 'lucide-react';
+import { AlertTriangle, Clock, Volume2, Crown, RefreshCw } from 'lucide-react';
 import SEO from '../components/SEO';
 import { useAuth } from '../context/AuthContext';
 
@@ -44,7 +44,21 @@ export default function QuizPage() {
         if (mode === 'rapide' && user?.role === 'STUDENT') {
             setShowFreemiumNotice(true);
         }
+
+        // --- Mistake Onboarding ---
+        if (mode === 'mistakes') {
+            const hasSeen = localStorage.getItem('hasSeenMistakeOnboarding');
+            if (!hasSeen) {
+                setTimeout(() => setShowMistakeOnboarding(true), 500);
+            }
+        }
     }, [user, searchParams]);
+
+    const [showMistakeOnboarding, setShowMistakeOnboarding] = useState(false);
+    const handleCloseOnboarding = () => {
+        setShowMistakeOnboarding(false);
+        localStorage.setItem('hasSeenMistakeOnboarding', 'true');
+    };
 
     useEffect(() => {
         fetchQuiz();
@@ -426,6 +440,44 @@ export default function QuizPage() {
                 description="Testez vos connaissances avec nos QCM interactifs pour l'examen Echelle 11."
                 url="/quiz"
             />
+
+            {/* Mistake Onboarding Modal */}
+            <AnimatePresence>
+                {showMistakeOnboarding && (
+                    <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm"
+                    >
+                        <motion.div
+                            initial={{ scale: 0.9, opacity: 0 }}
+                            animate={{ scale: 1, opacity: 1 }}
+                            exit={{ scale: 0.9, opacity: 0 }}
+                            className="bg-white dark:bg-gray-800 rounded-3xl shadow-2xl max-w-md w-full overflow-hidden border border-gray-100 dark:border-gray-700 relative"
+                        >
+                            <div className="relative h-32 bg-gradient-to-br from-red-500 to-pink-600 flex items-center justify-center overflow-hidden">
+                                <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10"></div>
+                                <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full blur-2xl transform translate-x-10 -translate-y-10"></div>
+                                <RefreshCw size={48} className="text-white relative z-10 drop-shadow-lg" />
+                            </div>
+
+                            <div className="p-8 text-center">
+                                <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">Mode Révision</h3>
+                                <p className="text-gray-600 dark:text-gray-300 mb-6 leading-relaxed">
+                                    Bienvenue dans votre Boîte à Erreurs !
+                                    <br /><br />
+                                    Ici, vous retrouvez toutes les questions où vous avez échoué. Répondez juste pour les faire disparaître !
+                                </p>
+
+                                <Button onClick={handleCloseOnboarding} className="w-full py-3 text-lg">
+                                    C'est parti !
+                                </Button>
+                            </div>
+                        </motion.div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
 
             {/* Freemium Notice Modal */}
             <AnimatePresence>
