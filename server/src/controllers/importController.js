@@ -35,6 +35,7 @@ export const importQuestionsFromCSV = async (req, res) => {
 
             questionsToImport = jsonData.map(q => ({
                 text: q.text,
+                explanation: q.explanation || null,
                 choices: q.choices.map(c => ({
                     text: c.text,
                     isCorrect: c.isCorrect
@@ -138,6 +139,7 @@ export const importQuestionsFromCSV = async (req, res) => {
                     data: {
                         text: q.text,
                         categoryId: category.id,
+                        explanation: q.explanation,
                         choices: {
                             create: q.choices.map(c => ({
                                 text: c.text,
