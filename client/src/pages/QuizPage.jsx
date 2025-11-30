@@ -557,52 +557,97 @@ export default function QuizPage() {
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
-                        className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm"
+                        className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-md"
                     >
                         <motion.div
-                            initial={{ scale: 0.9, opacity: 0 }}
-                            animate={{ scale: 1, opacity: 1 }}
-                            exit={{ scale: 0.9, opacity: 0 }}
-                            className="bg-white dark:bg-gray-800 rounded-3xl shadow-2xl max-w-md w-full overflow-hidden border border-gray-100 dark:border-gray-700"
+                            initial={{ scale: 0.9, y: 20, opacity: 0 }}
+                            animate={{ scale: 1, y: 0, opacity: 1 }}
+                            exit={{ scale: 0.9, y: 20, opacity: 0 }}
+                            transition={{ type: "spring", stiffness: 300, damping: 25 }}
+                            className="bg-white dark:bg-gray-900 rounded-[2rem] shadow-2xl max-w-md w-full overflow-hidden border border-white/20 dark:border-gray-700 relative"
                         >
-                            <div className="relative h-32 bg-gradient-to-br from-blue-600 to-indigo-700 flex items-center justify-center overflow-hidden">
-                                <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10"></div>
-                                <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full blur-2xl transform translate-x-10 -translate-y-10"></div>
-                                <Crown size={48} className="text-white relative z-10 drop-shadow-lg" />
+                            {/* Header with animated gradient blob */}
+                            <div className="relative h-40 bg-gray-50 dark:bg-gray-800 flex items-center justify-center overflow-hidden">
+                                <div className="absolute inset-0 bg-grid-slate-200/50 dark:bg-grid-slate-800/50 [mask-image:linear-gradient(0deg,white,rgba(255,255,255,0.6))] dark:[mask-image:linear-gradient(0deg,rgba(255,255,255,0.1),rgba(255,255,255,0.5))]"></div>
+
+                                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-32 h-32 bg-gradient-to-tr from-blue-500 to-indigo-500 rounded-full blur-[60px] opacity-40 animate-pulse"></div>
+
+                                <motion.div
+                                    initial={{ scale: 0, rotate: -180 }}
+                                    animate={{ scale: 1, rotate: 0 }}
+                                    transition={{ type: "spring", stiffness: 200, damping: 15, delay: 0.2 }}
+                                    className="relative z-10 bg-white dark:bg-gray-800 p-4 rounded-2xl shadow-xl border border-blue-100 dark:border-blue-900/30"
+                                >
+                                    <Crown size={40} className="text-blue-600 dark:text-blue-400" />
+                                </motion.div>
                             </div>
 
-                            <div className="p-8 text-center">
-                                <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">Mode Découverte</h3>
-                                <p className="text-gray-600 dark:text-gray-300 mb-6 leading-relaxed">
-                                    Vous utilisez le <strong>Quiz Rapide</strong> en version gratuite.
-                                    <br /><br />
-                                    <ul className="text-left space-y-2 bg-gray-50 dark:bg-gray-700/50 p-4 rounded-xl text-sm">
-                                        <li className="flex items-center gap-2">
-                                            <span className="text-green-500">✓</span> Accès aux modules gratuits uniquement
-                                        </li>
-                                        <li className="flex items-center gap-2">
-                                            <span className="text-green-500">✓</span> 30 questions par session
-                                        </li>
-                                        <li className="flex items-center gap-2 opacity-50">
-                                            <span className="text-gray-400">🔒</span> Accès illimité à tous les modules (Premium)
-                                        </li>
-                                    </ul>
-                                </p>
+                            <div className="p-8 text-center relative z-10">
+                                <motion.h3
+                                    initial={{ opacity: 0, y: 10 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    transition={{ delay: 0.3 }}
+                                    className="text-2xl font-bold text-gray-900 dark:text-white mb-3"
+                                >
+                                    Mode Découverte
+                                </motion.h3>
 
-                                <div className="flex flex-col gap-3">
+                                <motion.p
+                                    initial={{ opacity: 0, y: 10 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    transition={{ delay: 0.4 }}
+                                    className="text-gray-500 dark:text-gray-400 mb-8 leading-relaxed text-sm"
+                                >
+                                    Vous utilisez le <span className="font-semibold text-blue-600 dark:text-blue-400">Quiz Rapide</span> en version gratuite.
+                                    <br />
+                                    Passez Premium pour débloquer tout le potentiel !
+                                </motion.p>
+
+                                <motion.div
+                                    initial={{ opacity: 0, y: 10 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    transition={{ delay: 0.5 }}
+                                    className="space-y-3 mb-8 text-left bg-gray-50 dark:bg-gray-800/50 p-5 rounded-xl border border-gray-100 dark:border-gray-700/50"
+                                >
+                                    <div className="flex items-start gap-3">
+                                        <div className="mt-1 w-5 h-5 rounded-full bg-green-100 dark:bg-green-900/30 flex items-center justify-center flex-shrink-0">
+                                            <span className="text-green-600 dark:text-green-400 text-xs font-bold">✓</span>
+                                        </div>
+                                        <p className="text-sm text-gray-600 dark:text-gray-300">Accès aux modules gratuits uniquement</p>
+                                    </div>
+                                    <div className="flex items-start gap-3">
+                                        <div className="mt-1 w-5 h-5 rounded-full bg-green-100 dark:bg-green-900/30 flex items-center justify-center flex-shrink-0">
+                                            <span className="text-green-600 dark:text-green-400 text-xs font-bold">✓</span>
+                                        </div>
+                                        <p className="text-sm text-gray-600 dark:text-gray-300">Limité à 30 questions par session</p>
+                                    </div>
+                                    <div className="flex items-start gap-3 opacity-75">
+                                        <div className="mt-1 w-5 h-5 rounded-full bg-gray-100 dark:bg-gray-700 flex items-center justify-center flex-shrink-0">
+                                            <span className="text-gray-500 text-xs font-bold">🔒</span>
+                                        </div>
+                                        <p className="text-sm text-gray-500 dark:text-gray-400">Accès illimité à tous les modules (Premium)</p>
+                                    </div>
+                                </motion.div>
+
+                                <motion.div
+                                    initial={{ opacity: 0, y: 20 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    transition={{ delay: 0.6 }}
+                                    className="flex flex-col gap-3"
+                                >
                                     <Button
                                         onClick={() => navigate('/payment')}
-                                        className="w-full bg-gradient-to-r from-yellow-400 to-yellow-600 hover:from-yellow-500 hover:to-yellow-700 text-white font-bold py-3 rounded-xl shadow-lg shadow-yellow-500/30 transform transition hover:scale-[1.02]"
+                                        className="w-full py-4 text-lg font-bold bg-gradient-to-r from-yellow-400 to-yellow-600 hover:from-yellow-500 hover:to-yellow-700 text-white shadow-lg shadow-yellow-500/30 rounded-xl transform transition hover:scale-[1.02] active:scale-95"
                                     >
                                         Passer Premium 🚀
                                     </Button>
                                     <button
                                         onClick={() => setShowFreemiumNotice(false)}
-                                        className="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 text-sm font-medium py-2"
+                                        className="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 text-sm font-medium py-2 transition-colors"
                                     >
                                         Continuer en mode gratuit
                                     </button>
-                                </div>
+                                </motion.div>
                             </div>
                         </motion.div>
                     </motion.div>
