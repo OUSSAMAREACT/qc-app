@@ -11,6 +11,8 @@ import WeeklyExamCard from '../components/WeeklyExamCard';
 import axios from 'axios';
 import SEO from '../components/SEO';
 import AdvancedAnalytics from '../components/AdvancedAnalytics';
+import MobileExperienceNotice from '../components/MobileExperienceNotice';
+import { ChevronDown } from 'lucide-react';
 
 export default function DashboardPage() {
     const { user } = useAuth();
@@ -24,7 +26,8 @@ export default function DashboardPage() {
     const [categories, setCategories] = useState([]);
     const [activeExam, setActiveExam] = useState(null);
 
-    const INITIAL_DISPLAY_COUNT = 4;
+    const [displayCount, setDisplayCount] = useState(6);
+    const INITIAL_DISPLAY_COUNT = 6;
 
     useEffect(() => {
         const hour = new Date().getHours();
@@ -106,6 +109,10 @@ export default function DashboardPage() {
     const specialtyCategories = categories.filter(c => c.specialtyId && c.specialtyId === user?.specialty?.id);
     const commonCategories = categories.filter(c => !c.specialtyId);
 
+    const handleShowMore = () => {
+        setDisplayCount(prev => prev + 6);
+    };
+
     return (
         <motion.div
             variants={containerVariants}
@@ -118,6 +125,7 @@ export default function DashboardPage() {
                 description="Suivez votre progression, accédez à vos modules et examens, et consultez vos statistiques sur QCMEchelle11."
                 url="/dashboard"
             />
+            <MobileExperienceNotice />
 
             {/* Hero Section - Premium Glassmorphism */}
             <motion.div
@@ -250,7 +258,7 @@ export default function DashboardPage() {
                         </div>
 
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            {commonCategories.slice(0, INITIAL_DISPLAY_COUNT).map((cat, index) => (
+                            {commonCategories.slice(0, displayCount).map((cat, index) => (
                                 <Link
                                     to={user?.role === 'STUDENT' && !cat.isFree ? '/payment' : `/quiz?category=${encodeURIComponent(cat.name)}`}
                                     key={cat.id}
@@ -298,6 +306,17 @@ export default function DashboardPage() {
                                 </Link>
                             ))}
                         </div>
+
+                        {commonCategories.length > displayCount && (
+                            <div className="mt-8 text-center">
+                                <button
+                                    onClick={handleShowMore}
+                                    className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-white dark:bg-dark-card border border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 font-medium transition-colors shadow-sm"
+                                >
+                                    Afficher plus <ChevronDown size={18} />
+                                </button>
+                            </div>
+                        )}
                     </motion.div>
 
                     {/* Advanced Analytics Section */}
@@ -307,8 +326,8 @@ export default function DashboardPage() {
 
 
 
-                    {/* Specialty Modules Grid */}
-                    {user?.specialty && (
+                    {/* Specialty Modules Grid - Restricted to Admin */}
+                    {user?.specialty && (user.role === 'ADMIN' || user.role === 'SUPER_ADMIN') && (
                         <motion.div variants={itemVariants}>
                             <div className="flex items-center justify-between mb-6">
                                 <div className="flex items-center gap-3">
@@ -373,8 +392,8 @@ export default function DashboardPage() {
                     )}
                 </div>
 
-                {/* Right Column (Sidebar) */}
-                <div className="lg:col-span-4 space-y-8">
+                {/* Right Column (Sidebar) - Hidden on Mobile */}
+                <div className="hidden lg:block lg:col-span-4 space-y-8">
                     <div className="sticky top-24 space-y-8">
                         {/* Gamification Widget */}
                         <motion.div variants={itemVariants}>
