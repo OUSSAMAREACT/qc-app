@@ -18,12 +18,23 @@ export const getAdvancedStats = async (req, res) => {
             }
         });
 
+        // Fetch valid categories
+        const validCategories = await prisma.category.findMany({
+            select: { name: true }
+        });
+        const validCategoryNames = new Set(validCategories.map(c => c.name));
+        validCategoryNames.add('Général'); // Always include 'Général'
+
         // --- Radar Chart Data (Strengths/Weaknesses) ---
         // Aggregate average score per category
         const categoryStats = {};
 
         results.forEach(result => {
             const category = result.categoryName || 'Général';
+
+            // Skip if category is no longer valid
+            if (!validCategoryNames.has(category)) return;
+
             if (!categoryStats[category]) {
                 categoryStats[category] = { totalScore: 0, count: 0 };
             }
