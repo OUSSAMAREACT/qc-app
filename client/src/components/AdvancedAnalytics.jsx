@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import {
-    Radar, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis,
-    LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Area, AreaChart
+    BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Area, AreaChart
 } from 'recharts';
 import { motion } from 'framer-motion';
 import { TrendingUp, Target, Activity, Award } from 'lucide-react';
@@ -61,24 +60,31 @@ const AdvancedAnalytics = () => {
                     </div>
                 </div>
 
-                <div className="h-[300px] min-h-[300px] w-full relative z-10">
+                <div className="h-[400px] min-h-[400px] w-full relative z-10">
                     <ResponsiveContainer width="100%" height="100%" debounce={200}>
-                        <RadarChart cx="50%" cy="50%" outerRadius="80%" data={data.radarData}>
-                            <PolarGrid stroke="#e5e7eb" strokeOpacity={0.5} />
-                            <PolarAngleAxis
+                        <BarChart
+                            layout="vertical"
+                            data={data.radarData}
+                            margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
+                        >
+                            <defs>
+                                <linearGradient id="colorBar" x1="0" y1="0" x2="1" y2="0">
+                                    <stop offset="0%" stopColor="#3b82f6" />
+                                    <stop offset="100%" stopColor="#8b5cf6" />
+                                </linearGradient>
+                            </defs>
+                            <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="#e5e7eb" strokeOpacity={0.5} />
+                            <XAxis type="number" domain={[0, 100]} hide />
+                            <YAxis
                                 dataKey="subject"
-                                tick={{ fill: '#9ca3af', fontSize: 12 }}
-                            />
-                            <PolarRadiusAxis angle={30} domain={[0, 100]} tick={false} axisLine={false} />
-                            <Radar
-                                name="Score Moyen"
-                                dataKey="A"
-                                stroke="#3b82f6"
-                                strokeWidth={3}
-                                fill="#3b82f6"
-                                fillOpacity={0.3}
+                                type="category"
+                                width={150}
+                                tick={{ fill: '#6b7280', fontSize: 12, fontWeight: 500 }}
+                                axisLine={false}
+                                tickLine={false}
                             />
                             <Tooltip
+                                cursor={{ fill: 'transparent' }}
                                 contentStyle={{
                                     backgroundColor: 'rgba(255, 255, 255, 0.9)',
                                     borderRadius: '12px',
@@ -87,7 +93,15 @@ const AdvancedAnalytics = () => {
                                 }}
                                 itemStyle={{ color: '#1f2937', fontWeight: 'bold' }}
                             />
-                        </RadarChart>
+                            <Bar
+                                dataKey="A"
+                                name="Score Moyen"
+                                fill="url(#colorBar)"
+                                radius={[0, 10, 10, 0]}
+                                barSize={20}
+                                animationDuration={1500}
+                            />
+                        </BarChart>
                     </ResponsiveContainer>
                 </div>
             </motion.div>
