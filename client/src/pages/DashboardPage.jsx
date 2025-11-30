@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import {
     Flame, Star, BookOpen, ChevronRight, Lock, Crown,
-    Play, Trophy, Clock, Target, ArrowRight
+    Play, Trophy, Clock, Target, ArrowRight, RefreshCw
 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import GamificationWidget from '../components/GamificationWidget';
@@ -202,15 +202,21 @@ export default function DashboardPage() {
                             </div>
                             <div>
                                 <div className="text-2xl font-bold text-gray-900 dark:text-white">{stats.totalQuestions}</div>
-                                <div className="text-xs text-gray-500 font-medium uppercase tracking-wide">Questions</div>
+                                <div className="text-xs text-gray-500 font-medium uppercase tracking-wide">Questions Répondues</div>
                             </div>
                         </div>
-                        {/* Quick History Link */}
-                        <Link to="/history" className="bg-gray-50 dark:bg-gray-800 p-5 rounded-3xl border border-dashed border-gray-300 dark:border-gray-600 flex flex-col items-center justify-center h-32 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors group cursor-pointer">
-                            <div className="w-10 h-10 rounded-full bg-white dark:bg-gray-700 flex items-center justify-center shadow-sm mb-2 group-hover:scale-110 transition-transform">
-                                <ArrowRight size={18} className="text-gray-600 dark:text-gray-300" />
+
+                        {/* Boîte à Erreurs Card */}
+                        <Link to="/quiz?mode=mistakes">
+                            <div className="bg-white dark:bg-dark-card p-5 rounded-3xl shadow-sm border border-red-100 dark:border-red-900/30 flex flex-col justify-between h-32 hover:shadow-md transition-shadow cursor-pointer group">
+                                <div className="p-2 bg-red-50 dark:bg-red-900/20 w-fit rounded-xl text-red-600 dark:text-red-400 group-hover:scale-110 transition-transform">
+                                    <RefreshCw size={20} />
+                                </div>
+                                <div>
+                                    <div className="text-sm font-bold text-gray-900 dark:text-white">Boîte à Erreurs</div>
+                                    <div className="text-xs text-gray-500 font-medium uppercase tracking-wide">Réviser mes fautes</div>
+                                </div>
                             </div>
-                            <span className="text-xs font-bold text-gray-600 dark:text-gray-300">Voir l'historique</span>
                         </Link>
                     </motion.div>
 

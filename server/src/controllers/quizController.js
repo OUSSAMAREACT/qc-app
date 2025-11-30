@@ -8,6 +8,38 @@ export const startQuiz = async (req, res) => {
 
         const where = {};
 
+        // --- Boîte à Erreurs Logic ---
+        if (mode === 'mistakes') {
+            const mistakes = await prisma.userMistake.findMany({
+                where: { userId },
+                include: {
+                    question: {
+                        include: {
+                            choices: true,
+                            category: true,
+                        }
+                    }
+                },
+                take: parseInt(limit) || 50
+            });
+
+            const questions = mistakes.map(m => m.question);
+
+            // Randomize
+            const shuffled = questions.sort(() => 0.5 - Math.random());
+
+            // Sanitize
+            const sanitized = shuffled.map(q => ({
+                ...q,
+                text: q.text.replace(/\s*\(plusieurs\s+réponses?\)/gi, '').trim(),
+                choices: q.choices
+                    .sort(() => 0.5 - Math.random())
+                    .map(c => ({ id: c.id, text: c.text, questionId: c.questionId })),
+            }));
+
+            return res.json(sanitized);
+        }
+
         // --- Quiz Rapide Logic ---
         if (mode === 'rapide') {
             // 1. Limit to 30 questions
@@ -171,6 +203,25 @@ export const submitQuiz = async (req, res) => {
                 correctChoiceIds,
                 userSelectedIds: selectedIds,
             });
+
+            // --- Boîte à Erreurs Update ---
+            if (isCorrect) {
+                // If correct, remove from mistakes if it exists
+                await prisma.userMistake.deleteMany({
+                    where: { userId, questionId: question.id }
+                });
+            } else {
+                // If incorrect, add to mistakes (upsert to avoid duplicates)
+                try {
+                    await prisma.userMistake.upsert({
+                        where: { userId_questionId: { userId, questionId: question.id } },
+                        update: { addedAt: new Date() },
+                        create: { userId, questionId: question.id }
+                    });
+                } catch (e) {
+                    // Ignore unique constraint errors
+                }
+            }
         }
 
         // Save result
@@ -184,24 +235,23 @@ export const submitQuiz = async (req, res) => {
         });
 
         // Update Gamification Stats
-        // We assume any quiz submission counts as activity.
-        // We pass totalQuestions as questionsAnswered count.
         const { updateGamificationStats } = await import('../services/gamificationService.js');
         await updateGamificationStats(userId, totalQuestions);
 
         // --- Save Question History ---
-        // We save all answered questions (correct or not) to history so they aren't repeated in "Quiz Rapide"
-        // Use createMany with skipDuplicates if supported, or loop.
-        // Prisma createMany skipDuplicates is supported in recent versions.
         if (questionIds.length > 0) {
-            await prisma.userQuestionHistory.createMany({
-                data: questionIds.map(qId => ({
-                    userId,
-                    questionId: qId,
-                    isCorrect: details.find(d => d.questionId === qId)?.isCorrect || false
-                })),
-                skipDuplicates: true
-            });
+            // We loop to handle upsert properly for history
+            for (const detail of details) {
+                try {
+                    await prisma.userQuestionHistory.upsert({
+                        where: { userId_questionId: { userId, questionId: detail.questionId } },
+                        update: { isCorrect: detail.isCorrect, answeredAt: new Date() },
+                        create: { userId, questionId: detail.questionId, isCorrect: detail.isCorrect }
+                    });
+                } catch (e) {
+                    // Ignore
+                }
+            }
         }
 
         res.json({

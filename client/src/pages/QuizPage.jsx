@@ -123,6 +123,8 @@ export default function QuizPage() {
 
             if (mode === 'rapide') {
                 url = '/quiz/start?mode=rapide';
+            } else if (mode === 'mistakes') {
+                url = '/quiz/start?mode=mistakes&limit=50';
             } else if (categoryParam) {
                 url = `/quiz/start?limit=1000&category=${encodeURIComponent(categoryParam)}`;
             }
@@ -399,7 +401,11 @@ export default function QuizPage() {
     if (loading) return <div className="min-h-screen flex items-center justify-center">Chargement du quiz...</div>;
     if (questions.length === 0) return (
         <div className="min-h-screen bg-gray-50 p-4 flex flex-col items-center justify-center gap-4">
-            <p className="text-gray-500">Aucune question disponible pour cette catégorie.</p>
+            <p className="text-gray-500">
+                {searchParams.get('mode') === 'mistakes'
+                    ? "Votre boîte à erreurs est vide ! Bravo !"
+                    : "Aucune question disponible pour cette catégorie."}
+            </p>
             <Button onClick={() => navigate('/dashboard')}>Retour au tableau de bord</Button>
         </div>
     );

@@ -32,6 +32,7 @@ model User {
   badges      Badge[]
   progress    ExamProgress[]
   questionHistory UserQuestionHistory[]
+  mistakes        UserMistake[]
   
   // Profile Fields
   city        String?
@@ -104,6 +105,7 @@ model Question {
   comments    Comment[]
   audioFile   String?   // Cached TTS audio filename
   userHistory UserQuestionHistory[]
+  mistakes    UserMistake[]
 }
 
 model Choice {
@@ -208,6 +210,17 @@ model UserQuestionHistory {
   question   Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
   answeredAt DateTime @default(now())
   isCorrect  Boolean
+
+  @@unique([userId, questionId])
+}
+
+model UserMistake {
+  id         Int      @id @default(autoincrement())
+  userId     Int
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  questionId Int
+  question   Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  addedAt    DateTime @default(now())
 
   @@unique([userId, questionId])
 }
