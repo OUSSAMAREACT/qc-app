@@ -10,6 +10,8 @@ import GamificationWidget from '../components/GamificationWidget';
 import WeeklyExamCard from '../components/WeeklyExamCard';
 import axios from 'axios';
 import SEO from '../components/SEO';
+import { AnimatePresence } from 'framer-motion';
+import { Button } from '../components/ui/Button';
 
 export default function DashboardPage() {
     const { user } = useAuth();
@@ -34,7 +36,23 @@ export default function DashboardPage() {
         fetchStats();
         fetchCategories();
         fetchActiveExam();
+        checkOnboarding();
     }, []);
+
+    const checkOnboarding = () => {
+        const hasSeen = localStorage.getItem('hasSeenMistakeOnboarding');
+        if (!hasSeen) {
+            // Small delay to not overwhelm user immediately
+            setTimeout(() => setShowMistakeOnboarding(true), 1000);
+        }
+    };
+
+    const [showMistakeOnboarding, setShowMistakeOnboarding] = useState(false);
+
+    const handleCloseOnboarding = () => {
+        setShowMistakeOnboarding(false);
+        localStorage.setItem('hasSeenMistakeOnboarding', 'true');
+    };
 
     const fetchStats = async () => {
         try {
@@ -116,6 +134,44 @@ export default function DashboardPage() {
                 description="Suivez votre progression, accédez à vos modules et examens, et consultez vos statistiques sur QCMEchelle11."
                 url="/dashboard"
             />
+
+            {/* Onboarding Modal */}
+            <AnimatePresence>
+                {showMistakeOnboarding && (
+                    <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm"
+                    >
+                        <motion.div
+                            initial={{ scale: 0.9, opacity: 0 }}
+                            animate={{ scale: 1, opacity: 1 }}
+                            exit={{ scale: 0.9, opacity: 0 }}
+                            className="bg-white dark:bg-gray-800 rounded-3xl shadow-2xl max-w-md w-full overflow-hidden border border-gray-100 dark:border-gray-700 relative"
+                        >
+                            <div className="relative h-32 bg-gradient-to-br from-red-500 to-pink-600 flex items-center justify-center overflow-hidden">
+                                <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10"></div>
+                                <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full blur-2xl transform translate-x-10 -translate-y-10"></div>
+                                <RefreshCw size={48} className="text-white relative z-10 drop-shadow-lg" />
+                            </div>
+
+                            <div className="p-8 text-center">
+                                <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">Nouveau : Boîte à Erreurs !</h3>
+                                <p className="text-gray-600 dark:text-gray-300 mb-6 leading-relaxed">
+                                    Ne laissez plus vos erreurs vous ralentir.
+                                    <br /><br />
+                                    Chaque fois que vous vous trompez, la question est ajoutée ici. Révisez-les jusqu'à ce que vous les maîtrisiez !
+                                </p>
+
+                                <Button onClick={handleCloseOnboarding} className="w-full py-3 text-lg">
+                                    C'est compris !
+                                </Button>
+                            </div>
+                        </motion.div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
 
             {/* Hero Section - Premium Glassmorphism */}
             <motion.div
