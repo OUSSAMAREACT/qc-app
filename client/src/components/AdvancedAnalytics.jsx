@@ -15,7 +15,7 @@ const AdvancedAnalytics = () => {
         const fetchStats = async () => {
             try {
                 const token = localStorage.getItem('token');
-                const res = await axios.get('/api/stats/advanced', {
+                const res = await axios.get('/stats/advanced', {
                     headers: { Authorization: `Bearer ${token}` }
                 });
                 setData(res.data);

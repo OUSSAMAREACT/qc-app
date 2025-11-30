@@ -683,8 +683,8 @@ export default function QuizPage() {
                                 strokeDasharray={2 * Math.PI * 16}
                                 strokeDashoffset={0}
                                 strokeLinecap="round"
-                                className={`transition - all duration - 1000 ease - linear ${isLowTime ? "text-red-500" : "text-blue-600 dark:text-emerald-400"
-                                    } `}
+                                className={`transition-all duration-1000 ease-linear ${isLowTime ? "text-red-500" : "text-blue-600 dark:text-emerald-400"
+                                    }`}
                                 style={{
                                     strokeDasharray: '100',
                                     strokeDashoffset: 100 - timePercentage
@@ -692,14 +692,14 @@ export default function QuizPage() {
                             />
                         </svg>
                         <div className="absolute inset-0 flex items-center justify-center">
-                            <Clock size={14} className={` ${isLowTime ? "text-red-500" : "text-blue-600 dark:text-emerald-400"} `} />
+                            <Clock size={14} className={`${isLowTime ? "text-red-500" : "text-blue-600 dark:text-emerald-400"}`} />
                         </div>
                     </div>
 
                     {/* Time Display */}
                     <div className="flex flex-col items-start min-w-[70px]">
-                        <span className={`text - xl font - bold font - mono tracking - wider ${isLowTime ? "text-red-500 dark:text-red-400" : "text-gray-900 dark:text-white"
-                            } `}>
+                        <span className={`text-xl font-bold font-mono tracking-wider ${isLowTime ? "text-red-500 dark:text-red-400" : "text-gray-900 dark:text-white"
+                            }`}>
                             {formatTime(timeLeft)}
                         </span>
                         <span className="text-[9px] uppercase tracking-[0.2em] font-bold text-gray-500 dark:text-gray-400">
@@ -754,10 +754,10 @@ export default function QuizPage() {
                                     {currentQuestion.text}
                                     <button
                                         onClick={() => handleSpeak(currentQuestion)}
-                                        className={`ml - 3 inline - flex items - center justify - center p - 2 rounded - full transition - colors ${playingQuestionId === currentQuestion.id
+                                        className={`ml-3 inline-flex items-center justify-center p-2 rounded-full transition-colors ${playingQuestionId === currentQuestion.id
                                             ? 'bg-blue-500 text-white animate-pulse'
                                             : 'bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 hover:bg-blue-200 dark:hover:bg-blue-900/50'
-                                            } `}
+                                            }`}
                                         title="Écouter la question (IA)"
                                         disabled={isAudioLoading && playingQuestionId !== currentQuestion.id}
                                     >
@@ -782,23 +782,23 @@ export default function QuizPage() {
                                                 whileTap={{ scale: 0.99 }}
                                                 key={choice.id}
                                                 onClick={() => handleToggleChoice(currentQuestion.id, choice.id)}
-                                                className={`group relative p - 2.5 md: p - 5 rounded - 2xl border - 2 cursor - pointer transition - all duration - 200 flex items - center gap - 2.5 md: gap - 5 ${isSelected
+                                                className={`group relative p-2.5 md:p-5 rounded-2xl border-2 cursor-pointer transition-all duration-200 flex items-center gap-2.5 md:gap-5 ${isSelected
                                                     ? 'border-primary-500 bg-primary-50/50 dark:bg-primary-900/30 shadow-lg shadow-primary-100 dark:shadow-primary-900/20'
                                                     : 'border-gray-100 dark:border-gray-700 bg-white/50 dark:bg-gray-800/50 hover:border-primary-200 dark:hover:border-primary-700 hover:bg-white dark:hover:bg-gray-800'
-                                                    } `}
+                                                    }`}
                                             >
-                                                <div className={`w - 6 h - 6 md: w - 8 md: h - 8 rounded - lg md: rounded - xl border - 2 flex items - center justify - center transition - all duration - 300 flex - shrink - 0 ${isSelected
+                                                <div className={`w-6 h-6 md:w-8 md:h-8 rounded-lg md:rounded-xl border-2 flex items-center justify-center transition-all duration-300 flex-shrink-0 ${isSelected
                                                     ? 'bg-primary-600 border-primary-600 shadow-md transform scale-110'
                                                     : 'border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 group-hover:border-primary-300 dark:group-hover:border-primary-500'
-                                                    } `}>
+                                                    }`}>
                                                     {isSelected && (
                                                         <svg className="w-3 h-3 md:w-4 md:h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
                                                             <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                                                         </svg>
                                                     )}
                                                 </div>
-                                                <span className={`text - sm leading - snug md: text - lg md: leading - normal font - medium transition - colors duration - 300 ${isSelected ? 'text-primary-900 dark:text-primary-200' : 'text-gray-600 dark:text-gray-300 group-hover:text-gray-900 dark:group-hover:text-white'
-                                                    } `}>
+                                                <span className={`text-sm leading-snug md:text-lg md:leading-normal font-medium transition-colors duration-300 ${isSelected ? 'text-primary-900 dark:text-primary-200' : 'text-gray-600 dark:text-gray-300 group-hover:text-gray-900 dark:group-hover:text-white'
+                                                    }`}>
                                                     {choice.text}
                                                 </span>
                                             </motion.div>
@@ -811,8 +811,8 @@ export default function QuizPage() {
                                         variant="ghost"
                                         onClick={() => setCurrentIndex(prev => Math.max(0, prev - 1))}
                                         disabled={currentIndex === 0}
-                                        className={`w - full md: w - auto text - gray - 500 dark: text - gray - 400 hover: text - gray - 800 dark: hover: text - gray - 200 hover: bg - gray - 100 / 50 dark: hover: bg - gray - 700 / 50 px - 6 py - 3 rounded - xl transition - all ${currentIndex === 0 ? 'opacity-0 pointer-events-none hidden md:block' : 'opacity-100'
-                                            } `}
+                                        className={`w-full md:w-auto text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 hover:bg-gray-100/50 dark:hover:bg-gray-700/50 px-6 py-3 rounded-xl transition-all ${currentIndex === 0 ? 'opacity-0 pointer-events-none hidden md:block' : 'opacity-100'
+                                            }`}
                                     >
                                         ← Précédent
                                     </Button>
