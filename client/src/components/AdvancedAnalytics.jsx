@@ -60,7 +60,7 @@ const AdvancedAnalytics = () => {
                     </div>
                 </div>
 
-                <div className="h-[400px] min-h-[400px] w-full relative z-10">
+                <div className="h-[300px] min-h-[300px] w-full relative z-10">
                     <ResponsiveContainer width="100%" height="100%" debounce={200}>
                         <BarChart
                             layout="vertical"
@@ -125,7 +125,7 @@ const AdvancedAnalytics = () => {
                     </div>
                 </div>
 
-                <div className="h-[300px] min-h-[300px] w-full relative z-10">
+                <div className="h-[250px] min-h-[250px] w-full relative z-10">
                     <ResponsiveContainer width="100%" height="100%" debounce={200}>
                         <AreaChart data={data.progressData}>
                             <defs>
