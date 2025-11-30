@@ -1,4 +1,11 @@
 import prisma from '../prisma.js';
+import fs from 'fs/promises';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const audioDir = path.join(__dirname, '../../uploads/audio');
 
 export const getQuestions = async (req, res) => {
     try {
@@ -103,13 +110,29 @@ export const updateQuestion = async (req, res) => {
         // Transaction to update question and choices
         const updatedQuestion = await prisma.$transaction(async (prisma) => {
             // Update basic info
+            const existingQuestion = await prisma.question.findUnique({ where: { id: parseInt(id) } });
+
+            // Check if text changed to cleanup audio
+            let audioFileUpdate = undefined;
+            if (existingQuestion.audioFile && existingQuestion.text !== text) {
+                try {
+                    const filePath = path.join(audioDir, existingQuestion.audioFile);
+                    await fs.unlink(filePath);
+                    console.log(`Deleted old audio file: ${filePath}`);
+                } catch (err) {
+                    console.error(`Failed to delete old audio file: ${err.message}`);
+                }
+                audioFileUpdate = null; // Reset audio file in DB
+            }
+
             const q = await prisma.question.update({
                 where: { id: parseInt(id) },
                 data: {
                     text,
                     categoryId: parseInt(categoryId),
                     difficulty,
-                    explanation
+                    explanation,
+                    audioFile: audioFileUpdate // Will be null if text changed, or undefined (unchanged) otherwise
                 }
             });
 
@@ -142,6 +165,18 @@ export const updateQuestion = async (req, res) => {
 export const deleteQuestion = async (req, res) => {
     try {
         const { id } = req.params;
+        const question = await prisma.question.findUnique({ where: { id: parseInt(id) } });
+
+        if (question && question.audioFile) {
+            try {
+                const filePath = path.join(audioDir, question.audioFile);
+                await fs.unlink(filePath);
+                console.log(`Deleted audio file for deleted question: ${filePath}`);
+            } catch (err) {
+                console.error(`Failed to delete audio file: ${err.message}`);
+            }
+        }
+
         await prisma.question.delete({ where: { id: parseInt(id) } });
         res.json({ message: "Question supprimée." });
     } catch (error) {

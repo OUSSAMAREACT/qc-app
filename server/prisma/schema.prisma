@@ -101,6 +101,7 @@ model Question {
   category    Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
   weeklyExams WeeklyExam[]
   comments    Comment[]
+  audioFile   String?   // Cached TTS audio filename
 }
 
 model Choice {
