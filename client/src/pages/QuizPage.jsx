@@ -47,7 +47,7 @@ export default function QuizPage() {
 
         // --- Mistake Onboarding ---
         if (mode === 'mistakes') {
-            const hasSeen = localStorage.getItem('hasSeenMistakeOnboarding');
+            const hasSeen = localStorage.getItem('hasSeenMistakeOnboarding_v2');
             if (!hasSeen) {
                 setTimeout(() => setShowMistakeOnboarding(true), 500);
             }
@@ -57,7 +57,7 @@ export default function QuizPage() {
     const [showMistakeOnboarding, setShowMistakeOnboarding] = useState(false);
     const handleCloseOnboarding = () => {
         setShowMistakeOnboarding(false);
-        localStorage.setItem('hasSeenMistakeOnboarding', 'true');
+        localStorage.setItem('hasSeenMistakeOnboarding_v2', 'true');
     };
 
     useEffect(() => {
