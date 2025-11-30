@@ -159,6 +159,7 @@ model QuizResult {
   createdAt      DateTime @default(now())
   userId         Int
   categoryName   String?
+  answers        Json?    // Stores { questionId: choiceId }
   user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 

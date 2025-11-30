@@ -3,7 +3,7 @@ import axios from 'axios';
 import { Link } from 'react-router-dom';
 import { Card } from '../components/ui/Card';
 import { Button } from '../components/ui/Button';
-import { ArrowLeft, Clock, BookOpen, BarChart2 } from 'lucide-react';
+import { ArrowLeft, Clock, BookOpen, BarChart2, ArrowRight } from 'lucide-react';
 import SEO from '../components/SEO';
 
 export default function HistoryPage() {
@@ -65,47 +65,52 @@ export default function HistoryPage() {
                     <Card className="border-0 shadow-sm ring-1 ring-gray-100 dark:ring-gray-700 overflow-hidden bg-white dark:bg-gray-800">
                         <div className="divide-y divide-gray-50 dark:divide-gray-700">
                             {history.map((result) => (
-                                <div key={result.id} className="p-6 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors flex items-center justify-between group">
-                                    <div className="flex items-start gap-4">
-                                        <div className={`p-3 rounded-xl ${(result.score / result.totalQuestions) >= 0.5
-                                            ? 'bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400'
-                                            : 'bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400'
-                                            }`}>
-                                            <BookOpen size={24} />
-                                        </div>
-                                        <div>
-                                            <div className="font-bold text-gray-900 dark:text-white text-lg mb-1">
-                                                {result.categoryName || "Quiz"}
+                                <Link to={`/history/${result.id}`} key={result.id} className="block hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors group">
+                                    <div className="p-6 flex items-center justify-between">
+                                        <div className="flex items-start gap-4">
+                                            <div className={`p-3 rounded-xl ${(result.score / result.totalQuestions) >= 0.5
+                                                ? 'bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400'
+                                                : 'bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400'
+                                                }`}>
+                                                <BookOpen size={24} />
                                             </div>
-                                            <div className="text-sm text-gray-500 dark:text-gray-400 flex items-center gap-2">
-                                                <Clock size={14} />
-                                                {new Date(result.createdAt).toLocaleDateString('fr-FR', {
-                                                    weekday: 'long',
-                                                    day: 'numeric',
-                                                    month: 'long',
-                                                    year: 'numeric'
-                                                })}
-                                                <span>•</span>
-                                                {new Date(result.createdAt).toLocaleTimeString('fr-FR', {
-                                                    hour: '2-digit',
-                                                    minute: '2-digit'
-                                                })}
+                                            <div>
+                                                <div className="font-bold text-gray-900 dark:text-white text-lg mb-1 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
+                                                    {result.categoryName || "Quiz"}
+                                                </div>
+                                                <div className="text-sm text-gray-500 dark:text-gray-400 flex items-center gap-2">
+                                                    <Clock size={14} />
+                                                    {new Date(result.createdAt).toLocaleDateString('fr-FR', {
+                                                        weekday: 'long',
+                                                        day: 'numeric',
+                                                        month: 'long',
+                                                        year: 'numeric'
+                                                    })}
+                                                    <span>•</span>
+                                                    {new Date(result.createdAt).toLocaleTimeString('fr-FR', {
+                                                        hour: '2-digit',
+                                                        minute: '2-digit'
+                                                    })}
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
 
-                                    <div className="text-right">
-                                        <div className={`text-2xl font-bold mb-1 ${(result.score / result.totalQuestions) >= 0.5
-                                            ? 'text-green-600 dark:text-green-400'
-                                            : 'text-red-600 dark:text-red-400'
-                                            }`}>
-                                            {Math.round((result.score / result.totalQuestions) * 100)}%
-                                        </div>
-                                        <div className="text-sm text-gray-500 dark:text-gray-400 font-medium">
-                                            Score: {result.score}/{result.totalQuestions}
+                                        <div className="text-right flex items-center gap-4">
+                                            <div>
+                                                <div className={`text-2xl font-bold mb-1 ${(result.score / result.totalQuestions) >= 0.5
+                                                    ? 'text-green-600 dark:text-green-400'
+                                                    : 'text-red-600 dark:text-red-400'
+                                                    }`}>
+                                                    {Math.round((result.score / result.totalQuestions) * 100)}%
+                                                </div>
+                                                <div className="text-sm text-gray-500 dark:text-gray-400">
+                                                    {result.score}/{result.totalQuestions}
+                                                </div>
+                                            </div>
+                                            <ArrowRight className="text-gray-300 group-hover:text-blue-500 transition-colors" size={20} />
                                         </div>
                                     </div>
-                                </div>
+                                </Link>
                             ))}
                         </div>
                     </Card>

@@ -12,6 +12,7 @@ import QuizPage from './pages/QuizPage';
 import ResultPage from './pages/ResultPage';
 import AdminDashboardPage from './pages/AdminDashboardPage';
 import HistoryPage from './pages/HistoryPage';
+import QuizReviewPage from './pages/QuizReviewPage';
 import ProfilePage from './pages/ProfilePage';
 import WeeklyExamPage from './pages/WeeklyExamPage';
 import WeeklyExamResultPage from './pages/WeeklyExamResultPage';
@@ -118,6 +119,16 @@ function App() {
                   <RequireActive>
                     <Layout>
                       <HistoryPage />
+                    </Layout>
+                  </RequireActive>
+                </ProtectedRoute>
+              } />
+
+              <Route path="/history/:id" element={
+                <ProtectedRoute>
+                  <RequireActive>
+                    <Layout>
+                      <QuizReviewPage />
                     </Layout>
                   </RequireActive>
                 </ProtectedRoute>

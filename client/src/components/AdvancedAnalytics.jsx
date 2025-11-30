@@ -116,7 +116,7 @@ const AdvancedAnalytics = () => {
                 </div>
             </motion.div>
 
-            {/* Line Chart - Progress Over Time */}
+            {/* Recent History List */}
             <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -127,61 +127,52 @@ const AdvancedAnalytics = () => {
 
                 <div className="flex items-center gap-3 mb-6 relative z-10">
                     <div className="p-2 bg-green-100 dark:bg-green-900/30 rounded-xl">
-                        <TrendingUp className="w-6 h-6 text-green-600 dark:text-green-400" />
+                        <Activity className="w-6 h-6 text-green-600 dark:text-green-400" />
                     </div>
                     <div>
-                        <h3 className="text-lg font-bold text-gray-900 dark:text-white">Progression Hebdomadaire</h3>
-                        <p className="text-xs text-gray-500 dark:text-gray-400">Moyenne de vos scores par semaine</p>
+                        <h3 className="text-lg font-bold text-gray-900 dark:text-white">Historique Récent</h3>
+                        <p className="text-xs text-gray-500 dark:text-gray-400">Vos derniers quiz</p>
                     </div>
                 </div>
                 <Link to="/history" className="absolute top-6 right-6 text-xs font-bold text-green-600 dark:text-green-400 hover:text-green-700 dark:hover:text-green-300 flex items-center gap-1 transition-colors z-20">
-                    Historique <ArrowRight size={14} />
+                    Voir tout <ArrowRight size={14} />
                 </Link>
 
-                <div className="h-[250px] min-h-[250px] w-full relative z-10">
-                    <ResponsiveContainer width="100%" height="100%" debounce={200}>
-                        <AreaChart data={data.progressData}>
-                            <defs>
-                                <linearGradient id="colorScore" x1="0" y1="0" x2="0" y2="1">
-                                    <stop offset="5%" stopColor="#10b981" stopOpacity={0.3} />
-                                    <stop offset="95%" stopColor="#10b981" stopOpacity={0} />
-                                </linearGradient>
-                            </defs>
-                            <CartesianGrid strokeDasharray="3 3" stroke="#374151" strokeOpacity={0.1} vertical={false} />
-                            <XAxis
-                                dataKey="date"
-                                tick={{ fill: '#9ca3af', fontSize: 12 }}
-                                axisLine={false}
-                                tickLine={false}
-                                dy={10}
-                            />
-                            <YAxis
-                                domain={[0, 100]}
-                                tick={{ fill: '#9ca3af', fontSize: 12 }}
-                                axisLine={false}
-                                tickLine={false}
-                                dx={-10}
-                            />
-                            <Tooltip
-                                contentStyle={{
-                                    backgroundColor: 'rgba(255, 255, 255, 0.9)',
-                                    borderRadius: '12px',
-                                    border: 'none',
-                                    boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1)'
-                                }}
-                                itemStyle={{ color: '#10b981', fontWeight: 'bold' }}
-                                formatter={(value) => [`${value}%`, 'Score Moyen']}
-                            />
-                            <Area
-                                type="monotone"
-                                dataKey="score"
-                                stroke="#10b981"
-                                strokeWidth={3}
-                                fillOpacity={1}
-                                fill="url(#colorScore)"
-                            />
-                        </AreaChart>
-                    </ResponsiveContainer>
+                <div className="h-[300px] min-h-[300px] w-full relative z-10 overflow-y-auto pr-2 custom-scrollbar">
+                    <div className="space-y-3">
+                        {data.recentHistory && data.recentHistory.length > 0 ? (
+                            data.recentHistory.map((item, index) => (
+                                <Link to={`/history/${item.id}`} key={item.id}>
+                                    <motion.div
+                                        initial={{ opacity: 0, x: -20 }}
+                                        animate={{ opacity: 1, x: 0 }}
+                                        transition={{ delay: index * 0.1 }}
+                                        className="group p-4 rounded-2xl bg-gray-50 dark:bg-gray-700/30 hover:bg-green-50 dark:hover:bg-green-900/10 transition-colors border border-transparent hover:border-green-200 dark:hover:border-green-900/30 cursor-pointer"
+                                    >
+                                        <div className="flex justify-between items-center">
+                                            <div>
+                                                <h4 className="font-bold text-gray-900 dark:text-white text-sm mb-1 group-hover:text-green-700 dark:group-hover:text-green-400 transition-colors">
+                                                    {item.categoryName || "Quiz Général"}
+                                                </h4>
+                                                <div className="flex items-center gap-2 text-xs text-gray-500 dark:text-gray-400">
+                                                    <span>{new Date(item.createdAt).toLocaleDateString()}</span>
+                                                    <span>•</span>
+                                                    <span>{item.totalQuestions} questions</span>
+                                                </div>
+                                            </div>
+                                            <div className={`text-lg font-bold ${(item.score / item.totalQuestions) >= 0.5 ? 'text-green-600 dark:text-green-400' : 'text-red-500 dark:text-red-400'}`}>
+                                                {Math.round((item.score / item.totalQuestions) * 100)}%
+                                            </div>
+                                        </div>
+                                    </motion.div>
+                                </Link>
+                            ))
+                        ) : (
+                            <div className="text-center py-8 text-gray-400 text-sm">
+                                Aucun historique récent.
+                            </div>
+                        )}
+                    </div>
                 </div>
             </motion.div>
         </div>

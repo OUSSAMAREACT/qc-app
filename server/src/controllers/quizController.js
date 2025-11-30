@@ -225,12 +225,13 @@ export const submitQuiz = async (req, res) => {
         }
 
         // Save result
-        await prisma.quizResult.create({
+        const savedResult = await prisma.quizResult.create({
             data: {
                 userId,
                 score,
                 totalQuestions,
                 categoryName: req.body.categoryName || "Général",
+                answers: answers, // Save detailed answers
             },
         });
 
@@ -255,6 +256,7 @@ export const submitQuiz = async (req, res) => {
         }
 
         res.json({
+            id: savedResult.id, // Return ID for redirection
             score,
             totalQuestions,
             percentage: Math.round((score / totalQuestions) * 100),
@@ -275,5 +277,69 @@ export const getHistory = async (req, res) => {
         res.json(results);
     } catch (error) {
         res.status(500).json({ message: "Erreur lors de la récupération de l'historique." });
+    }
+};
+
+export const getQuizResult = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const userId = req.user.userId;
+
+        const result = await prisma.quizResult.findUnique({
+            where: { id: parseInt(id) },
+        });
+
+        if (!result) {
+            return res.status(404).json({ message: "Résultat non trouvé." });
+        }
+
+        if (result.userId !== userId) {
+            return res.status(403).json({ message: "Accès refusé." });
+        }
+
+        // If answers are stored, we can reconstruct the details
+        // Note: This assumes questions/choices haven't been deleted.
+        // For a robust system, we might want to snapshot the questions at the time of quiz.
+        // But for now, we'll fetch current questions.
+
+        let details = null;
+        if (result.answers && Array.isArray(result.answers)) {
+            const answers = result.answers;
+            const questionIds = answers.map(a => a.questionId);
+
+            const questions = await prisma.question.findMany({
+                where: { id: { in: questionIds } },
+                include: { choices: true },
+            });
+
+            details = answers.map(answer => {
+                const question = questions.find(q => q.id === answer.questionId);
+                if (!question) return null;
+
+                const correctChoiceIds = question.choices.filter(c => c.isCorrect).map(c => c.id);
+                const selectedIds = answer.selectedChoiceIds || [];
+
+                // Determine correctness again (or trust stored score, but per-question is better re-calc)
+                const sortedCorrect = correctChoiceIds.sort((a, b) => a - b);
+                const sortedSelected = selectedIds.sort((a, b) => a - b);
+                const isCorrect = JSON.stringify(sortedCorrect) === JSON.stringify(sortedSelected);
+
+                return {
+                    questionId: question.id,
+                    questionText: question.text,
+                    explanation: question.explanation,
+                    choices: question.choices.map(c => ({ id: c.id, text: c.text, isCorrect: c.isCorrect })),
+                    isCorrect,
+                    correctChoiceIds,
+                    userSelectedIds: selectedIds,
+                };
+            }).filter(Boolean);
+        }
+
+        res.json({ ...result, details });
+
+    } catch (error) {
+        console.error("Get quiz result error:", error);
+        res.status(500).json({ message: "Erreur lors de la récupération du résultat." });
     }
 };
