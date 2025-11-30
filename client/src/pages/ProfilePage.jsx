@@ -7,12 +7,13 @@ import {
     User, Mail, Lock, Save, Award,
     TrendingUp, Calendar, BookOpen, Target,
     MapPin, Building2, Phone, Map, Crown,
-    Sparkles, Shield, Edit3, Camera
+    Sparkles, Shield, Edit3, Camera, CreditCard, CheckCircle
 } from 'lucide-react';
 import PremiumBadge from '../components/ui/PremiumBadge';
 import { motion, AnimatePresence } from 'framer-motion';
 import { moroccoRegions } from '../data/moroccoData';
 import SEO from '../components/SEO';
+import { Link } from 'react-router-dom';
 
 export default function ProfilePage() {
     const { user, login } = useAuth();
@@ -189,35 +190,35 @@ export default function ProfilePage() {
                     <div className="flex-1 mb-2">
                         <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4">
                             <div>
-                                <h1 className="text-3xl md:text-5xl font-heading font-bold text-gray-900 dark:text-white drop-shadow-sm">
+                                <h1 className="text-3xl md:text-5xl font-heading font-bold text-white drop-shadow-md">
                                     {user?.name}
                                 </h1>
                                 <div className="flex flex-wrap items-center gap-3 mt-3">
                                     {/* Role Badge */}
                                     <div className={`flex items-center gap-2 px-4 py-1.5 rounded-full text-sm font-bold shadow-sm border ${user?.role === 'PREMIUM'
                                             ? 'bg-gradient-to-r from-yellow-100 to-amber-100 text-yellow-800 border-yellow-200'
-                                            : 'bg-gray-100 text-gray-700 border-gray-200'
+                                            : 'bg-white/90 text-gray-700 border-white/50 backdrop-blur-sm'
                                         }`}>
                                         {user?.role === 'PREMIUM' ? <Crown size={14} fill="currentColor" /> : <User size={14} />}
-                                        <span>{user?.role === 'PREMIUM' ? 'Membre Premium' : 'Étudiant Standard'}</span>
+                                        <span>{user?.role === 'PREMIUM' ? 'Membre Premium' : 'Compte Gratuit'}</span>
                                     </div>
 
                                     {/* Specialty Badge */}
                                     {user?.specialty ? (
-                                        <div className="flex items-center gap-2 bg-white dark:bg-gray-800 px-4 py-1.5 rounded-full text-sm font-medium shadow-sm border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-200">
-                                            <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>
+                                        <div className="flex items-center gap-2 bg-white/10 backdrop-blur-md px-4 py-1.5 rounded-full text-sm font-medium shadow-sm border border-white/20 text-white">
+                                            <div className="w-2 h-2 bg-blue-400 rounded-full animate-pulse"></div>
                                             {user.specialty.name}
                                         </div>
                                     ) : (
-                                        <div className="flex items-center gap-2 bg-red-50 text-red-600 px-4 py-1.5 rounded-full text-sm font-medium border border-red-100">
-                                            <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse"></div>
+                                        <div className="flex items-center gap-2 bg-red-500/20 backdrop-blur-md text-red-100 px-4 py-1.5 rounded-full text-sm font-medium border border-red-500/30">
+                                            <div className="w-2 h-2 bg-red-400 rounded-full animate-pulse"></div>
                                             Spécialité non définie
                                         </div>
                                     )}
 
                                     {/* Location Badge */}
                                     {user?.city && (
-                                        <div className="flex items-center gap-2 bg-white dark:bg-gray-800 px-4 py-1.5 rounded-full text-sm font-medium shadow-sm border border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-300">
+                                        <div className="flex items-center gap-2 bg-white/10 backdrop-blur-md px-4 py-1.5 rounded-full text-sm font-medium shadow-sm border border-white/20 text-white">
                                             <MapPin size={14} /> {user.city}
                                         </div>
                                     )}
@@ -227,7 +228,7 @@ export default function ProfilePage() {
                             {!isEditing && (
                                 <Button
                                     onClick={() => setIsEditing(true)}
-                                    className="bg-gray-900 dark:bg-white text-white dark:text-gray-900 hover:bg-gray-800 dark:hover:bg-gray-100 rounded-xl px-6 py-3 font-bold shadow-xl shadow-gray-900/10 flex items-center gap-2 transition-all hover:-translate-y-1"
+                                    className="bg-white text-gray-900 hover:bg-gray-100 rounded-xl px-6 py-3 font-bold shadow-xl shadow-black/10 flex items-center gap-2 transition-all hover:-translate-y-1"
                                 >
                                     <Edit3 size={18} /> Modifier le profil
                                 </Button>
@@ -243,7 +244,7 @@ export default function ProfilePage() {
                     {/* Stats Grid - Glassmorphism */}
                     <motion.div variants={itemVariants} className="grid grid-cols-2 md:grid-cols-4 gap-4">
                         {[
-                            { icon: TrendingUp, label: "Série Actuelle", value: stats?.currentStreak || 0, color: "orange" },
+                            { icon: TrendingUp, label: "Série Actuelle", value: stats?.streak || 0, color: "orange" },
                             { icon: Target, label: "Record Série", value: stats?.longestStreak || 0, color: "blue" },
                             { icon: BookOpen, label: "Quiz Total", value: stats?.totalQuizzes || 0, color: "purple" },
                             { icon: Calendar, label: "Questions (Sem)", value: stats?.weeklyProgress?.questionsAnswered || 0, color: "green" }
@@ -257,6 +258,59 @@ export default function ProfilePage() {
                                 <div className="text-xs text-gray-500 font-bold uppercase tracking-wider">{stat.label}</div>
                             </div>
                         ))}
+                    </motion.div>
+
+                    {/* Subscription Status Card */}
+                    <motion.div variants={itemVariants}>
+                        <div className="bg-white dark:bg-dark-card rounded-[2rem] p-8 shadow-sm border border-gray-100 dark:border-gray-700/50 relative overflow-hidden">
+                            <div className="flex items-start justify-between relative z-10">
+                                <div className="flex items-center gap-4">
+                                    <div className={`p-3 rounded-2xl ${user?.role === 'PREMIUM' ? 'bg-yellow-100 text-yellow-600' : 'bg-gray-100 text-gray-600'}`}>
+                                        <CreditCard size={28} />
+                                    </div>
+                                    <div>
+                                        <h2 className="text-xl font-heading font-bold text-gray-900 dark:text-white">Abonnement</h2>
+                                        <p className="text-sm text-gray-500 dark:text-gray-400">Gérez votre plan et vos accès</p>
+                                    </div>
+                                </div>
+                                {user?.role === 'PREMIUM' ? (
+                                    <span className="px-4 py-1.5 bg-green-100 text-green-700 rounded-full text-sm font-bold flex items-center gap-2">
+                                        <CheckCircle size={14} /> Actif
+                                    </span>
+                                ) : (
+                                    <Link to="/payment">
+                                        <Button className="bg-gradient-to-r from-yellow-500 to-amber-600 text-white border-0 shadow-lg shadow-yellow-500/30 hover:shadow-yellow-500/40">
+                                            Passer Premium
+                                        </Button>
+                                    </Link>
+                                )}
+                            </div>
+
+                            <div className="mt-6 p-4 bg-gray-50 dark:bg-gray-800/50 rounded-2xl border border-gray-100 dark:border-gray-700">
+                                <div className="flex justify-between items-center">
+                                    <div>
+                                        <p className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-1">Plan Actuel</p>
+                                        <p className="text-lg font-bold text-gray-900 dark:text-white flex items-center gap-2">
+                                            {user?.role === 'PREMIUM' ? 'Membre Premium' : 'Compte Gratuit'}
+                                            {user?.role === 'PREMIUM' && <Crown size={16} className="text-yellow-500" fill="currentColor" />}
+                                        </p>
+                                    </div>
+                                    {user?.role === 'PREMIUM' && user?.premiumExpiresAt && (
+                                        <div className="text-right">
+                                            <p className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-1">Expire le</p>
+                                            <p className="text-lg font-bold text-gray-900 dark:text-white">
+                                                {new Date(user.premiumExpiresAt).toLocaleDateString()}
+                                            </p>
+                                        </div>
+                                    )}
+                                </div>
+                                {user?.role !== 'PREMIUM' && (
+                                    <p className="mt-3 text-sm text-gray-500 dark:text-gray-400">
+                                        Passez à la vitesse supérieure pour accéder à tous les modules et fonctionnalités exclusives.
+                                    </p>
+                                )}
+                            </div>
+                        </div>
                     </motion.div>
 
                     {/* Badges Section */}

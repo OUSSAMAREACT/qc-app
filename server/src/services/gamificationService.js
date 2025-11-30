@@ -121,7 +121,13 @@ export const getGamificationStats = async (userId) => {
 
         const user = await prisma.user.findUnique({
             where: { id: userId },
-            select: { currentStreak: true, longestStreak: true }
+            select: {
+                currentStreak: true,
+                longestStreak: true,
+                _count: {
+                    select: { results: true }
+                }
+            }
         });
 
         const weeklyProgress = await prisma.weeklyProgress.findUnique({
@@ -137,6 +143,7 @@ export const getGamificationStats = async (userId) => {
         return {
             streak: user?.currentStreak || 0,
             longestStreak: user?.longestStreak || 0,
+            totalQuizzes: user?._count?.results || 0,
             weeklyProgress: weeklyProgress || {
                 questionsAnswered: 0,
                 daysStudied: 0,
