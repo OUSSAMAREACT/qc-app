@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import {
-    BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Area, AreaChart
+    XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Area, AreaChart
 } from 'recharts';
 import { motion } from 'framer-motion';
 import { TrendingUp, Target, Activity, Award } from 'lucide-react';
@@ -60,49 +60,58 @@ const AdvancedAnalytics = () => {
                     </div>
                 </div>
 
-                <div className="h-[300px] min-h-[300px] w-full relative z-10">
-                    <ResponsiveContainer width="100%" height="100%" debounce={200}>
-                        <BarChart
-                            layout="vertical"
-                            data={data.radarData}
-                            margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
-                        >
-                            <defs>
-                                <linearGradient id="colorBar" x1="0" y1="0" x2="1" y2="0">
-                                    <stop offset="0%" stopColor="#3b82f6" />
-                                    <stop offset="100%" stopColor="#8b5cf6" />
-                                </linearGradient>
-                            </defs>
-                            <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="#e5e7eb" strokeOpacity={0.5} />
-                            <XAxis type="number" domain={[0, 100]} hide />
-                            <YAxis
-                                dataKey="subject"
-                                type="category"
-                                width={150}
-                                tick={{ fill: '#6b7280', fontSize: 12, fontWeight: 500 }}
-                                axisLine={false}
-                                tickLine={false}
-                            />
-                            <Tooltip
-                                cursor={{ fill: 'transparent' }}
-                                contentStyle={{
-                                    backgroundColor: 'rgba(255, 255, 255, 0.9)',
-                                    borderRadius: '12px',
-                                    border: 'none',
-                                    boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1)'
-                                }}
-                                itemStyle={{ color: '#1f2937', fontWeight: 'bold' }}
-                            />
-                            <Bar
-                                dataKey="A"
-                                name="Score Moyen"
-                                fill="url(#colorBar)"
-                                radius={[0, 10, 10, 0]}
-                                barSize={20}
-                                animationDuration={1500}
-                            />
-                        </BarChart>
-                    </ResponsiveContainer>
+                <div className="h-[300px] min-h-[300px] w-full relative z-10 overflow-y-auto pr-2 custom-scrollbar">
+                    <div className="space-y-4">
+                        {data.radarData.map((item, index) => {
+                            const score = item.A;
+                            let level = 'Débutant';
+                            let color = 'bg-blue-500';
+                            let textColor = 'text-blue-600 dark:text-blue-400';
+                            let bgColor = 'bg-blue-100 dark:bg-blue-900/30';
+
+                            if (score >= 80) {
+                                level = 'Expert';
+                                color = 'bg-purple-500';
+                                textColor = 'text-purple-600 dark:text-purple-400';
+                                bgColor = 'bg-purple-100 dark:bg-purple-900/30';
+                            } else if (score >= 50) {
+                                level = 'Intermédiaire';
+                                color = 'bg-indigo-500';
+                                textColor = 'text-indigo-600 dark:text-indigo-400';
+                                bgColor = 'bg-indigo-100 dark:bg-indigo-900/30';
+                            }
+
+                            return (
+                                <motion.div
+                                    key={item.subject}
+                                    initial={{ opacity: 0, x: -20 }}
+                                    animate={{ opacity: 1, x: 0 }}
+                                    transition={{ delay: index * 0.1 }}
+                                    className="group"
+                                >
+                                    <div className="flex justify-between items-end mb-1">
+                                        <span className="font-bold text-gray-700 dark:text-gray-200 text-sm">{item.subject}</span>
+                                        <div className="flex items-center gap-2">
+                                            <span className={`text-xs font-bold px-2 py-0.5 rounded-full ${bgColor} ${textColor}`}>
+                                                {level}
+                                            </span>
+                                            <span className="font-bold text-gray-900 dark:text-white text-sm">{score}%</span>
+                                        </div>
+                                    </div>
+                                    <div className="h-2.5 w-full bg-gray-100 dark:bg-gray-700 rounded-full overflow-hidden">
+                                        <motion.div
+                                            initial={{ width: 0 }}
+                                            animate={{ width: `${score}%` }}
+                                            transition={{ duration: 1, ease: "easeOut", delay: 0.2 + (index * 0.1) }}
+                                            className={`h-full rounded-full ${color} shadow-[0_0_10px_rgba(0,0,0,0.2)] relative`}
+                                        >
+                                            <div className="absolute inset-0 bg-white/20 animate-pulse"></div>
+                                        </motion.div>
+                                    </div>
+                                </motion.div>
+                            );
+                        })}
+                    </div>
                 </div>
             </motion.div>
 
