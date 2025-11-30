@@ -33,7 +33,6 @@ export const startQuiz = async (req, res) => {
                 ...q,
                 text: q.text.replace(/\s*\(plusieurs\s+réponses?\)/gi, '').trim(),
                 choices: q.choices
-                    .sort(() => 0.5 - Math.random())
                     .map(c => ({ id: c.id, text: c.text, questionId: c.questionId })),
             }));
 
@@ -106,7 +105,6 @@ export const startQuiz = async (req, res) => {
                 ...q,
                 text: q.text.replace(/\s*\(plusieurs\s+réponses?\)/gi, '').trim(),
                 choices: q.choices
-                    .sort(() => 0.5 - Math.random())
                     .map(c => ({ id: c.id, text: c.text, questionId: c.questionId })),
             }));
 
@@ -144,7 +142,6 @@ export const startQuiz = async (req, res) => {
             ...q,
             text: q.text.replace(/\s*\(plusieurs\s+réponses?\)/gi, '').trim(),
             choices: q.choices
-                .sort(() => 0.5 - Math.random()) // Shuffle choices
                 .map(c => ({ id: c.id, text: c.text, questionId: c.questionId })),
         }));
 
