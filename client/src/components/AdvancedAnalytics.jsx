@@ -3,8 +3,9 @@ import {
     XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Area, AreaChart
 } from 'recharts';
 import { motion } from 'framer-motion';
-import { TrendingUp, Target, Activity, Award } from 'lucide-react';
+import { TrendingUp, Target, Activity, Award, ArrowRight } from 'lucide-react';
 import axios from 'axios';
+import { Link } from 'react-router-dom';
 
 const AdvancedAnalytics = () => {
     const [data, setData] = useState({ radarData: [], progressData: [] });
@@ -133,6 +134,9 @@ const AdvancedAnalytics = () => {
                         <p className="text-xs text-gray-500 dark:text-gray-400">Moyenne de vos scores par semaine</p>
                     </div>
                 </div>
+                <Link to="/history" className="absolute top-6 right-6 text-xs font-bold text-green-600 dark:text-green-400 hover:text-green-700 dark:hover:text-green-300 flex items-center gap-1 transition-colors z-20">
+                    Historique <ArrowRight size={14} />
+                </Link>
 
                 <div className="h-[250px] min-h-[250px] w-full relative z-10">
                     <ResponsiveContainer width="100%" height="100%" debounce={200}>
