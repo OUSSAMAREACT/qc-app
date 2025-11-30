@@ -20,6 +20,7 @@ import ttsRoutes from './routes/ttsRoutes.js';
 import paymentRoutes from './routes/paymentRoutes.js';
 import knowledgeBaseRoutes from './routes/knowledgeBaseRoutes.js';
 import aiTutorRoutes from './routes/aiTutorRoutes.js';
+import statsRoutes from './routes/statsRoutes.js';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
@@ -77,6 +78,7 @@ app.use('/api/tts', ttsRoutes);
 app.use('/api/payments', paymentRoutes);
 app.use('/api/knowledge-base', knowledgeBaseRoutes);
 app.use('/api/ai-tutor', aiTutorRoutes);
+app.use('/api/stats', statsRoutes);
 
 app.get('/', (req, res) => {
     res.send('Quiz API is running');

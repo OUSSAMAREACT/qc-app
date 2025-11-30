@@ -10,6 +10,7 @@ import GamificationWidget from '../components/GamificationWidget';
 import WeeklyExamCard from '../components/WeeklyExamCard';
 import axios from 'axios';
 import SEO from '../components/SEO';
+import AdvancedAnalytics from '../components/AdvancedAnalytics';
 
 export default function DashboardPage() {
     const { user } = useAuth();
@@ -219,6 +220,11 @@ export default function DashboardPage() {
                                 </div>
                             </div>
                         </Link>
+                    </motion.div>
+
+                    {/* Advanced Analytics Section */}
+                    <motion.div variants={itemVariants}>
+                        <AdvancedAnalytics />
                     </motion.div>
 
                     {/* Weekly Exam Section */}
