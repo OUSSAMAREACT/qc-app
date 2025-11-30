@@ -380,6 +380,10 @@ export default function QuizPage() {
         }
     };
 
+    const handleFinishClick = () => {
+        setConfirmModalOpen(true);
+    };
+
     const handleSubmit = async (auto = false) => {
         if (!auto) setConfirmModalOpen(false);
         setSubmitting(true);
