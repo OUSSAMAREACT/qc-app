@@ -150,36 +150,52 @@ export default function AdminDashboardPage() {
                     />
                     {user?.role === 'SUPER_ADMIN' && (
                         <>
-                            <SidebarItem
-                                icon={<Users size={20} />}
-                                label="Utilisateurs"
-                                isActive={currentView === 'users'}
-                                onClick={() => { setCurrentView('users'); setSelectedCategory(null); setIsSidebarOpen(false); }}
-                            />
-                            <SidebarItem
-                                icon={<Settings size={20} />}
-                                label="Paramètres"
-                                isActive={currentView === 'settings'}
-                                onClick={() => { setCurrentView('settings'); setSelectedCategory(null); setIsSidebarOpen(false); }}
-                            />
-                            <SidebarItem
-                                icon={<CreditCard size={20} />}
-                                label="Paiements"
-                                isActive={currentView === 'payments'}
-                                onClick={() => { setCurrentView('payments'); setSelectedCategory(null); setIsSidebarOpen(false); }}
-                            />
-                            <SidebarItem
-                                icon={<Send size={20} />}
-                                label="Broadcast"
-                                isActive={currentView === 'broadcast'}
-                                onClick={() => { setCurrentView('broadcast'); setSelectedCategory(null); setIsSidebarOpen(false); }}
-                            />
-                            <SidebarItem
-                                icon={<AlertTriangle size={20} />}
-                                label="Maintenance"
-                                isActive={currentView === 'integrity'}
-                                onClick={() => { setCurrentView('integrity'); setSelectedCategory(null); setIsSidebarOpen(false); }}
-                            />
+                            <div className="space-y-1">
+                                <SidebarItem
+                                    icon={<Users size={20} />}
+                                    label="Utilisateurs"
+                                    isActive={currentView === 'users'}
+                                    onClick={() => { setCurrentView('users'); setSelectedCategory(null); setIsSidebarOpen(false); }}
+                                />
+                                {(currentView === 'users' || currentView === 'payments') && (
+                                    <div className="ml-4 pl-4 border-l-2 border-gray-100 dark:border-gray-700 space-y-1">
+                                        <SidebarItem
+                                            icon={<CreditCard size={18} />}
+                                            label="Paiements"
+                                            isActive={currentView === 'payments'}
+                                            onClick={() => { setCurrentView('payments'); setSelectedCategory(null); setIsSidebarOpen(false); }}
+                                            isChild
+                                        />
+                                    </div>
+                                )}
+                            </div>
+
+                            <div className="space-y-1">
+                                <SidebarItem
+                                    icon={<Settings size={20} />}
+                                    label="Paramètres"
+                                    isActive={currentView === 'settings'}
+                                    onClick={() => { setCurrentView('settings'); setSelectedCategory(null); setIsSidebarOpen(false); }}
+                                />
+                                {(currentView === 'settings' || currentView === 'broadcast' || currentView === 'integrity') && (
+                                    <div className="ml-4 pl-4 border-l-2 border-gray-100 dark:border-gray-700 space-y-1">
+                                        <SidebarItem
+                                            icon={<Send size={18} />}
+                                            label="Broadcast"
+                                            isActive={currentView === 'broadcast'}
+                                            onClick={() => { setCurrentView('broadcast'); setSelectedCategory(null); setIsSidebarOpen(false); }}
+                                            isChild
+                                        />
+                                        <SidebarItem
+                                            icon={<AlertTriangle size={18} />}
+                                            label="Maintenance"
+                                            isActive={currentView === 'integrity'}
+                                            onClick={() => { setCurrentView('integrity'); setSelectedCategory(null); setIsSidebarOpen(false); }}
+                                            isChild
+                                        />
+                                    </div>
+                                )}
+                            </div>
                         </>
                     )}
                     <SidebarItem
@@ -219,14 +235,14 @@ export default function AdminDashboardPage() {
     );
 }
 
-function SidebarItem({ icon, label, isActive, onClick }) {
+function SidebarItem({ icon, label, isActive, onClick, isChild = false }) {
     return (
         <button
             onClick={onClick}
             className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200 cursor-pointer ${isActive
                 ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300 shadow-sm'
                 : 'text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-white'
-                }`}
+                } ${isChild ? 'text-xs py-2' : ''}`}
         >
             {icon}
             {label}
