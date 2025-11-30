@@ -5,8 +5,10 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import { Button } from '../components/ui/Button';
 import { Card } from '../components/ui/Card';
 import { Modal } from '../components/ui/Modal';
-import { AlertTriangle, Clock, Volume2 } from 'lucide-react';
+
+import { AlertTriangle, Clock, Volume2, Crown } from 'lucide-react';
 import SEO from '../components/SEO';
+import { useAuth } from '../context/AuthContext';
 
 // Simple beep sound (base64)
 const BEEP_SOUND = "data:audio/wav;base64,UklGRl9vT1BXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YU"; // Placeholder, will use a real one or AudioContext
@@ -32,6 +34,17 @@ export default function QuizPage() {
     const navigate = useNavigate();
     const [searchParams] = useSearchParams();
     const categoryParam = searchParams.get('category');
+    const { user } = useAuth();
+
+    // --- Freemium Notice Logic ---
+    const [showFreemiumNotice, setShowFreemiumNotice] = useState(false);
+
+    useEffect(() => {
+        const mode = searchParams.get('mode');
+        if (mode === 'rapide' && user?.role === 'STUDENT') {
+            setShowFreemiumNotice(true);
+        }
+    }, [user, searchParams]);
 
     useEffect(() => {
         fetchQuiz();
@@ -398,16 +411,7 @@ export default function QuizPage() {
     // Circular progress calculation for timer
     const timePercentage = totalTime > 0 ? (timeLeft / totalTime) * 100 : 0;
 
-    // --- Freemium Notice Logic ---
-    const [showFreemiumNotice, setShowFreemiumNotice] = useState(false);
 
-    useEffect(() => {
-        const searchParams = new URLSearchParams(location.search);
-        const mode = searchParams.get('mode');
-        if (mode === 'rapide' && user?.role === 'STUDENT') {
-            setShowFreemiumNotice(true);
-        }
-    }, [user, location.search]);
 
     return (
         <div className="min-h-screen bg-gray-50 dark:bg-gray-900 p-4 flex flex-col items-center pb-32 md:pb-20 font-sans transition-colors duration-300">
