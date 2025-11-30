@@ -33,7 +33,7 @@ export default function PaymentPage() {
             price: '500 DH',
             icon: Calendar,
             color: 'purple',
-            features: ['Accès complet pendant 90 jours', 'Tuteur IA & Audio Inclus', 'Idéal pour une préparation ciblée']
+            features: ['Accès complet pendant 90 jours', 'Tuteur Personnel & Audio Inclus', 'Idéal pour une préparation ciblée']
         },
         {
             id: '1_YEAR',
@@ -43,7 +43,7 @@ export default function PaymentPage() {
             icon: Crown,
             color: 'orange',
             popular: true,
-            features: ['Accès complet jusqu\'au concours', 'Tuteur IA Illimité', 'Mode Audio (TTS)', 'Tranquillité d\'esprit garantie', 'Support prioritaire']
+            features: ['Accès complet jusqu\'au concours', 'Tuteur Personnel Illimité', 'Mode Audio (TTS)', 'Tranquillité d\'esprit garantie', 'Support prioritaire']
         }
     ];
 

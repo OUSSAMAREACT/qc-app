@@ -73,12 +73,17 @@ export default function LandingPage() {
                                 </Link>
                             ) : (
                                 <>
+                                    <Link to="/login" className="sm:hidden">
+                                        <Button className="bg-blue-600 hover:bg-blue-700 text-white shadow-lg shadow-blue-500/30 rounded-xl px-6">
+                                            Se connecter
+                                        </Button>
+                                    </Link>
                                     <Link to="/login" className="hidden sm:block">
                                         <Button variant="ghost" className="text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 font-medium">
                                             Connexion
                                         </Button>
                                     </Link>
-                                    <Link to="/register">
+                                    <Link to="/register" className="hidden sm:block">
                                         <Button className="bg-blue-600 hover:bg-blue-700 text-white shadow-lg shadow-blue-500/30 rounded-xl px-6">
                                             S'inscrire
                                         </Button>
@@ -123,7 +128,7 @@ export default function LandingPage() {
                             <p className="mt-6 text-xl md:text-2xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto mb-10 leading-relaxed font-medium">
                                 La plateforme tout-en-un pour l'Echelle 11, Master ISPITS, ISSS et ENSP.
                                 <span className="block mt-2 text-gray-500 dark:text-gray-400">
-                                    QCMs intelligents, Tuteur IA, et Suivi de progression détaillé.
+                                    QCMs intelligents, Tuteur Personnel, et Suivi de progression détaillé.
                                 </span>
                             </p>
 
@@ -159,7 +164,7 @@ export default function LandingPage() {
                             className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-8 max-w-5xl mx-auto"
                         >
                             <StatCard number={questionCount} label="Questions QCM" color="text-blue-600 dark:text-blue-400" icon={<BookOpen size={24} />} />
-                            <StatCard number="IA" label="Tuteur Personnel" color="text-purple-600 dark:text-purple-400" icon={<Zap size={24} />} />
+                            <StatCard number="Expert" label="Tuteur Personnel" color="text-purple-600 dark:text-purple-400" icon={<Zap size={24} />} />
                             <StatCard number="Audio" label="Révision TTS" color="text-indigo-600 dark:text-indigo-400" icon={<Users size={24} />} />
                             <StatCard number="100%" label="Suivi Progression" color="text-green-600 dark:text-green-400" icon={<Target size={24} />} />
                         </motion.div>
@@ -213,9 +218,9 @@ export default function LandingPage() {
                                     <div className="w-16 h-16 bg-white dark:bg-gray-800 rounded-2xl flex items-center justify-center text-purple-600 shadow-lg mb-8 group-hover:scale-110 transition-transform">
                                         <Zap size={32} fill="currentColor" />
                                     </div>
-                                    <h3 className="text-3xl font-bold mb-4 text-gray-900 dark:text-white">Tuteur IA Personnel</h3>
+                                    <h3 className="text-3xl font-bold mb-4 text-gray-900 dark:text-white">Tuteur Personnel</h3>
                                     <p className="text-gray-600 dark:text-gray-300 text-lg leading-relaxed max-w-md">
-                                        Une explication détaillée pour chaque question. Notre IA analyse vos erreurs et vous aide à comprendre le "pourquoi" de la réponse.
+                                        Une explication détaillée pour chaque question. Notre système analyse vos erreurs et vous aide à comprendre le "pourquoi" de la réponse.
                                     </p>
                                 </div>
                                 <div className="absolute right-0 bottom-0 w-64 h-64 bg-purple-500/10 rounded-full blur-3xl transform translate-x-1/3 translate-y-1/3" />
