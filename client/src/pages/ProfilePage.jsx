@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { Button } from '../components/ui/Button';
 import { Card } from '../components/ui/Card';
@@ -18,6 +18,7 @@ import { Link } from 'react-router-dom';
 export default function ProfilePage() {
     const { user, login } = useAuth();
     const [isEditing, setIsEditing] = useState(false);
+    const editSectionRef = useRef(null);
 
     // Find initial region based on user city if possible
     const findRegionByCity = (city) => {
@@ -90,6 +91,14 @@ export default function ProfilePage() {
     const handleRegionChange = (e) => {
         setSelectedRegion(e.target.value);
         setFormData({ ...formData, city: '' });
+    };
+
+    const handleEditClick = () => {
+        setIsEditing(true);
+        // Small delay to ensure state update and render before scrolling
+        setTimeout(() => {
+            editSectionRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 100);
     };
 
     const handleSubmit = async (e) => {
@@ -174,7 +183,7 @@ export default function ProfilePage() {
                 </div>
 
                 {/* Profile Info Overlay */}
-                <div className="absolute -bottom-16 left-0 right-0 px-6 md:px-12 flex flex-col md:flex-row items-end gap-6 md:gap-8">
+                <div className="absolute -bottom-16 left-0 right-0 px-6 md:px-12 flex flex-col md:flex-row items-center md:items-end gap-6 md:gap-8">
                     {/* Avatar with Glass Ring */}
                     <motion.div
                         initial={{ scale: 0.9, opacity: 0 }}
@@ -197,17 +206,17 @@ export default function ProfilePage() {
                     </motion.div>
 
                     {/* User Details */}
-                    <div className="flex-1 mb-2">
-                        <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4">
+                    <div className="flex-1 mb-2 w-full md:w-auto">
+                        <div className="flex flex-col md:flex-row justify-between items-center md:items-end gap-4 text-center md:text-left">
                             <div>
                                 <h1 className="text-3xl md:text-5xl font-heading font-bold text-white drop-shadow-md">
                                     {user?.name}
                                 </h1>
-                                <div className="flex flex-wrap items-center gap-3 mt-3">
+                                <div className="flex flex-wrap items-center justify-center md:justify-start gap-3 mt-3">
                                     {/* Role Badge */}
                                     <div className={`flex items-center gap-2 px-4 py-1.5 rounded-full text-sm font-bold shadow-sm border ${user?.role === 'PREMIUM'
-                                            ? 'bg-gradient-to-r from-yellow-100 to-amber-100 text-yellow-800 border-yellow-200'
-                                            : 'bg-white/90 text-gray-700 border-white/50 backdrop-blur-sm'
+                                        ? 'bg-gradient-to-r from-yellow-100 to-amber-100 text-yellow-800 border-yellow-200'
+                                        : 'bg-white/90 text-gray-700 border-white/50 backdrop-blur-sm'
                                         }`}>
                                         {user?.role === 'PREMIUM' ? <Crown size={14} fill="currentColor" /> : <User size={14} />}
                                         <span>{user?.role === 'PREMIUM' ? 'Membre Premium' : 'Compte Gratuit'}</span>
@@ -237,7 +246,7 @@ export default function ProfilePage() {
 
                             {!isEditing && (
                                 <Button
-                                    onClick={() => setIsEditing(true)}
+                                    onClick={handleEditClick}
                                     className="bg-white text-gray-900 hover:bg-gray-100 rounded-xl px-6 py-3 font-bold shadow-xl shadow-black/10 flex items-center gap-2 transition-all hover:-translate-y-1"
                                 >
                                     <Edit3 size={18} /> Modifier le profil
@@ -388,7 +397,7 @@ export default function ProfilePage() {
                 </div>
 
                 {/* Right Column: Edit Profile */}
-                <motion.div variants={itemVariants} className="lg:col-span-4">
+                <motion.div variants={itemVariants} className="lg:col-span-4" ref={editSectionRef}>
                     <div className="bg-white dark:bg-dark-card rounded-[2rem] shadow-xl shadow-gray-200/50 dark:shadow-black/20 border border-gray-100 dark:border-gray-700/50 sticky top-24 overflow-hidden">
                         {/* Header */}
                         <div className="p-6 border-b border-gray-100 dark:border-gray-700 bg-gray-50/50 dark:bg-gray-800/50 backdrop-blur-sm flex items-center justify-between">
