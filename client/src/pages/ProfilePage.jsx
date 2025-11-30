@@ -6,10 +6,11 @@ import axios from 'axios';
 import {
     User, Mail, Lock, Save, Award,
     TrendingUp, Calendar, BookOpen, Target,
-    MapPin, Building2, Phone, Map, Crown
+    MapPin, Building2, Phone, Map, Crown,
+    Sparkles, Shield, Edit3, Camera
 } from 'lucide-react';
 import PremiumBadge from '../components/ui/PremiumBadge';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { moroccoRegions } from '../data/moroccoData';
 import SEO from '../components/SEO';
 
@@ -139,383 +140,409 @@ export default function ProfilePage() {
             variants={containerVariants}
             initial="hidden"
             animate="visible"
-            className="max-w-6xl mx-auto space-y-8 pb-12"
+            className="max-w-7xl mx-auto space-y-8 pb-12"
         >
             <SEO
                 title="Mon Profil"
                 description="Gérez votre profil, vos informations personnelles et vos statistiques sur QCMEchelle11."
                 url="/profile"
             />
-            {/* Header Section with Cover */}
-            <motion.div variants={itemVariants} className="relative mb-12">
-                <div className="h-48 md:h-64 bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 rounded-3xl shadow-lg overflow-hidden relative">
-                    <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10"></div>
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
-                </div>
 
-                {/* Avatar - Overlapping */}
-                <div className="absolute -bottom-16 left-8 md:left-12 flex items-end">
-                    <div className="w-32 h-32 md:w-40 md:h-40 rounded-3xl bg-white dark:bg-gray-800 p-2 shadow-2xl ring-4 ring-white/50 dark:ring-gray-700/50 backdrop-blur-sm z-10">
-                        <div className="w-full h-full bg-gradient-to-br from-blue-500 to-indigo-600 rounded-2xl flex items-center justify-center text-white text-5xl md:text-6xl font-bold shadow-inner">
-                            {user?.name?.charAt(0).toUpperCase()}
-                        </div>
+            {/* Hero Section - Premium Mesh Gradient */}
+            <motion.div variants={itemVariants} className="relative mb-20">
+                <div className="h-64 md:h-80 rounded-[2.5rem] overflow-hidden relative shadow-2xl shadow-indigo-900/20">
+                    {/* Animated Mesh Gradient */}
+                    <div className="absolute inset-0 bg-gray-900">
+                        <div className="absolute inset-0 bg-[radial-gradient(at_top_right,_var(--tw-gradient-stops))] from-indigo-500 via-purple-500 to-pink-500 opacity-60 mix-blend-overlay"></div>
+                        <div className="absolute -top-1/2 -left-1/2 w-full h-full bg-blue-500/30 rounded-full blur-[120px] animate-pulse"></div>
+                        <div className="absolute -bottom-1/2 -right-1/2 w-full h-full bg-purple-500/30 rounded-full blur-[120px] animate-pulse delay-700"></div>
                     </div>
+
+                    {/* Pattern Overlay */}
+                    <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10 mix-blend-overlay"></div>
                 </div>
-            </motion.div>
 
-            {/* User Info - Below Cover */}
-            <motion.div variants={itemVariants} className="px-4 md:px-12 flex flex-col md:flex-row justify-between items-start md:items-end gap-6 mt-20 md:mt-4">
-                <div className="md:pl-44 w-full"> {/* Offset for avatar width + gap */}
-                    <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-                        <div>
-                            <h1 className="text-3xl md:text-4xl font-heading font-bold text-gray-900 dark:text-white">
-                                {user?.name}
-                            </h1>
-                            <div className="flex flex-wrap items-center gap-3 text-gray-600 dark:text-gray-300 font-medium mt-2">
-                                <div className="flex items-center gap-2 bg-white dark:bg-gray-800 px-3 py-1.5 rounded-full shadow-sm border border-gray-100 dark:border-gray-700">
-                                    <Award size={16} className={user?.role === 'PREMIUM' ? "text-yellow-600" : "text-yellow-500"} />
-                                    <span>
-                                        {user?.role === 'ADMIN' ? 'Administrateur' :
-                                            user?.role === 'PREMIUM' ? 'Étudiant Premium' : 'Étudiant'}
-                                    </span>
-                                </div>
-                                {user?.role === 'PREMIUM' && (
-                                    <div className="flex items-center gap-2 bg-gradient-to-r from-yellow-100 to-amber-100 dark:from-yellow-900/30 dark:to-amber-900/30 px-3 py-1.5 rounded-full shadow-sm border border-yellow-200 dark:border-yellow-700 text-yellow-800 dark:text-yellow-400 font-bold">
-                                        <Crown size={16} fill="currentColor" />
-                                        <span>Membre VIP</span>
-                                    </div>
-                                )}
-                                {user?.specialty ? (
-                                    <div className="flex items-center gap-2 bg-white dark:bg-gray-800 px-3 py-1.5 rounded-full shadow-sm border border-gray-100 dark:border-gray-700">
-                                        <span className="w-2 h-2 bg-blue-500 rounded-full"></span>
-                                        <span>{user.specialty.name}</span>
-                                    </div>
-                                ) : (
-                                    <div className="flex items-center gap-2 bg-yellow-50 dark:bg-yellow-900/20 px-3 py-1.5 rounded-full shadow-sm border border-yellow-100 dark:border-yellow-800 text-yellow-700 dark:text-yellow-400 text-sm">
-                                        <span className="w-2 h-2 bg-yellow-500 rounded-full animate-pulse"></span>
-                                        <span>Spécialité non définie</span>
-                                    </div>
-                                )}
-                                {user?.city && (
-                                    <div className="flex items-center gap-2 bg-white dark:bg-gray-800 px-3 py-1.5 rounded-full shadow-sm border border-gray-100 dark:border-gray-700">
-                                        <MapPin size={16} className="text-red-500" />
-                                        <span>{user.city}</span>
-                                    </div>
-                                )}
+                {/* Profile Info Overlay */}
+                <div className="absolute -bottom-16 left-0 right-0 px-6 md:px-12 flex flex-col md:flex-row items-end gap-6 md:gap-8">
+                    {/* Avatar with Glass Ring */}
+                    <motion.div
+                        initial={{ scale: 0.9, opacity: 0 }}
+                        animate={{ scale: 1, opacity: 1 }}
+                        transition={{ delay: 0.2 }}
+                        className="relative group"
+                    >
+                        <div className="w-32 h-32 md:w-40 md:h-40 rounded-[2rem] bg-white dark:bg-gray-800 p-1.5 shadow-2xl ring-1 ring-white/20 backdrop-blur-xl z-10 relative overflow-hidden">
+                            <div className="w-full h-full bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 rounded-[1.7rem] flex items-center justify-center text-white text-5xl md:text-6xl font-bold shadow-inner">
+                                {user?.name?.charAt(0).toUpperCase()}
                             </div>
+                            {/* Shine Effect */}
+                            <div className="absolute inset-0 bg-gradient-to-tr from-white/0 via-white/20 to-white/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000"></div>
                         </div>
-
-                        {!isEditing && (
-                            <Button
-                                onClick={() => setIsEditing(true)}
-                                className="shadow-lg shadow-blue-500/20"
-                            >
-                                Modifier le profil
-                            </Button>
+                        {user?.role === 'PREMIUM' && (
+                            <div className="absolute -top-3 -right-3 bg-yellow-400 text-yellow-900 p-2 rounded-full shadow-lg border-2 border-white dark:border-gray-800 z-20">
+                                <Crown size={20} fill="currentColor" />
+                            </div>
                         )}
+                    </motion.div>
+
+                    {/* User Details */}
+                    <div className="flex-1 mb-2">
+                        <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4">
+                            <div>
+                                <h1 className="text-3xl md:text-5xl font-heading font-bold text-gray-900 dark:text-white drop-shadow-sm">
+                                    {user?.name}
+                                </h1>
+                                <div className="flex flex-wrap items-center gap-3 mt-3">
+                                    {/* Role Badge */}
+                                    <div className={`flex items-center gap-2 px-4 py-1.5 rounded-full text-sm font-bold shadow-sm border ${user?.role === 'PREMIUM'
+                                            ? 'bg-gradient-to-r from-yellow-100 to-amber-100 text-yellow-800 border-yellow-200'
+                                            : 'bg-gray-100 text-gray-700 border-gray-200'
+                                        }`}>
+                                        {user?.role === 'PREMIUM' ? <Crown size={14} fill="currentColor" /> : <User size={14} />}
+                                        <span>{user?.role === 'PREMIUM' ? 'Membre Premium' : 'Étudiant Standard'}</span>
+                                    </div>
+
+                                    {/* Specialty Badge */}
+                                    {user?.specialty ? (
+                                        <div className="flex items-center gap-2 bg-white dark:bg-gray-800 px-4 py-1.5 rounded-full text-sm font-medium shadow-sm border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-200">
+                                            <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>
+                                            {user.specialty.name}
+                                        </div>
+                                    ) : (
+                                        <div className="flex items-center gap-2 bg-red-50 text-red-600 px-4 py-1.5 rounded-full text-sm font-medium border border-red-100">
+                                            <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse"></div>
+                                            Spécialité non définie
+                                        </div>
+                                    )}
+
+                                    {/* Location Badge */}
+                                    {user?.city && (
+                                        <div className="flex items-center gap-2 bg-white dark:bg-gray-800 px-4 py-1.5 rounded-full text-sm font-medium shadow-sm border border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-300">
+                                            <MapPin size={14} /> {user.city}
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
+
+                            {!isEditing && (
+                                <Button
+                                    onClick={() => setIsEditing(true)}
+                                    className="bg-gray-900 dark:bg-white text-white dark:text-gray-900 hover:bg-gray-800 dark:hover:bg-gray-100 rounded-xl px-6 py-3 font-bold shadow-xl shadow-gray-900/10 flex items-center gap-2 transition-all hover:-translate-y-1"
+                                >
+                                    <Edit3 size={18} /> Modifier le profil
+                                </Button>
+                            )}
+                        </div>
                     </div>
                 </div>
             </motion.div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 px-4 md:px-0">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 px-4 md:px-0 pt-12">
                 {/* Left Column: Stats & Badges */}
-                <div className="lg:col-span-2 space-y-8">
-                    {/* Stats Grid */}
-                    <motion.div variants={itemVariants} className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-                        <div className="bg-white dark:bg-dark-card p-4 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 flex flex-col items-center text-center hover:border-blue-200 dark:hover:border-blue-800 transition-colors group">
-                            <div className="p-3 bg-orange-100 dark:bg-orange-900/30 text-orange-600 rounded-xl mb-3 group-hover:scale-110 transition-transform">
-                                <TrendingUp size={24} />
+                <div className="lg:col-span-8 space-y-8">
+                    {/* Stats Grid - Glassmorphism */}
+                    <motion.div variants={itemVariants} className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                        {[
+                            { icon: TrendingUp, label: "Série Actuelle", value: stats?.currentStreak || 0, color: "orange" },
+                            { icon: Target, label: "Record Série", value: stats?.longestStreak || 0, color: "blue" },
+                            { icon: BookOpen, label: "Quiz Total", value: stats?.totalQuizzes || 0, color: "purple" },
+                            { icon: Calendar, label: "Questions (Sem)", value: stats?.weeklyProgress?.questionsAnswered || 0, color: "green" }
+                        ].map((stat, idx) => (
+                            <div key={idx} className="bg-white dark:bg-dark-card p-5 rounded-3xl shadow-sm border border-gray-100 dark:border-gray-700/50 flex flex-col items-center justify-center text-center hover:shadow-md transition-all group relative overflow-hidden">
+                                <div className={`absolute inset-0 bg-${stat.color}-500/5 opacity-0 group-hover:opacity-100 transition-opacity`}></div>
+                                <div className={`p-3 bg-${stat.color}-50 dark:bg-${stat.color}-900/20 text-${stat.color}-600 dark:text-${stat.color}-400 rounded-2xl mb-3 group-hover:scale-110 transition-transform duration-300`}>
+                                    <stat.icon size={24} />
+                                </div>
+                                <div className="text-3xl font-bold text-gray-900 dark:text-white mb-1 font-heading">{stat.value}</div>
+                                <div className="text-xs text-gray-500 font-bold uppercase tracking-wider">{stat.label}</div>
                             </div>
-                            <div className="text-3xl font-bold text-gray-900 dark:text-white mb-1">{stats?.currentStreak || 0}</div>
-                            <div className="text-xs text-gray-500 font-medium uppercase tracking-wide">Série Actuelle</div>
-                        </div>
-                        <div className="bg-white dark:bg-dark-card p-4 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 flex flex-col items-center text-center hover:border-blue-200 dark:hover:border-blue-800 transition-colors group">
-                            <div className="p-3 bg-blue-100 dark:bg-blue-900/30 text-blue-600 rounded-xl mb-3 group-hover:scale-110 transition-transform">
-                                <Target size={24} />
-                            </div>
-                            <div className="text-3xl font-bold text-gray-900 dark:text-white mb-1">{stats?.longestStreak || 0}</div>
-                            <div className="text-xs text-gray-500 font-medium uppercase tracking-wide">Record Série</div>
-                        </div>
-                        <div className="bg-white dark:bg-dark-card p-4 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 flex flex-col items-center text-center hover:border-blue-200 dark:hover:border-blue-800 transition-colors group">
-                            <div className="p-3 bg-purple-100 dark:bg-purple-900/30 text-purple-600 rounded-xl mb-3 group-hover:scale-110 transition-transform">
-                                <BookOpen size={24} />
-                            </div>
-                            <div className="text-3xl font-bold text-gray-900 dark:text-white mb-1">{stats?.totalQuizzes || 0}</div>
-                            <div className="text-xs text-gray-500 font-medium uppercase tracking-wide">Quiz Total</div>
-                        </div>
-                        <div className="bg-white dark:bg-dark-card p-4 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 flex flex-col items-center text-center hover:border-blue-200 dark:hover:border-blue-800 transition-colors group">
-                            <div className="p-3 bg-green-100 dark:bg-green-900/30 text-green-600 rounded-xl mb-3 group-hover:scale-110 transition-transform">
-                                <Calendar size={24} />
-                            </div>
-                            <div className="text-3xl font-bold text-gray-900 dark:text-white mb-1">{stats?.weeklyProgress?.questionsAnswered || 0}</div>
-                            <div className="text-xs text-gray-500 font-medium uppercase tracking-wide">Questions (Sem)</div>
-                        </div>
+                        ))}
                     </motion.div>
 
                     {/* Badges Section */}
                     <motion.div variants={itemVariants}>
-                        <Card className="bg-white dark:bg-dark-card border-gray-100 dark:border-gray-700 shadow-sm overflow-hidden">
-                            <div className="flex items-center gap-3 mb-6 p-2">
-                                <div className="p-2 bg-yellow-100 dark:bg-yellow-900/30 text-yellow-600 rounded-xl">
-                                    <Award size={24} />
+                        <div className="bg-white dark:bg-dark-card rounded-[2rem] p-8 shadow-sm border border-gray-100 dark:border-gray-700/50 relative overflow-hidden">
+                            <div className="absolute top-0 right-0 w-64 h-64 bg-yellow-500/5 rounded-full blur-3xl -mr-16 -mt-16"></div>
+
+                            <div className="flex items-center gap-4 mb-8 relative z-10">
+                                <div className="p-3 bg-yellow-100 dark:bg-yellow-900/30 text-yellow-600 rounded-2xl">
+                                    <Award size={28} />
                                 </div>
-                                <h2 className="text-xl font-heading font-bold text-gray-900 dark:text-white">Mes Badges</h2>
+                                <div>
+                                    <h2 className="text-2xl font-heading font-bold text-gray-900 dark:text-white">Collection de Badges</h2>
+                                    <p className="text-sm text-gray-500 dark:text-gray-400">Vos trophées et accomplissements</p>
+                                </div>
                             </div>
 
                             {user?.badges && user.badges.length > 0 ? (
                                 <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6">
                                     {user.badges.map((badge) => (
-                                        <div key={badge.id} className="flex flex-col items-center group p-4 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors">
-                                            <div className="transform transition-transform duration-300 group-hover:scale-110 drop-shadow-lg">
+                                        <motion.div
+                                            whileHover={{ y: -5 }}
+                                            key={badge.id}
+                                            className="flex flex-col items-center group p-4 rounded-2xl bg-gray-50 dark:bg-gray-800/50 hover:bg-white dark:hover:bg-gray-800 border border-transparent hover:border-gray-100 dark:hover:border-gray-700 hover:shadow-lg transition-all"
+                                        >
+                                            <div className="transform transition-transform duration-300 group-hover:scale-110 drop-shadow-xl">
                                                 <PremiumBadge type={badge.type} size="lg" />
                                             </div>
-                                            <span className="mt-3 text-sm font-bold text-gray-800 dark:text-gray-200 text-center">
+                                            <span className="mt-4 text-sm font-bold text-gray-900 dark:text-white text-center leading-tight">
                                                 {badge.name}
                                             </span>
-                                            <span className="text-xs text-gray-500 dark:text-gray-400 text-center">
+                                            <span className="text-xs text-gray-500 dark:text-gray-400 text-center mt-1 font-medium">
                                                 {new Date(badge.awardedAt).toLocaleDateString()}
                                             </span>
-                                        </div>
+                                        </motion.div>
                                     ))}
                                 </div>
                             ) : (
-                                <div className="text-center py-12 bg-gray-50 dark:bg-gray-800/50 rounded-2xl border border-dashed border-gray-200 dark:border-gray-700">
-                                    <div className="w-16 h-16 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center mx-auto mb-4 text-gray-400">
-                                        <Award size={32} />
+                                <div className="text-center py-16 bg-gray-50 dark:bg-gray-800/30 rounded-3xl border-2 border-dashed border-gray-200 dark:border-gray-700 flex flex-col items-center justify-center">
+                                    <div className="w-20 h-20 bg-white dark:bg-gray-800 rounded-full flex items-center justify-center mb-4 shadow-sm text-gray-300 dark:text-gray-600">
+                                        <Award size={40} />
                                     </div>
-                                    <p className="text-gray-500 dark:text-gray-400 font-medium">Aucun badge obtenu pour le moment.</p>
-                                    <p className="text-sm text-gray-400 dark:text-gray-500 mt-1">Participez aux examens hebdomadaires pour en gagner !</p>
+                                    <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-2">Aucun badge pour le moment</h3>
+                                    <p className="text-gray-500 dark:text-gray-400 max-w-xs mx-auto">
+                                        Participez aux examens hebdomadaires et complétez des séries pour débloquer des trophées exclusifs !
+                                    </p>
                                 </div>
                             )}
-                        </Card>
+                        </div>
                     </motion.div>
                 </div>
 
                 {/* Right Column: Edit Profile */}
-                <motion.div variants={itemVariants} className="lg:col-span-1">
-                    <Card className="bg-white dark:bg-dark-card border-gray-100 dark:border-gray-700 shadow-lg sticky top-24">
-                        <div className="flex items-center justify-between mb-6 border-b border-gray-100 dark:border-gray-700 pb-4">
+                <motion.div variants={itemVariants} className="lg:col-span-4">
+                    <div className="bg-white dark:bg-dark-card rounded-[2rem] shadow-xl shadow-gray-200/50 dark:shadow-black/20 border border-gray-100 dark:border-gray-700/50 sticky top-24 overflow-hidden">
+                        {/* Header */}
+                        <div className="p-6 border-b border-gray-100 dark:border-gray-700 bg-gray-50/50 dark:bg-gray-800/50 backdrop-blur-sm flex items-center justify-between">
                             <h2 className="text-lg font-heading font-bold text-gray-900 dark:text-white flex items-center gap-2">
-                                <User size={20} className="text-blue-600" /> Détails du Profil
+                                <Shield size={20} className="text-indigo-600" /> Détails du Compte
                             </h2>
                             {isEditing && (
-                                <Button
-                                    variant="ghost"
+                                <button
                                     onClick={() => setIsEditing(false)}
-                                    className="text-sm text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 hover:text-red-600"
+                                    className="text-xs font-bold text-red-500 hover:text-red-600 bg-red-50 hover:bg-red-100 px-3 py-1.5 rounded-lg transition-colors"
                                 >
                                     Annuler
-                                </Button>
+                                </button>
                             )}
                         </div>
 
-                        {message && (
-                            <div className="mb-4 p-3 bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-300 rounded-xl text-sm border border-green-100 dark:border-green-800 flex items-center gap-2 animate-in fade-in slide-in-from-top-2">
-                                <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                                {message}
-                            </div>
-                        )}
-                        {error && (
-                            <div className="mb-4 p-3 bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-300 rounded-xl text-sm border border-red-100 dark:border-red-800 flex items-center gap-2 animate-in fade-in slide-in-from-top-2">
-                                <div className="w-2 h-2 bg-red-500 rounded-full"></div>
-                                {error}
-                            </div>
-                        )}
+                        <div className="p-6">
+                            {message && (
+                                <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="mb-6 p-4 bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-300 rounded-2xl text-sm border border-green-100 dark:border-green-800 flex items-center gap-3">
+                                    <div className="w-2 h-2 bg-green-500 rounded-full shrink-0"></div>
+                                    {message}
+                                </motion.div>
+                            )}
+                            {error && (
+                                <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="mb-6 p-4 bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-300 rounded-2xl text-sm border border-red-100 dark:border-red-800 flex items-center gap-3">
+                                    <div className="w-2 h-2 bg-red-500 rounded-full shrink-0"></div>
+                                    {error}
+                                </motion.div>
+                            )}
 
-                        <form onSubmit={handleSubmit} className="space-y-5">
-                            {/* Read-Only / Basic Info */}
-                            <div className="space-y-4">
-                                <div>
-                                    <label className="block text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1.5 ml-1">Nom complet</label>
-                                    <div className="relative">
-                                        <User className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
-                                        <input
-                                            type="text"
-                                            name="name"
-                                            value={formData.name}
-                                            onChange={handleChange}
-                                            disabled={!isEditing}
-                                            className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all disabled:opacity-70 disabled:cursor-not-allowed disabled:bg-gray-100 dark:disabled:bg-gray-900"
-                                        />
+                            <form onSubmit={handleSubmit} className="space-y-6">
+                                {/* Read-Only / Basic Info */}
+                                <div className="space-y-5">
+                                    <div className="group">
+                                        <label className="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2 ml-1">Nom complet</label>
+                                        <div className="relative">
+                                            <User className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-indigo-500 transition-colors" size={20} />
+                                            <input
+                                                type="text"
+                                                name="name"
+                                                value={formData.name}
+                                                onChange={handleChange}
+                                                disabled={!isEditing}
+                                                className="w-full pl-12 pr-4 py-3.5 rounded-2xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50 text-gray-900 dark:text-white font-medium focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all disabled:opacity-70 disabled:cursor-not-allowed disabled:bg-gray-100 dark:disabled:bg-gray-900"
+                                            />
+                                        </div>
+                                    </div>
+
+                                    <div className="group">
+                                        <label className="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2 ml-1">Email</label>
+                                        <div className="relative">
+                                            <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={20} />
+                                            <input
+                                                type="email"
+                                                value={user?.email || ''}
+                                                disabled
+                                                className="w-full pl-12 pr-4 py-3.5 rounded-2xl border border-gray-200 dark:border-gray-700 bg-gray-100 dark:bg-gray-900 text-gray-500 dark:text-gray-400 font-medium cursor-not-allowed"
+                                            />
+                                        </div>
                                     </div>
                                 </div>
 
-                                <div>
-                                    <label className="block text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1.5 ml-1">Email</label>
-                                    <div className="relative">
-                                        <Mail className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
-                                        <input
-                                            type="email"
-                                            value={user?.email || ''}
-                                            disabled
-                                            className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-100 dark:bg-gray-900 text-gray-500 dark:text-gray-400 cursor-not-allowed"
-                                        />
-                                    </div>
-                                </div>
-                            </div>
+                                {/* Extended Profile Info */}
+                                <div className="pt-6 border-t border-gray-100 dark:border-gray-700 space-y-5">
+                                    <h3 className="text-sm font-bold text-gray-900 dark:text-white flex items-center gap-2">
+                                        <Sparkles size={16} className="text-yellow-500" /> Informations Personnelles
+                                    </h3>
 
-                            {/* Extended Profile Info */}
-                            <div className="pt-4 border-t border-gray-100 dark:border-gray-700 space-y-4">
-                                <h3 className="text-sm font-bold text-gray-900 dark:text-white">Informations Personnelles</h3>
-
-                                <div className="grid grid-cols-1 gap-4">
-                                    {/* Region & City */}
-                                    {isEditing ? (
-                                        <>
+                                    <div className="grid grid-cols-1 gap-5">
+                                        {/* Region & City */}
+                                        {isEditing ? (
+                                            <>
+                                                <div>
+                                                    <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1.5 ml-1">Région</label>
+                                                    <div className="relative">
+                                                        <Map className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
+                                                        <select
+                                                            value={selectedRegion}
+                                                            onChange={handleRegionChange}
+                                                            className="w-full pl-12 pr-4 py-3 rounded-2xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none appearance-none transition-all"
+                                                        >
+                                                            <option value="">Sélectionner une région</option>
+                                                            {moroccoRegions.map((region) => (
+                                                                <option key={region.name} value={region.name}>{region.name}</option>
+                                                            ))}
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div>
+                                                    <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1.5 ml-1">Ville</label>
+                                                    <div className="relative">
+                                                        <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
+                                                        <select
+                                                            name="city"
+                                                            value={formData.city}
+                                                            onChange={handleChange}
+                                                            disabled={!selectedRegion}
+                                                            className="w-full pl-12 pr-4 py-3 rounded-2xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none appearance-none disabled:opacity-50 transition-all"
+                                                        >
+                                                            <option value="">Sélectionner une ville</option>
+                                                            {availableCities.map((city) => (
+                                                                <option key={city} value={city}>{city}</option>
+                                                            ))}
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </>
+                                        ) : (
                                             <div>
-                                                <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">Région</label>
+                                                <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1.5 ml-1">Ville / Région</label>
                                                 <div className="relative">
-                                                    <Map className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
-                                                    <select
-                                                        value={selectedRegion}
-                                                        onChange={handleRegionChange}
-                                                        className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 outline-none appearance-none"
-                                                    >
-                                                        <option value="">Sélectionner une région</option>
-                                                        {moroccoRegions.map((region) => (
-                                                            <option key={region.name} value={region.name}>{region.name}</option>
-                                                        ))}
-                                                    </select>
+                                                    <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
+                                                    <input
+                                                        type="text"
+                                                        value={formData.city || 'Non renseigné'}
+                                                        disabled
+                                                        className="w-full pl-12 pr-4 py-3 rounded-2xl border border-gray-200 dark:border-gray-700 bg-gray-100 dark:bg-gray-900 text-gray-700 dark:text-gray-300 font-medium"
+                                                    />
                                                 </div>
                                             </div>
-                                            <div>
-                                                <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">Ville</label>
-                                                <div className="relative">
-                                                    <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
-                                                    <select
-                                                        name="city"
-                                                        value={formData.city}
-                                                        onChange={handleChange}
-                                                        disabled={!selectedRegion}
-                                                        className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 outline-none appearance-none disabled:opacity-50"
-                                                    >
-                                                        <option value="">Sélectionner une ville</option>
-                                                        {availableCities.map((city) => (
-                                                            <option key={city} value={city}>{city}</option>
-                                                        ))}
-                                                    </select>
-                                                </div>
-                                            </div>
-                                        </>
-                                    ) : (
+                                        )}
+
+                                        {/* Hospital */}
                                         <div>
-                                            <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">Ville / Région</label>
+                                            <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1.5 ml-1">Hôpital / Lieu de travail</label>
                                             <div className="relative">
-                                                <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
+                                                <Building2 className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
                                                 <input
                                                     type="text"
-                                                    value={formData.city || 'Non renseigné'}
-                                                    disabled
-                                                    className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-100 dark:bg-gray-900 text-gray-700 dark:text-gray-300"
+                                                    name="hospital"
+                                                    value={formData.hospital}
+                                                    onChange={handleChange}
+                                                    disabled={!isEditing}
+                                                    placeholder="Ex: CHU Ibn Rochd"
+                                                    className="w-full pl-12 pr-4 py-3 rounded-2xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all disabled:opacity-70 disabled:bg-gray-100 dark:disabled:bg-gray-900"
                                                 />
                                             </div>
                                         </div>
-                                    )}
 
-                                    {/* Hospital */}
-                                    <div>
-                                        <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">Hôpital / Lieu de travail</label>
-                                        <div className="relative">
-                                            <Building2 className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
-                                            <input
-                                                type="text"
-                                                name="hospital"
-                                                value={formData.hospital}
-                                                onChange={handleChange}
-                                                disabled={!isEditing}
-                                                placeholder="Ex: CHU Ibn Rochd"
-                                                className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 transition-all disabled:opacity-70 disabled:bg-gray-100 dark:disabled:bg-gray-900"
-                                            />
-                                        </div>
-                                    </div>
-
-                                    {/* Phone */}
-                                    <div>
-                                        <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">Téléphone</label>
-                                        <div className="relative">
-                                            <Phone className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
-                                            <input
-                                                type="text"
-                                                name="phoneNumber"
-                                                value={formData.phoneNumber}
-                                                onChange={handleChange}
-                                                disabled={!isEditing}
-                                                placeholder="+212 6..."
-                                                className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 transition-all disabled:opacity-70 disabled:bg-gray-100 dark:disabled:bg-gray-900"
-                                            />
+                                        {/* Phone */}
+                                        <div>
+                                            <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1.5 ml-1">Téléphone</label>
+                                            <div className="relative">
+                                                <Phone className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
+                                                <input
+                                                    type="text"
+                                                    name="phoneNumber"
+                                                    value={formData.phoneNumber}
+                                                    onChange={handleChange}
+                                                    disabled={!isEditing}
+                                                    placeholder="+212 6..."
+                                                    className="w-full pl-12 pr-4 py-3 rounded-2xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all disabled:opacity-70 disabled:bg-gray-100 dark:disabled:bg-gray-900"
+                                                />
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
 
-                            {/* Specialty Selection - Only if not set */}
-                            {!user?.specialty && (
-                                <div className="pt-4 border-t border-gray-100 dark:border-gray-700">
-                                    <label className="block text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1.5 ml-1">
-                                        Spécialité <span className="text-xs text-yellow-600 dark:text-yellow-400 normal-case">(Choix unique)</span>
-                                    </label>
-                                    <div className="relative">
-                                        <BookOpen className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
-                                        <select
-                                            name="specialtyId"
-                                            value={formData.specialtyId || ''}
-                                            onChange={handleChange}
-                                            disabled={!isEditing}
-                                            className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all disabled:opacity-60 disabled:cursor-not-allowed appearance-none"
+                                {/* Specialty Selection - Only if not set */}
+                                {!user?.specialty && (
+                                    <div className="pt-6 border-t border-gray-100 dark:border-gray-700">
+                                        <label className="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2 ml-1">
+                                            Spécialité <span className="text-xs text-yellow-600 dark:text-yellow-400 normal-case font-normal bg-yellow-100 dark:bg-yellow-900/30 px-2 py-0.5 rounded-md ml-2">Choix unique</span>
+                                        </label>
+                                        <div className="relative">
+                                            <BookOpen className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
+                                            <select
+                                                name="specialtyId"
+                                                value={formData.specialtyId || ''}
+                                                onChange={handleChange}
+                                                disabled={!isEditing}
+                                                className="w-full pl-12 pr-4 py-3 rounded-2xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all disabled:opacity-60 disabled:cursor-not-allowed appearance-none"
+                                            >
+                                                <option value="">Sélectionner une spécialité</option>
+                                                {specialties.map(s => (
+                                                    <option key={s.id} value={s.id}>{s.name}</option>
+                                                ))}
+                                            </select>
+                                        </div>
+                                    </div>
+                                )}
+
+                                <AnimatePresence>
+                                    {isEditing && (
+                                        <motion.div
+                                            initial={{ opacity: 0, height: 0 }}
+                                            animate={{ opacity: 1, height: 'auto' }}
+                                            exit={{ opacity: 0, height: 0 }}
+                                            className="space-y-5 pt-6 border-t border-gray-100 dark:border-gray-700"
                                         >
-                                            <option value="">Sélectionner une spécialité</option>
-                                            {specialties.map(s => (
-                                                <option key={s.id} value={s.id}>{s.name}</option>
-                                            ))}
-                                        </select>
-                                    </div>
-                                </div>
-                            )}
+                                            <h3 className="text-sm font-bold text-gray-900 dark:text-white flex items-center gap-2">
+                                                <Lock size={16} className="text-red-500" /> Sécurité
+                                            </h3>
+                                            <div>
+                                                <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1.5 ml-1">Mot de passe actuel</label>
+                                                <div className="relative">
+                                                    <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
+                                                    <input
+                                                        type="password"
+                                                        name="currentPassword"
+                                                        value={formData.currentPassword}
+                                                        onChange={handleChange}
+                                                        placeholder="Requis pour changer de mot de passe"
+                                                        className="w-full pl-12 pr-4 py-3 rounded-2xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all"
+                                                    />
+                                                </div>
+                                            </div>
 
-                            {isEditing && (
-                                <motion.div
-                                    initial={{ opacity: 0, height: 0 }}
-                                    animate={{ opacity: 1, height: 'auto' }}
-                                    className="space-y-4 pt-4 border-t border-gray-100 dark:border-gray-700"
-                                >
-                                    <h3 className="text-sm font-bold text-gray-900 dark:text-white">Sécurité</h3>
-                                    <div>
-                                        <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">Mot de passe actuel</label>
-                                        <div className="relative">
-                                            <Lock className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
-                                            <input
-                                                type="password"
-                                                name="currentPassword"
-                                                value={formData.currentPassword}
-                                                onChange={handleChange}
-                                                placeholder="Requis pour changer de mot de passe"
-                                                className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
-                                            />
-                                        </div>
-                                    </div>
+                                            <div>
+                                                <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1.5 ml-1">Nouveau mot de passe</label>
+                                                <div className="relative">
+                                                    <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
+                                                    <input
+                                                        type="password"
+                                                        name="newPassword"
+                                                        value={formData.newPassword}
+                                                        onChange={handleChange}
+                                                        placeholder="Laisser vide pour ne pas changer"
+                                                        className="w-full pl-12 pr-4 py-3 rounded-2xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all"
+                                                    />
+                                                </div>
+                                            </div>
 
-                                    <div>
-                                        <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">Nouveau mot de passe</label>
-                                        <div className="relative">
-                                            <Lock className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
-                                            <input
-                                                type="password"
-                                                name="newPassword"
-                                                value={formData.newPassword}
-                                                onChange={handleChange}
-                                                placeholder="Laisser vide pour ne pas changer"
-                                                className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
-                                            />
-                                        </div>
-                                    </div>
-
-                                    <Button type="submit" className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-xl font-bold shadow-lg shadow-blue-500/20 flex items-center justify-center gap-2 transform active:scale-[0.98] transition-all">
-                                        <Save size={18} /> Enregistrer les modifications
-                                    </Button>
-                                </motion.div>
-                            )}
-                        </form>
-                    </Card>
+                                            <Button type="submit" className="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-4 rounded-2xl font-bold shadow-lg shadow-indigo-500/30 flex items-center justify-center gap-2 transform active:scale-[0.98] transition-all mt-4">
+                                                <Save size={20} /> Enregistrer les modifications
+                                            </Button>
+                                        </motion.div>
+                                    )}
+                                </AnimatePresence>
+                            </form>
+                        </div>
+                    </div>
                 </motion.div>
             </div>
         </motion.div>
