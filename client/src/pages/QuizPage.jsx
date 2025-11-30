@@ -41,6 +41,8 @@ export default function QuizPage() {
 
     useEffect(() => {
         const mode = searchParams.get('mode');
+        console.log('QuizPage useEffect:', { mode, userRole: user?.role });
+
         if (mode === 'rapide' && user?.role === 'STUDENT') {
             setShowFreemiumNotice(true);
         }
@@ -48,8 +50,14 @@ export default function QuizPage() {
         // --- Mistake Onboarding ---
         if (mode === 'mistakes') {
             const hasSeen = localStorage.getItem('hasSeenMistakeOnboarding_v2');
+            console.log('Checking mistake onboarding:', { hasSeen });
+
             if (!hasSeen) {
-                setTimeout(() => setShowMistakeOnboarding(true), 500);
+                console.log('Scheduling onboarding modal...');
+                setTimeout(() => {
+                    console.log('Showing onboarding modal now');
+                    setShowMistakeOnboarding(true);
+                }, 500);
             }
         }
     }, [user, searchParams]);
