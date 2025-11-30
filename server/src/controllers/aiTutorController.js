@@ -29,7 +29,7 @@ export const explainWithContext = async (req, res) => {
 
         const documents = await prisma.knowledgeBaseDocument.findMany({
             where: whereClause,
-            take: 5,
+            take: 1, // OPTIMIZATION: Limit to 1 document to save tokens
             orderBy: { createdAt: 'desc' }
         });
 
@@ -39,7 +39,16 @@ export const explainWithContext = async (req, res) => {
             });
         }
 
-        const contextText = documents.map(doc => `--- DOCUMENT: ${doc.title} ---\n${doc.content}\n`).join("\n");
+        // OPTIMIZATION: Truncate content to ~20k chars to avoid huge bills
+        // A standard PDF page is ~2-3k chars. 20k chars is ~7-10 pages.
+        const MAX_CONTEXT_LENGTH = 20000;
+        const contextText = documents.map(doc => {
+            let content = doc.content;
+            if (content.length > MAX_CONTEXT_LENGTH) {
+                content = content.substring(0, MAX_CONTEXT_LENGTH) + "\n...[TRUNCATED]...";
+            }
+            return `--- DOCUMENT: ${doc.title} ---\n${content}\n`;
+        }).join("\n");
 
         // 2. Construct Prompt
         const prompt = `
