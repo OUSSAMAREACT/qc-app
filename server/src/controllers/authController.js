@@ -68,7 +68,9 @@ export const register = async (req, res) => {
                 city: user.city,
                 hospital: user.hospital,
                 gender: user.gender,
-                phoneNumber: user.phoneNumber
+                gender: user.gender,
+                phoneNumber: user.phoneNumber,
+                premiumExpiresAt: user.premiumExpiresAt
             }
         });
     } catch (error) {
@@ -149,7 +151,9 @@ export const login = async (req, res) => {
                 city: user.city,
                 hospital: user.hospital,
                 gender: user.gender,
-                phoneNumber: user.phoneNumber
+                gender: user.gender,
+                phoneNumber: user.phoneNumber,
+                premiumExpiresAt: user.premiumExpiresAt
             }
         });
     } catch (error) {
@@ -186,7 +190,9 @@ export const getMe = async (req, res) => {
                 city: user.city,
                 hospital: user.hospital,
                 gender: user.gender,
-                phoneNumber: user.phoneNumber
+                gender: user.gender,
+                phoneNumber: user.phoneNumber,
+                premiumExpiresAt: user.premiumExpiresAt
             }
         });
     } catch (error) {
@@ -255,7 +261,9 @@ export const updateProfile = async (req, res) => {
                 city: updatedUser.city,
                 hospital: updatedUser.hospital,
                 gender: updatedUser.gender,
-                phoneNumber: updatedUser.phoneNumber
+                gender: user.gender,
+                phoneNumber: updatedUser.phoneNumber,
+                premiumExpiresAt: updatedUser.premiumExpiresAt
             }
         });
     } catch (error) {
