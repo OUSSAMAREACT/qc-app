@@ -34,8 +34,7 @@ export default function Navbar() {
 
     const navLinks = [
         { path: '/dashboard', label: 'Tableau de bord', icon: LayoutDashboard },
-        { path: '/quiz', label: 'Quiz', icon: BookOpen },
-        { path: '/history', label: 'Historique', icon: History },
+        { path: '/modules/common', label: 'Modules Commun', icon: BookOpen, isScroll: true },
     ];
 
     if (user?.role === 'ADMIN' || user?.role === 'SUPER_ADMIN') {
@@ -70,6 +69,12 @@ export default function Navbar() {
                                 <Link
                                     key={link.path}
                                     to={link.path}
+                                    onClick={(e) => {
+                                        if (link.isScroll && location.pathname === '/dashboard') {
+                                            e.preventDefault();
+                                            document.getElementById('common-modules')?.scrollIntoView({ behavior: 'smooth' });
+                                        }
+                                    }}
                                     className={`relative px-4 py-2 rounded-xl text-sm font-medium transition-all duration-200 flex items-center gap-2 ${isActive
                                         ? 'text-primary-600 bg-primary-50 dark:bg-primary-900/20'
                                         : 'text-gray-600 dark:text-gray-300 hover:text-primary-600 hover:bg-gray-50 dark:hover:bg-gray-800'
@@ -179,7 +184,13 @@ export default function Navbar() {
                                     >
                                         <Link
                                             to={link.path}
-                                            onClick={() => setIsMobileMenuOpen(false)}
+                                            onClick={(e) => {
+                                                if (link.isScroll && location.pathname === '/dashboard') {
+                                                    e.preventDefault();
+                                                    document.getElementById('common-modules')?.scrollIntoView({ behavior: 'smooth' });
+                                                }
+                                                setIsMobileMenuOpen(false);
+                                            }}
                                             className={`flex items-center gap-4 p-4 rounded-2xl text-lg font-medium transition-all ${isActive
                                                 ? 'bg-primary-50 dark:bg-primary-900/20 text-primary-600'
                                                 : 'text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800'

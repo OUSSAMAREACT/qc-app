@@ -243,7 +243,7 @@ export default function DashboardPage() {
                     </motion.div>
 
                     {/* Common Modules Grid */}
-                    <motion.div variants={itemVariants}>
+                    <motion.div variants={itemVariants} id="common-modules">
                         <div className="flex items-center justify-between mb-6">
                             <div className="flex items-center gap-3">
                                 <div className="h-8 w-1 bg-blue-500 rounded-full"></div>
