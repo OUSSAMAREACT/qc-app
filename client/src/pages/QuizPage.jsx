@@ -398,6 +398,17 @@ export default function QuizPage() {
     // Circular progress calculation for timer
     const timePercentage = totalTime > 0 ? (timeLeft / totalTime) * 100 : 0;
 
+    // --- Freemium Notice Logic ---
+    const [showFreemiumNotice, setShowFreemiumNotice] = useState(false);
+
+    useEffect(() => {
+        const searchParams = new URLSearchParams(location.search);
+        const mode = searchParams.get('mode');
+        if (mode === 'rapide' && user?.role === 'STUDENT') {
+            setShowFreemiumNotice(true);
+        }
+    }, [user, location.search]);
+
     return (
         <div className="min-h-screen bg-gray-50 dark:bg-gray-900 p-4 flex flex-col items-center pb-32 md:pb-20 font-sans transition-colors duration-300">
             <SEO
@@ -405,6 +416,66 @@ export default function QuizPage() {
                 description="Testez vos connaissances avec nos QCM interactifs pour l'examen Echelle 11."
                 url="/quiz"
             />
+
+            {/* Freemium Notice Modal */}
+            <AnimatePresence>
+                {showFreemiumNotice && (
+                    <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm"
+                    >
+                        <motion.div
+                            initial={{ scale: 0.9, opacity: 0 }}
+                            animate={{ scale: 1, opacity: 1 }}
+                            exit={{ scale: 0.9, opacity: 0 }}
+                            className="bg-white dark:bg-gray-800 rounded-3xl shadow-2xl max-w-md w-full overflow-hidden border border-gray-100 dark:border-gray-700"
+                        >
+                            <div className="relative h-32 bg-gradient-to-br from-blue-600 to-indigo-700 flex items-center justify-center overflow-hidden">
+                                <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10"></div>
+                                <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full blur-2xl transform translate-x-10 -translate-y-10"></div>
+                                <Crown size={48} className="text-white relative z-10 drop-shadow-lg" />
+                            </div>
+
+                            <div className="p-8 text-center">
+                                <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">Mode Découverte</h3>
+                                <p className="text-gray-600 dark:text-gray-300 mb-6 leading-relaxed">
+                                    Vous utilisez le <strong>Quiz Rapide</strong> en version gratuite.
+                                    <br /><br />
+                                    <ul className="text-left space-y-2 bg-gray-50 dark:bg-gray-700/50 p-4 rounded-xl text-sm">
+                                        <li className="flex items-center gap-2">
+                                            <span className="text-green-500">✓</span> Accès aux modules gratuits uniquement
+                                        </li>
+                                        <li className="flex items-center gap-2">
+                                            <span className="text-green-500">✓</span> 30 questions par session
+                                        </li>
+                                        <li className="flex items-center gap-2 opacity-50">
+                                            <span className="text-gray-400">🔒</span> Accès illimité à tous les modules (Premium)
+                                        </li>
+                                    </ul>
+                                </p>
+
+                                <div className="flex flex-col gap-3">
+                                    <Button
+                                        onClick={() => navigate('/payment')}
+                                        className="w-full bg-gradient-to-r from-yellow-400 to-yellow-600 hover:from-yellow-500 hover:to-yellow-700 text-white font-bold py-3 rounded-xl shadow-lg shadow-yellow-500/30 transform transition hover:scale-[1.02]"
+                                    >
+                                        Passer Premium 🚀
+                                    </Button>
+                                    <button
+                                        onClick={() => setShowFreemiumNotice(false)}
+                                        className="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 text-sm font-medium py-2"
+                                    >
+                                        Continuer en mode gratuit
+                                    </button>
+                                </div>
+                            </div>
+                        </motion.div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
+
             {/* Dark Premium Floating Timer (Bottom Right on Desktop, Bottom Center on Mobile) */}
             <div className={`fixed bottom-6 left-1/2 -translate-x-1/2 md:left-auto md:translate-x-0 md:right-6 z-40 transition-all duration-500 transform hover:scale-105 ${isLowTime ? 'animate-pulse' : ''
                 }`}>
@@ -459,6 +530,7 @@ export default function QuizPage() {
                     </div>
                 </div>
             </div>
+
 
             <div className="w-full max-w-4xl space-y-4 md:space-y-8 mt-4 md:mt-12 z-10">
                 {/* Header Info */}
