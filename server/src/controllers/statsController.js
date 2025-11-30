@@ -55,16 +55,37 @@ export const getAdvancedStats = async (req, res) => {
         }));
 
         // --- Progress Graph Data (History) ---
-        // Map results to a simple format: { date: 'DD/MM', score: % }
-        const progressData = results.map(result => ({
-            date: new Date(result.createdAt).toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit' }),
-            score: result.totalQuestions > 0
-                ? Math.round((result.score / result.totalQuestions) * 100)
-                : 0
+        // Aggregate scores by week
+        const weeklyStats = {};
+
+        results.forEach(result => {
+            const date = new Date(result.createdAt);
+            // Get week number and year
+            const startOfYear = new Date(date.getFullYear(), 0, 1);
+            const pastDaysOfYear = (date - startOfYear) / 86400000;
+            const weekNum = Math.ceil((pastDaysOfYear + startOfYear.getDay() + 1) / 7);
+            const year = date.getFullYear();
+            const key = `${year}-W${weekNum}`;
+
+            if (!weeklyStats[key]) {
+                weeklyStats[key] = { totalScore: 0, count: 0, weekLabel: `Sem ${weekNum}` };
+            }
+
+            const percentage = result.totalQuestions > 0
+                ? (result.score / result.totalQuestions) * 100
+                : 0;
+
+            weeklyStats[key].totalScore += percentage;
+            weeklyStats[key].count += 1;
+        });
+
+        const progressData = Object.keys(weeklyStats).map(key => ({
+            date: weeklyStats[key].weekLabel,
+            score: Math.round(weeklyStats[key].totalScore / weeklyStats[key].count)
         }));
 
-        // Limit progress data to last 20 attempts to avoid clutter
-        const recentProgress = progressData.slice(-20);
+        // Limit progress data to last 12 weeks
+        const recentProgress = progressData.slice(-12);
 
         res.json({
             radarData,

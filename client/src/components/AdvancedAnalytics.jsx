@@ -120,8 +120,8 @@ const AdvancedAnalytics = () => {
                         <TrendingUp className="w-6 h-6 text-green-600 dark:text-green-400" />
                     </div>
                     <div>
-                        <h3 className="text-lg font-bold text-gray-900 dark:text-white">Progression</h3>
-                        <p className="text-xs text-gray-500 dark:text-gray-400">Évolution de vos scores</p>
+                        <h3 className="text-lg font-bold text-gray-900 dark:text-white">Progression Hebdomadaire</h3>
+                        <p className="text-xs text-gray-500 dark:text-gray-400">Moyenne de vos scores par semaine</p>
                     </div>
                 </div>
 
@@ -157,6 +157,7 @@ const AdvancedAnalytics = () => {
                                     boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1)'
                                 }}
                                 itemStyle={{ color: '#10b981', fontWeight: 'bold' }}
+                                formatter={(value) => [`${value}%`, 'Score Moyen']}
                             />
                             <Area
                                 type="monotone"
