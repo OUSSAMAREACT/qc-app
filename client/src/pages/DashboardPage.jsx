@@ -222,26 +222,6 @@ export default function DashboardPage() {
                         </Link>
                     </motion.div>
 
-                    {/* Advanced Analytics Section */}
-                    <motion.div variants={itemVariants}>
-                        <AdvancedAnalytics />
-                    </motion.div>
-
-                    {/* Weekly Exam Section */}
-                    <motion.div variants={itemVariants}>
-                        <div className="flex items-center gap-3 mb-6">
-                            <div className="h-8 w-1 bg-yellow-500 rounded-full"></div>
-                            <h2 className="text-2xl font-heading font-bold text-gray-900 dark:text-white">Challenge Hebdomadaire</h2>
-                        </div>
-                        {activeExam ? (
-                            <WeeklyExamCard exam={activeExam} />
-                        ) : (
-                            <div className="bg-white dark:bg-dark-card p-8 rounded-3xl shadow-sm border border-gray-100 dark:border-gray-700 text-center">
-                                <p className="text-gray-500 dark:text-gray-400">Aucun examen hebdomadaire actif pour le moment.</p>
-                            </div>
-                        )}
-                    </motion.div>
-
                     {/* Common Modules Grid */}
                     <motion.div variants={itemVariants} id="common-modules">
                         <div className="flex items-center justify-between mb-6">
@@ -303,6 +283,26 @@ export default function DashboardPage() {
                                 </Link>
                             ))}
                         </div>
+                    </motion.div>
+
+                    {/* Advanced Analytics Section */}
+                    <motion.div variants={itemVariants}>
+                        <AdvancedAnalytics />
+                    </motion.div>
+
+                    {/* Weekly Exam Section */}
+                    <motion.div variants={itemVariants}>
+                        <div className="flex items-center gap-3 mb-6">
+                            <div className="h-8 w-1 bg-yellow-500 rounded-full"></div>
+                            <h2 className="text-2xl font-heading font-bold text-gray-900 dark:text-white">Challenge Hebdomadaire</h2>
+                        </div>
+                        {activeExam ? (
+                            <WeeklyExamCard exam={activeExam} />
+                        ) : (
+                            <div className="bg-white dark:bg-dark-card p-8 rounded-3xl shadow-sm border border-gray-100 dark:border-gray-700 text-center">
+                                <p className="text-gray-500 dark:text-gray-400">Aucun examen hebdomadaire actif pour le moment.</p>
+                            </div>
+                        )}
                     </motion.div>
 
                     {/* Specialty Modules Grid */}
