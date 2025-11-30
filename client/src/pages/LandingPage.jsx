@@ -92,81 +92,76 @@ export default function LandingPage() {
 
             <main>
                 {/* Hero Section */}
-                <section className="pt-32 pb-20 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
-                    {/* Background Blobs - Animated */}
-                    {/* Background Blobs - Animated - Light Mode (Multiply) */}
-                    <div className="absolute inset-0 -z-10 overflow-hidden pointer-events-none opacity-100 dark:opacity-0 transition-opacity duration-300 ease-in-out">
-                        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[1000px] bg-blue-400/20 rounded-full blur-3xl animate-pulse mix-blend-multiply" />
-                        <div className="absolute bottom-0 right-0 w-[800px] h-[800px] bg-indigo-400/20 rounded-full blur-3xl mix-blend-multiply animate-blob" />
-                        <div className="absolute top-1/4 left-0 w-[600px] h-[600px] bg-purple-400/20 rounded-full blur-3xl mix-blend-multiply animate-blob animation-delay-2000" />
+                <section className="relative pt-32 pb-20 lg:pt-48 lg:pb-32 overflow-hidden">
+                    {/* Background Elements */}
+                    <div className="absolute inset-0 -z-10">
+                        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full max-w-7xl mx-auto pointer-events-none">
+                            <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-blue-500/20 rounded-full blur-[100px] animate-pulse mix-blend-multiply dark:mix-blend-screen" />
+                            <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-purple-500/20 rounded-full blur-[100px] animate-pulse delay-1000 mix-blend-multiply dark:mix-blend-screen" />
+                        </div>
+                        <div className="absolute inset-0 bg-[url('/grid.svg')] opacity-[0.02] dark:opacity-[0.05]" />
                     </div>
 
-                    {/* Background Blobs - Animated - Dark Mode (Screen) */}
-                    <div className="absolute inset-0 -z-10 overflow-hidden pointer-events-none opacity-0 dark:opacity-100 transition-opacity duration-300 ease-in-out">
-                        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[1000px] bg-blue-900/20 rounded-full blur-3xl animate-pulse mix-blend-screen" />
-                        <div className="absolute bottom-0 right-0 w-[800px] h-[800px] bg-indigo-900/20 rounded-full blur-3xl mix-blend-screen animate-blob" />
-                        <div className="absolute top-1/4 left-0 w-[600px] h-[600px] bg-purple-900/20 rounded-full blur-3xl mix-blend-screen animate-blob animation-delay-2000" />
-                    </div>
-
-                    <div className="max-w-7xl mx-auto text-center relative z-10">
-                        <div className="animate-fade-in-up">
-                            <motion.span
-                                initial={{ opacity: 0, scale: 0.9 }}
-                                animate={{ opacity: 1, scale: 1 }}
-                                transition={{ delay: 0.2 }}
-                                className="inline-flex items-center py-1.5 px-4 rounded-full bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-300 text-sm font-bold mb-8 border border-blue-100 dark:border-blue-800/50 shadow-sm backdrop-blur-sm"
-                            >
+                    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
+                        <motion.div
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.5 }}
+                        >
+                            <span className="inline-flex items-center py-1.5 px-4 rounded-full bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-300 text-sm font-bold mb-8 border border-blue-100 dark:border-blue-800/50 shadow-sm backdrop-blur-sm">
                                 <span className="flex h-2 w-2 rounded-full bg-blue-600 mr-2 animate-pulse"></span>
                                 La référence pour l'examen Echelle 11
-                            </motion.span>
+                            </span>
 
-                            <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight mb-8 leading-tight">
+                            <h1 className="text-5xl md:text-7xl lg:text-8xl font-extrabold tracking-tight mb-8 leading-[1.1]">
                                 Réussissez votre <br className="hidden md:block" />
                                 <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 dark:from-blue-400 dark:via-indigo-400 dark:to-purple-400 animate-gradient-x">
                                     Concours & Carrière
                                 </span>
                             </h1>
 
-                            <p className="mt-6 text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto mb-8 leading-relaxed font-medium">
-                                La plateforme de référence pour l'Echelle 11, Master ISPITS, ISSS et ENSP. Cours, résumés et QCMs pour exceller.
+                            <p className="mt-6 text-xl md:text-2xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto mb-10 leading-relaxed font-medium">
+                                La plateforme tout-en-un pour l'Echelle 11, Master ISPITS, ISSS et ENSP.
+                                <span className="block mt-2 text-gray-500 dark:text-gray-400">
+                                    QCMs intelligents, Tuteur IA, et Suivi de progression détaillé.
+                                </span>
                             </p>
 
-                            <CountdownTimer />
-
-                            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+                            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-16">
                                 {user ? (
                                     <Link to="/dashboard" className="w-full sm:w-auto">
-                                        <Button size="lg" className="w-full sm:w-auto text-lg px-8 py-4 bg-blue-600 hover:bg-blue-700 text-white shadow-xl shadow-blue-500/30 rounded-2xl transition-transform hover:scale-105 active:scale-95">
+                                        <Button size="lg" className="w-full sm:w-auto text-lg px-8 py-6 bg-blue-600 hover:bg-blue-700 text-white shadow-xl shadow-blue-500/30 rounded-2xl transition-all hover:scale-105 active:scale-95 font-bold">
                                             Accéder à mon Espace <ArrowRight className="ml-2 h-5 w-5" />
                                         </Button>
                                     </Link>
                                 ) : (
                                     <>
                                         <Link to="/register" className="w-full sm:w-auto">
-                                            <Button size="lg" className="w-full sm:w-auto text-lg px-8 py-4 bg-blue-600 hover:bg-blue-700 text-white shadow-xl shadow-blue-500/30 rounded-2xl transition-transform hover:scale-105 active:scale-95">
+                                            <Button size="lg" className="w-full sm:w-auto text-lg px-8 py-6 bg-blue-600 hover:bg-blue-700 text-white shadow-xl shadow-blue-500/30 rounded-2xl transition-all hover:scale-105 active:scale-95 font-bold">
                                                 Commencer Gratuitement <ArrowRight className="ml-2 h-5 w-5" />
                                             </Button>
                                         </Link>
                                         <Link to="/login" className="w-full sm:w-auto">
-                                            <Button variant="secondary" size="lg" className="w-full sm:w-auto text-lg px-8 py-4 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-2xl transition-transform hover:scale-105 active:scale-95">
+                                            <Button variant="secondary" size="lg" className="w-full sm:w-auto text-lg px-8 py-6 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-2xl transition-all hover:scale-105 active:scale-95 font-bold">
                                                 <LogIn className="mr-2 h-5 w-5" /> Se connecter
                                             </Button>
                                         </Link>
                                     </>
                                 )}
                             </div>
-                        </div>
+                        </motion.div>
 
                         {/* Stats Preview - Glassmorphism */}
                         <motion.div
                             initial={{ opacity: 0, y: 40 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ duration: 0.7, delay: 0.2 }}
-                            className="mt-24 grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto"
+                            className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-8 max-w-5xl mx-auto"
                         >
-                            <StatCard number={questionCount} label="Questions QCM" color="text-blue-600 dark:text-blue-400" />
-                            <StatCard number="Hebdo" label="Examens Blancs" color="text-indigo-600 dark:text-indigo-400" />
-                            <StatCard number="100%" label="Suivi de Progression" color="text-purple-600 dark:text-purple-400" />
+                            <StatCard number={questionCount} label="Questions QCM" color="text-blue-600 dark:text-blue-400" icon={<BookOpen size={24} />} />
+                            <StatCard number="IA" label="Tuteur Personnel" color="text-purple-600 dark:text-purple-400" icon={<Zap size={24} />} />
+                            <StatCard number="Audio" label="Révision TTS" color="text-indigo-600 dark:text-indigo-400" icon={<Users size={24} />} />
+                            <StatCard number="100%" label="Suivi Progression" color="text-green-600 dark:text-green-400" icon={<Target size={24} />} />
                         </motion.div>
                     </div>
                 </section>
@@ -201,58 +196,81 @@ export default function LandingPage() {
                     </div>
                 </section>
 
-                {/* New Features Section */}
-                <section className="py-24 bg-blue-50 dark:bg-gray-900/50 relative overflow-hidden">
-                    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+                {/* Features Bento Grid */}
+                <section className="py-24 bg-white dark:bg-gray-900 relative">
+                    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                         <div className="text-center mb-20">
-                            <span className="text-blue-600 dark:text-blue-400 font-bold tracking-wider uppercase text-sm">Innovation</span>
-                            <h2 className="text-3xl md:text-4xl font-bold mt-2 mb-6">Une Technologie au Service de votre Réussite</h2>
+                            <h2 className="text-3xl md:text-5xl font-bold mb-6">Tout ce dont vous avez besoin</h2>
                             <p className="text-gray-600 dark:text-gray-400 max-w-2xl mx-auto text-lg">
-                                Profitez d'outils exclusifs pour optimiser votre apprentissage et gagner du temps.
+                                Une suite d'outils complète conçue pour maximiser vos chances de réussite.
                             </p>
                         </div>
 
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-                            <Card className="p-8 border-none shadow-xl bg-white dark:bg-gray-800 rounded-3xl overflow-hidden relative group hover:-translate-y-1 transition-transform duration-300">
-                                <div className="absolute top-0 right-0 w-32 h-32 bg-purple-500/10 rounded-bl-full -mr-8 -mt-8 transition-transform group-hover:scale-110"></div>
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                            {/* AI Tutor - Large Card */}
+                            <div className="md:col-span-2 bg-gradient-to-br from-purple-50 to-indigo-50 dark:from-purple-900/20 dark:to-indigo-900/20 rounded-[2.5rem] p-8 md:p-12 relative overflow-hidden group border border-purple-100 dark:border-purple-800/30">
                                 <div className="relative z-10">
-                                    <div className="w-14 h-14 bg-purple-100 dark:bg-purple-900/30 rounded-2xl flex items-center justify-center text-purple-600 mb-6">
-                                        <Zap size={32} />
+                                    <div className="w-16 h-16 bg-white dark:bg-gray-800 rounded-2xl flex items-center justify-center text-purple-600 shadow-lg mb-8 group-hover:scale-110 transition-transform">
+                                        <Zap size={32} fill="currentColor" />
                                     </div>
-                                    <h3 className="text-2xl font-bold mb-4">Tuteur IA Personnel</h3>
-                                    <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
-                                        Ne restez jamais bloqué. Notre IA analyse vos réponses et vous fournit des explications détaillées et personnalisées pour chaque question.
+                                    <h3 className="text-3xl font-bold mb-4 text-gray-900 dark:text-white">Tuteur IA Personnel</h3>
+                                    <p className="text-gray-600 dark:text-gray-300 text-lg leading-relaxed max-w-md">
+                                        Une explication détaillée pour chaque question. Notre IA analyse vos erreurs et vous aide à comprendre le "pourquoi" de la réponse.
                                     </p>
                                 </div>
-                            </Card>
+                                <div className="absolute right-0 bottom-0 w-64 h-64 bg-purple-500/10 rounded-full blur-3xl transform translate-x-1/3 translate-y-1/3" />
+                            </div>
 
-                            <Card className="p-8 border-none shadow-xl bg-white dark:bg-gray-800 rounded-3xl overflow-hidden relative group hover:-translate-y-1 transition-transform duration-300">
-                                <div className="absolute top-0 right-0 w-32 h-32 bg-blue-500/10 rounded-bl-full -mr-8 -mt-8 transition-transform group-hover:scale-110"></div>
+                            {/* TTS - Tall Card */}
+                            <div className="bg-gradient-to-br from-blue-50 to-cyan-50 dark:from-blue-900/20 dark:to-cyan-900/20 rounded-[2.5rem] p-8 md:p-12 relative overflow-hidden group border border-blue-100 dark:border-blue-800/30">
                                 <div className="relative z-10">
-                                    <div className="w-14 h-14 bg-blue-100 dark:bg-blue-900/30 rounded-2xl flex items-center justify-center text-blue-600 mb-6">
-                                        <div className="relative">
-                                            <div className="absolute -right-1 -top-1 w-3 h-3 bg-red-500 rounded-full animate-ping"></div>
-                                            <Users size={32} className="hidden" /> {/* Placeholder to keep import if needed, but using a different icon here would be better if imported. I'll use LayoutDashboard as a fallback or just text if icon missing. Wait, I can use the existing imports. */}
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-volume-2"><path d="M11 4.702a.705.705 0 0 0-1.203-.498L6.413 7.587A1.4 1.4 0 0 1 5.416 8H3a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h2.416a1.4 1.4 0 0 1 .997.413l3.383 3.384A.705.705 0 0 0 11 19.298z" /><path d="M16 9a5 5 0 0 1 0 6" /><path d="M19.364 18.364a9 9 0 0 0 0-12.728" /></svg>
-                                        </div>
+                                    <div className="w-16 h-16 bg-white dark:bg-gray-800 rounded-2xl flex items-center justify-center text-blue-600 shadow-lg mb-8 group-hover:scale-110 transition-transform">
+                                        <Users size={32} />
                                     </div>
-                                    <h3 className="text-2xl font-bold mb-4">Révision Audio (TTS)</h3>
-                                    <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
-                                        Apprenez partout. Écoutez les questions et les choix de réponses en haute qualité audio, idéal pour réviser dans les transports ou en faisant du sport.
+                                    <h3 className="text-2xl font-bold mb-4 text-gray-900 dark:text-white">Révision Audio</h3>
+                                    <p className="text-gray-600 dark:text-gray-300 leading-relaxed">
+                                        Écoutez vos cours et QCMs partout. Idéal pour les transports.
                                     </p>
                                 </div>
-                            </Card>
+                            </div>
+
+                            {/* Mistake Box */}
+                            <div className="bg-gradient-to-br from-red-50 to-orange-50 dark:from-red-900/20 dark:to-orange-900/20 rounded-[2.5rem] p-8 md:p-12 relative overflow-hidden group border border-red-100 dark:border-red-800/30">
+                                <div className="relative z-10">
+                                    <div className="w-16 h-16 bg-white dark:bg-gray-800 rounded-2xl flex items-center justify-center text-red-600 shadow-lg mb-8 group-hover:scale-110 transition-transform">
+                                        <Target size={32} />
+                                    </div>
+                                    <h3 className="text-2xl font-bold mb-4 text-gray-900 dark:text-white">Boîte à Erreurs</h3>
+                                    <p className="text-gray-600 dark:text-gray-300 leading-relaxed">
+                                        Ciblez vos faiblesses. Répétez uniquement les questions où vous avez échoué.
+                                    </p>
+                                </div>
+                            </div>
+
+                            {/* History - Large Card */}
+                            <div className="md:col-span-2 bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 rounded-[2.5rem] p-8 md:p-12 relative overflow-hidden group border border-green-100 dark:border-green-800/30">
+                                <div className="relative z-10">
+                                    <div className="w-16 h-16 bg-white dark:bg-gray-800 rounded-2xl flex items-center justify-center text-green-600 shadow-lg mb-8 group-hover:scale-110 transition-transform">
+                                        <Trophy size={32} />
+                                    </div>
+                                    <h3 className="text-3xl font-bold mb-4 text-gray-900 dark:text-white">Suivi de Progression Détaillé</h3>
+                                    <p className="text-gray-600 dark:text-gray-300 text-lg leading-relaxed max-w-md">
+                                        Visualisez votre évolution avec des graphiques précis. Consultez l'historique de chaque quiz et analysez vos performances par module.
+                                    </p>
+                                </div>
+                                <div className="absolute right-0 bottom-0 w-64 h-64 bg-green-500/10 rounded-full blur-3xl transform translate-x-1/3 translate-y-1/3" />
+                            </div>
                         </div>
                     </div>
                 </section>
 
-                {/* Why Choose Us Section */}
-                <section className="py-24 bg-gray-50 dark:bg-gray-900">
+                {/* Social Proof / Why Choose Us */}
+                <section className="py-24 bg-gray-50 dark:bg-gray-900/50">
                     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
                             <div>
                                 <h2 className="text-3xl md:text-4xl font-bold mb-6">Pourquoi choisir QCMEchelle11 ?</h2>
-                                <div className="space-y-6">
+                                <div className="space-y-8">
                                     <div className="flex gap-4">
                                         <div className="flex-shrink-0 w-12 h-12 rounded-xl bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center text-blue-600">
                                             <Target size={24} />
@@ -285,18 +303,18 @@ export default function LandingPage() {
                             <div className="relative">
                                 <div className="absolute inset-0 bg-gradient-to-br from-blue-600 to-purple-600 rounded-3xl transform rotate-3 opacity-20 blur-lg"></div>
                                 <div className="relative bg-white dark:bg-gray-800 rounded-3xl p-8 shadow-xl border border-gray-100 dark:border-gray-700">
-                                    <div className="space-y-4">
-                                        <div className="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-700/50 rounded-xl">
-                                            <span className="font-medium">Taux de réussite</span>
-                                            <span className="text-green-500 font-bold">+85%</span>
+                                    <div className="space-y-6">
+                                        <div className="flex items-center justify-between p-6 bg-gray-50 dark:bg-gray-700/50 rounded-2xl">
+                                            <span className="font-medium text-lg">Taux de réussite</span>
+                                            <span className="text-green-500 font-bold text-2xl">+85%</span>
                                         </div>
-                                        <div className="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-700/50 rounded-xl">
-                                            <span className="font-medium">Utilisateurs Actifs</span>
-                                            <span className="text-blue-500 font-bold">5,000+</span>
+                                        <div className="flex items-center justify-between p-6 bg-gray-50 dark:bg-gray-700/50 rounded-2xl">
+                                            <span className="font-medium text-lg">Utilisateurs Actifs</span>
+                                            <span className="text-blue-500 font-bold text-2xl">5,000+</span>
                                         </div>
-                                        <div className="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-700/50 rounded-xl">
-                                            <span className="font-medium">Questions Disponibles</span>
-                                            <span className="text-purple-500 font-bold">2,500+</span>
+                                        <div className="flex items-center justify-between p-6 bg-gray-50 dark:bg-gray-700/50 rounded-2xl">
+                                            <span className="font-medium text-lg">Questions Disponibles</span>
+                                            <span className="text-purple-500 font-bold text-2xl">2,500+</span>
                                         </div>
                                     </div>
                                 </div>
@@ -305,32 +323,24 @@ export default function LandingPage() {
                     </div>
                 </section>
 
-                {/* CTA Section */}
-                <section className="py-24 px-4">
-                    <div className="max-w-5xl mx-auto bg-gradient-to-br from-blue-600 to-indigo-700 rounded-[2.5rem] p-12 md:p-20 text-center text-white shadow-2xl shadow-blue-900/20 relative overflow-hidden group">
-                        <div className="absolute top-0 right-0 w-96 h-96 bg-white/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 group-hover:bg-white/20 transition-colors duration-500" />
-                        <div className="absolute bottom-0 left-0 w-96 h-96 bg-black/10 rounded-full blur-3xl translate-y-1/2 -translate-x-1/2 group-hover:bg-black/20 transition-colors duration-500" />
-
-                        <h2 className="text-3xl md:text-5xl font-bold mb-8 relative z-10 leading-tight">Prêt à réussir votre examen ?</h2>
-                        <p className="text-blue-100 mb-12 max-w-2xl mx-auto text-xl relative z-10 font-light">
-                            Rejoignez dès maintenant la plateforme de référence et donnez un nouvel élan à votre carrière.
+                {/* Final CTA */}
+                <section className="py-24 relative overflow-hidden">
+                    <div className="absolute inset-0 bg-blue-600 dark:bg-blue-900">
+                        <div className="absolute inset-0 bg-[url('/grid.svg')] opacity-10"></div>
+                        <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-blue-600 to-indigo-700 dark:from-blue-900 dark:to-indigo-900 opacity-90"></div>
+                    </div>
+                    <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center text-white">
+                        <h2 className="text-4xl md:text-5xl font-bold mb-8">Prêt à exceller ?</h2>
+                        <p className="text-xl text-blue-100 mb-12 max-w-2xl mx-auto">
+                            Rejoignez des milliers de professionnels de santé qui préparent leur avenir avec QCMEchelle11.
                         </p>
-
-                        <div className="relative z-10">
-                            {user ? (
-                                <Link to="/dashboard">
-                                    <Button size="lg" className="bg-white text-blue-600 hover:bg-blue-50 border-none text-lg px-10 py-5 h-auto rounded-2xl shadow-xl transition-transform hover:scale-105">
-                                        Retourner au Tableau de Bord
-                                    </Button>
-                                </Link>
-                            ) : (
-                                <Link to="/register">
-                                    <Button size="lg" className="bg-white text-blue-600 hover:bg-blue-50 border-none text-lg px-10 py-5 h-auto rounded-2xl shadow-xl transition-transform hover:scale-105">
-                                        Créer mon compte gratuitement
-                                    </Button>
-                                </Link>
-                            )}
-                        </div>
+                        {!user && (
+                            <Link to="/register">
+                                <Button size="lg" className="text-lg px-10 py-6 bg-white text-blue-600 hover:bg-blue-50 shadow-xl rounded-2xl font-bold transition-transform hover:scale-105 active:scale-95">
+                                    Créer un compte gratuit <ArrowRight className="ml-2 h-5 w-5" />
+                                </Button>
+                            </Link>
+                        )}
                     </div>
                 </section>
             </main>
@@ -359,11 +369,14 @@ export default function LandingPage() {
     );
 }
 
-function StatCard({ number, label, color }) {
+function StatCard({ number, label, color, icon }) {
     return (
-        <div className="p-8 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-3xl shadow-xl border border-gray-100 dark:border-gray-700/50 hover:border-blue-200 dark:hover:border-blue-800 transition-all duration-300 hover:-translate-y-1">
-            <div className={`text-5xl font-extrabold ${color} mb-3`}>{number}</div>
-            <div className="text-gray-600 dark:text-gray-400 font-medium text-lg">{label}</div>
+        <div className="p-6 md:p-8 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-3xl shadow-xl border border-gray-100 dark:border-gray-700/50 hover:border-blue-200 dark:hover:border-blue-800 transition-all duration-300 hover:-translate-y-1 flex flex-col items-center text-center">
+            <div className={`mb-4 p-3 rounded-2xl bg-gray-50 dark:bg-gray-700/50 ${color}`}>
+                {icon}
+            </div>
+            <div className={`text-3xl md:text-4xl font-extrabold ${color} mb-2`}>{number}</div>
+            <div className="text-gray-600 dark:text-gray-400 font-medium text-sm md:text-base">{label}</div>
         </div>
     );
 }
