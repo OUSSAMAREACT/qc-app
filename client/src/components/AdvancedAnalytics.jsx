@@ -61,8 +61,8 @@ const AdvancedAnalytics = () => {
                     </div>
                 </div>
 
-                <div className="h-[300px] w-full relative z-10">
-                    <ResponsiveContainer width="100%" height="100%">
+                <div className="h-[300px] min-h-[300px] w-full relative z-10">
+                    <ResponsiveContainer width="100%" height="100%" debounce={200}>
                         <RadarChart cx="50%" cy="50%" outerRadius="80%" data={data.radarData}>
                             <PolarGrid stroke="#e5e7eb" strokeOpacity={0.5} />
                             <PolarAngleAxis
@@ -111,8 +111,8 @@ const AdvancedAnalytics = () => {
                     </div>
                 </div>
 
-                <div className="h-[300px] w-full relative z-10">
-                    <ResponsiveContainer width="100%" height="100%">
+                <div className="h-[300px] min-h-[300px] w-full relative z-10">
+                    <ResponsiveContainer width="100%" height="100%" debounce={200}>
                         <AreaChart data={data.progressData}>
                             <defs>
                                 <linearGradient id="colorScore" x1="0" y1="0" x2="0" y2="1">
